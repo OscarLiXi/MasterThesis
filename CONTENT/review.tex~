@@ -1,0 +1,940 @@
+%% This is an example first chapter.  You should put chapter/appendix that you
+%% write into a separate file, and add a line \include{yourfilename} to
+%% main.tex, where `yourfilename.tex' is the name of the chapter/appendix file.
+%% You can process specific files by typing their names in at the 
+%% \files=
+%% prompt when you run the file main.tex through LaTeX.
+\chapter{Overview of Graph and Hypergraph Matching}
+\label{chap:review}
+    This chapter presents a systematic review of graph and hypergraph matching.
+    Section \ref{sec:assignments} gives a historical overview of assignment problems with a focus on assignment constraints.
+    Section \ref{sec:GM_LAP} introduces the linear assignment problem and the Hungarian algorithm as an optimal solver for it.
+    Section \ref{sec:GM_QAP} introduces the quadratic assignment problem as well as quadratic graph matching.
+    Several relaxation techniques and state-of-the-art algorithms will be discussed in this section.
+    Section \ref{sec:GM_HAP} introduces the higher order assignment problem as well as hypergraph matching.
+    We will see how tensors and multilinear functions presented in Chapter \ref{chap:background} 
+    are used to formulate hypergraph matching problems.
+    In particular, a hypergraph matching problem can be formulated by extending the formulation of quadratic graph matching to higher-order case.
+    Furthermore, we draw the connections between hypergraph matching and some tensor problems, including 
+    the best tensor rank-1 approximation problem, the H-eigenvalue problem and the Z-eigenvalue problem.
+    Finally, state-of-the-art algorithms for hypergraph matching will be discussed.
+
+\section{Assignments}
+\label{sec:assignments}
+The assignment problem is one of the most fundamental problems in combinatorial optimization.
+In its pure form, the assignment problem concerns with the question of how to assign $n$ items (e.g. tasks) to other $n$ items (e.g. machines) 
+in the best possible way. A more general problem could be to assign $m$ items to $n$ items.
+There are two main components involved in assignment problems, that are the assignment constraints characterizing the way how to connect objects
+between the two sets and an objective function modeling the ``best possible way''.
+
+There are different ways to describe an assignment. 
+Mathematically an assignment is nothing but a \textit{bijective mapping} between two equal sized sets, which can be represented by 
+a permutation $\sigma$ of $n$ integers $\set{1, \ldots, n}$ 
+such that every $i$-th item of the first set is linked to the $\sigma(i)$-th item of the second.
+However, in practical problems, it is often more convenient to represent an assignment by a permutation matrix, i.e. a binary square matrix
+with exactly one $1$ in each row and column.
+For instance, the assignment $\sigma$ can be represented by a matrix $\bX_\sigma = \sset{x_{ij}} $ with $x_{ij}=1$ for $j=\sigma(i)$
+and $x_{ij}=0$ for $j\neq\sigma(i)$. 
+The set of all $n\times n$ assignment matrices will be denoted by $\MC_n$, where the caligraphic letter $\MC$ stands for ``matching''.
+One observes that $\MC_n$ has exactly $n!$ elements, which are characterized by the following equations called the \textit{assignment constraints}
+% \begin{equation}\label{eq:assignment_constraints}
+% \begin{array}{llllll}
+%     &&\sum_{i=1}^n x_{ij} = 1 & \textrm{for all} & j = 1,\ldots,n \\
+%     (\MC_n)&&\sum_{j=1}^n x_{ij} = 1 & \textrm{for all} & i = 1,\ldots,n \\
+%     &&x_{ij} \in \set{0,1} & \textrm{for all} & i,j = 1,\ldots,n 
+% \end{array}
+% \end{equation}
+\begin{equation}\label{eq:assignment_constraints}
+\bX = [x_{ij}] \in \MC_n \iff \left\lbrace
+\begin{array}{lll}
+    \sum_{i=1}^n x_{ij} = 1 & \forall j = 1,\ldots,n \\
+    \sum_{j=1}^n x_{ij} = 1 & \forall i = 1,\ldots,n \\
+    x_{ij} \in \set{0,1} & \forall i,j = 1,\ldots,n. 
+\end{array}
+\right.
+\end{equation}
+Replacing the binary conditions $x_{ij} \in \set{0,1}$ by the nonnegativity conditions $x_{ij} \geq 0$ give us a \textit{doubly stochastic matrix}
+(sometimes called a \textit{bi-stochastic matrix}).
+A famous theorem of Birkhoff \cite{Birkhoff1946} has shown that the set of doubly stochastic matrices constitute the convex hull of all assignment
+matrices and is often referred as the \textit{assignment polytope}.
+\begin{theorem}[Birkhoff \cite{Birkhoff1946}, 1946] \label{theo:Birkhoff}
+    The vertices of the assignment polytope correspond uniquely to permutation matrices.
+\end{theorem}
+Equivalently said every doubly stochastic matrix can be represented by a convex combination of two permutation matrices.
+% Apart from permutation vectors and matrices, assignments can also be viewed as a \textit{perfect matching} in bipartite graphs.
+
+Concerning the relation between graph matching and assignment problems, 
+graph matching problem can be seen as a special case of the assignment problem since its objective is to find correspondences between two graphs.
+This relation will become more clear in the next sections where one can formulate graph matching problems as assignment problems.
+However, in principle, graphs might have different number of vertices, which is not the case for a pure assignment problem.
+Therefore, it is useful to extend the assignment constraints accordingly so that 
+existing algorithms for pure assignment problems can be directly applied to solve graph matching problems.
+For this purpose, let us assume $G_1=(V_1, E_1)$ and $G_2=(V_2, E_2)$ be two graphs to be matched with $|V_1| = m$ and $|V_2| = n$.
+Without loss of generality, we assume that $m < n$. 
+Then the assignment constraints can be described as 
+% \begin{equation}\label{eq:assignment_constraints_2}
+% \begin{array}{llllll}
+%     &&\sum_{i=1}^m x_{ij} \leq 1 & \textrm{for all} & j = 1,\ldots,n \\
+%     (\MC_{mn})&&\sum_{j=1}^n x_{ij} = 1 & \textrm{for all} & i = 1,\ldots,m \\
+%     &&x_{ij} \in \set{0,1} & \textrm{for all} & i = 1,\ldots,m \textrm{ and } j = 1,\ldots,n 
+% \end{array}
+% \end{equation}
+\begin{equation}\label{eq:assignment_constraints_2}
+\bX = [x_{ij}] \in \MC_{mn} \iff \left\lbrace
+\begin{array}{lll}
+    \sum_{i=1}^m x_{ij} \leq 1 & \forall j = 1,\ldots,n \\
+    \sum_{j=1}^n x_{ij} = 1 & \forall i = 1,\ldots,m \\
+    x_{ij} \in \set{0,1} & \forall i = 1,\ldots,m \textrm{ and } j = 1,\ldots,n. 
+\end{array}
+\right.
+\end{equation}
+% For convenience, we denote $\MC_{mn}$ as the set of matrices in $\RR^{m\times n}$ which satisfy \eqref{eq:assignment_constraints_2}.
+Intuitively, each matrix in $\MC_{mn}$ describes an assignment between $V_1$ and $V_2$ such that every vertex in $V_1$ 
+is assigned to exactly one vertex in $V_2$ and there exists no two distinct vertices in $V_1$ that are assigned to the same vertex in $V_2$.
+This kind of constraints can be seen as an \textit{injective mapping} from $V_1$ to $V_2$.
+
+% Unlike $\MC_{n}$, we are not aware of any result like Theorem \ref{theo:Birkhoff} that explicitly specifies
+% the vertices of the continuous relaxed set of $\MC_{mn}$ where binary constraints are all replaced by nonnegativity constraints.
+% Thus, it might be natural to ask whether or not these vertices coincide with the assignment matrices in $\MC_{mn}$.
+
+In the next sections, we will give a systematic review of assignment problems as well as graph and hypergraph matching algorithms.
+Depending on the order of the polynomial objective functions, assignment problems can be categorized into: Linear Assignment Problem (LAP), 
+Quadratic Assignment Problem (QAP) or Higher-order Assignment Problem (HAP).
+In each category, we might present different formulations of the problem and review the most recent approaches.
+Some primary formulations and methods will be briefly discussed as well.
+For recent surveys on graph based methods, see \cite{Conte2004, Foggia2014}.
+
+\section{Graph Matching as Linear Assignment Problem}
+\label{sec:GM_LAP}
+% \begin{itemize}
+%     \item introduce LAP as an integer linear program
+%     \item show that LAP can be relaxed to a linear program, which can be efficiently solved by the Simplex method.
+%     Emphasize the fact that all extreme points of the set of doubly stochastic matrices are permutation matrices ~\cite{Birkhoff1946, Q.J.Zhu2004}.
+%     If the domain is the set of square matrices, the output will be a permutation matrix. 
+%     Otherwise, the cost matrix can be made square by adding additional zero rows/columns.
+%     Therefore, the output of the Simplex method is always an assignment matrix.
+%     \item introduce the Hungarian algorithm, which can solve LAP to global optimality in polynomial time, and
+%     the output is also an assignment matrix.
+%     \item Note that the Simplex is not polynomial in general while the Hungarian has cubic running time.
+%     The famous Hungarian algorithm originally proposed in the mid-1950s by Kuhn ~\cite{Kuhn1955} solves the problem in $O(n^4)$ time.
+%     However, there are available cubic time implementations of the Hungarian method (see ~\cite{DellAmico2000}).
+%     Although there is a polynomial implementation of the Simplex method in case of LAP, the Hungarian method is still preferred due to
+%     its simplicity.
+% \end{itemize}
+In this section, we first give a short introduction to the Linear Assignment Problem and then, 
+we briefly discuss some efficient algorithms for solving the problem.
+Different the Quadratic or Higher-order Assignment Problems, the Linear Assignment Problem can always be solved to global optimality in polynomial time.
+\subsection{Linear Assignment Problem}
+\label{sec:LAP}
+Let us return to the pure assignment problem where one needs to assign $n$ tasks to $n$ machines in the best possible way
+\footnote{Note that a general assignment problem could have $m$ tasks and $n$ machines, but for simplicity, we first assume that $m = n$.}
+.
+Assume further that task $i$ can be done in $c_{ij}$ time with machine $j$, then the Linear Assignment Problem (LAP) concerns with how to 
+assign each task to one and only one machine so that all the tasks can be done in the least amount of time, that is to minimize
+\begin{equation}
+\begin{array}{rl}
+    \displaystyle\min_{\sigma \in \permut_n}	&  \displaystyle\sum_{i=1}^n c_{i \sigma(i)}.
+\end{array}
+\end{equation}
+where $\sigma$ is minimized over the set of permutations of $\set{1,\ldots,n}$.
+Representing an assignment by a permutation matrix $\bX = \sset{x_{ij}} \in \RR^{nn}$ as in the previous section,
+the LAP can be formulated as the following binary linear program
+\begin{equation}\label{eq:LAP}
+    \begin{array}{rll}
+	\min & \displaystyle \sum_{i,j=1}^n c_{ij} x_{ij} & \\
+	\textit{s.t.} & \displaystyle\sum_{i=1}^n x_{ij} = 1 & \forall j=1,\ldots,n, \\
+		    & \displaystyle\sum_{j=1}^n x_{ij} = 1 & \forall i=1,\ldots,n, \\
+		    & x_{ij} \in \set{0,1} 		   & \forall i,j = 1,\ldots,n. 
+    \end{array}
+\end{equation}
+% \begin{equation}\label{eq:LAP}
+% \begin{array}{rl}
+%       \displaystyle\min_{\bX \in \MC_n}	 &  \displaystyle \sum_{i=1}^n \sum_{j=1}^n c_{ij} x_{ij}
+% \end{array}
+% \end{equation}
+Relaxing the binary constraints to nonnegativity constraints, one gets a linear program 
+\begin{equation}\label{eq:LAP_LIN}
+    \begin{array}{rll}
+	\min & \displaystyle \sum_{i,j=1}^n c_{ij} x_{ij} & \\
+	\textit{s.t.} & \displaystyle\sum_{i=1}^n x_{ij} = 1 & \forall j=1,\ldots,n, \\
+		    & \displaystyle\sum_{j=1}^n x_{ij} = 1 & \forall i=1,\ldots,n, \\
+		    & x_{ij} \geq 0 		   	   & \forall i,j = 1,\ldots,n. 
+    \end{array}
+\end{equation}
+% \begin{equation}\label{eq:LAP_LIN}
+% \begin{array}{rl}
+%       \displaystyle\min_{\bX \in \DS}  &  \displaystyle \sum_{i=1}^n \sum_{j=1}^n c_{ij} x_{ij}
+% \end{array}
+% \end{equation}
+which can be efficiently solved by, for instance, the Simplex algorithm.
+
+There are a few points to note about these formulations in general cases.
+First, the weighting matrix $c$ can always be assumed to be nonnegative since one can otherwise subtract from each of its entries the minimum value.
+Second, the LAP can always be written as a linear minimization problem or a linear maximization problem.
+A simple way for doing this is to replace $c_{ij}$ by $(\max_{k,l} c_{kl} - c_{ij})$ for every $i,j=1,\ldots,n$.
+Third, one can assume that the problem is square in the sense that $m = n$ because
+one can always turn a non-square problem ($m \neq n$) into a square problem.
+For example, assume $m < n$, then one can add $(n-m)$ zero rows to the weight matrix so that it becomes a square matrix,
+and replace the constraint $\MC_{mn}$ by $\MC_n$.
+One can check that the global solution of the original problem can be extracted from the global solution of the new problem by taking the first
+$m$ rows of it.
+% The new problem can be shown to be equivalent to the original linear assignment problem.
+Fourth, it should be mentioned that due to Theorem \ref{theo:Birkhoff}, 
+any optimal solution of \eqref{eq:LAP_LIN} will be a permutation matrix, hence, 
+be an optimal solution of the combinatorial problem \eqref{eq:LAP} as well.
+The two formulations of LAP given in \eqref{eq:LAP} and \eqref{eq:LAP_LIN} are therefore equivalent to each other, 
+and one can use existing algorithms corresponding to one of these formulations to solve the problem.
+
+\subsection{Algorithms}
+First, it should be stressed that linear assignment problems can always be solved to global optimality in polynomial time.
+Simplex-based algorithms and the Hungarian method are among the most prominent solvers for the LAP.
+The simplex algorithms are not polynomial in general, but there are available polynomial implementations of them in case of the LAP.
+
+On the other hand, the famous Hungarian method was first proposed in the 1950s by Kuhn \cite{Kuhn1955} with a worst-case complexity $O(n^4)$.
+In \cite{Lawler1976}, Lawler reduced this complexity to $O(n^3)$ by using the weighted bipartite graph matching model.
+The algorithm is then turned into a successive shortest path problems, where the Dijkstra algorithm can be applied.
+Many practical implementations of the Hungarian method adopting this idea have been proposed in literature and for many years been the most 
+successful tools for solving LAP instances (see \cite{DellAmico2000} for a survey).
+
+In this thesis, we do not intend to detail any of these algorithms and implementations, 
+but we refer the reader to the appropriate literature for a complete and rigorous description.
+The Hungarian method will be used as an inner-solver for one of our proposed algorithms in Chapter \ref{chap:bcagm}.
+
+\section{Graph Matching as Quadratic Assignment Problem}
+\label{sec:GM_QAP}
+We start this section by giving a brief historical overview of the Quadratic Assignment Problem (QAP).
+In particular, formal problem descriptions and mathematical formulations of the problem will be provided.
+Then, we will formulate the graph matching as a quadratic assignment problem.
+Different from linear assignment problems, the quadratic versions are NP-hard, 
+thus we will review some relaxation techniques and approximate algorithms for solving them.
+
+As a general statement, we will use $\MC_n$ and $\MC_{mn}$ to denote the assignment constraint sets 
+for most of the formulations in this section.
+Thus, the readers are referred to Section \ref{sec:LAP} for corresponding definitions.
+
+\subsection{Quadratic Assignment Problem}
+\label{sec:QAP}
+% \begin{itemize}
+%     \item the original QAP formulation dates back to the work of Koopmans and Beckmann ~\cite{Koopmans1957}
+%     \item the first attempts to solve QAP linearized the quadratic term in the objective function, resulting a mixed binary linear program.
+%     The linearization is done by introducing new variables and new linear (and binary) constraints
+%     (see \cite{Lawler1963, Kaufman1978, Frieze1983} for such linearizations).
+%     Then the existing methods for mixed binary linear programming can be applied. 
+%     However, note that the MILP is NP-complete, thus NP-hard. 
+%     Also, the very large number of new variables and constraints add further difficulties in efficiently solving the resulting MILP. 
+%     \item therefore, we focus on a recently proposed formulation in literature.
+%     This approach minimize the adjacency disagreement between two graphs, leading to a more natural QAP formulation.
+%     In particular, the objective function can be generalized to involve any affinity matrix. 
+%     \item Explain the intuition of this affinity matrix
+%     \item By taking different relaxations, one ends up with different optmization techniques as detailed below.
+% \end{itemize}
+The quadratic assignment problem (QAP) was introduced by Koopmans and Beckmann \cite{Koopmans1957} in 1957 as a mathematical model for the 
+location of indivisible economical activities. 
+In particular, consider the problem of assigning $n$ facilities to $n$ locations with the cost being the flow between facilities multiplied by
+the distances between their locations, plus costs for placing the facilities at those locations. 
+The objective is to assign each facility to a location such that the total cost is minimized. 
+Given three $n\times n$ matrices
+$$
+\begin{array}{l}
+  \bF = \sset{f_{ij}} \textrm{, where } f_{ij} \textrm{ is the flow from facility } i \textrm{ to facility } j, \\
+  \bD = \sset{d_{kl}} \textrm{, where } d_{kl} \textrm{ is the distance from location } k \textrm{ to location } l, \\
+  \bB = \sset{b_{ik}} \textrm{, where } b_{ik} \textrm{ is the cost of placing facility i at location } k. \\
+\end{array}
+$$
+the Koopmans-Beckmann version of the QAP can be written as
+\begin{equation}\label{eq:QAP_Koopmans}
+\begin{array}{rl}
+    \displaystyle\min_{\sigma \in \permut_n}  &  \displaystyle\sum_{i=1}^n \sum_{j=1}^n f_{ij} d_{\sigma(i)\sigma(j)} + \sum_{i=1}^n b_{i\sigma(i)}.
+\end{array}
+\end{equation}
+Intuitively, each product term $f_{ij} d_{\sigma(i)\sigma(j)}$ is the transportation cost caused by allocating facility $i$ at location $\sigma(i)$
+and facility $j$ at location $\sigma(j)$, and $b_{i\sigma(i)}$ is the cost of placing facility $i$ at location $\sigma(i)$.
+Note that in this problem, $F$ and $D$ are symmetric nonnegative matrices with zeros in the diagonal.
+
+A more general formulation of the QAP was later introduced by Lawler \cite{Lawler1963} in 1963.
+In this version, Lawler considered a four-dimensional array $C = \sset{c_{ijkl}} \in \RR^{n^4}$ instead of two matrices $F$ and $D$ and obtained the problem as
+\begin{equation}\label{eq:QAP_Lawler}
+\begin{array}{rl}
+    \displaystyle\min_{\sigma \in \permut_n}  &  \sum_{i=1}^n \sum_{j=1}^n c_{ij\sigma(i)\sigma(j)}.
+\end{array}
+\end{equation}
+It is straightforward to see that the Koopmans-Beckmann problem can be obtained from the QAP formulation of Lawler by setting
+$c_{ijkl} = f_{ij} d_{kl}$ with $i \neq j$, $c_{iikk} = b_{ik}$ and $c_{ijkl} = 0$ otherwise.
+
+\subsubsection{Quadratic Integer Program Formulation}
+Using permutation matrix notation, the Lawer QAP \eqref{eq:QAP_Lawler} can be written as the following \textit{quadratic integer program}
+% \begin{equation}\label{eq:QAP_QIP}
+%     \begin{array}{rll}
+% 	\min & \displaystyle \sum_{i=1}^n \sum_{j=1}^n \sum_{k=1}^n \sum_{l=1}^n c_{ijkl} x_{ik} x_{jl}  & \\
+% 	\textit{s.t.} & \displaystyle\sum_{i=1}^n x_{ij} = 1 & \forall j=1,\ldots,n \\
+% 		    & \displaystyle\sum_{j=1}^n x_{ij} = 1 & \forall i=1,\ldots,n \\
+% 		    & x_{ij} \in \set{0,1} 		   & \forall i,j = 1,\ldots,n 
+%     \end{array}
+% \end{equation}
+\begin{equation}\label{eq:QAP_QIP}
+    \begin{array}{rl}
+	\displaystyle\min_{\bX \in \MC_n}   &   \displaystyle \sum_{i=1}^n \sum_{j=1}^n \sum_{k=1}^n \sum_{l=1}^n c_{ijkl} x_{ik} x_{jl}.  \\
+    \end{array}
+\end{equation}
+where $\MC_n$ is the set of $n\times n$ assignment matrices defined in Section \ref{sec:assignments}.
+Similarly, the Koopmans-Beckmann version of the QAP can be rewritten in a more compact form.
+Given some $n\times n$ matrix $\bA$, a permutation vector $\sigma \in \permut_n$ and the associated permutation matrix $\bX \in \MC_n$, 
+then $\bX\bA$ and $\bA\bX^T$ permute the rows and columns of $\bA$ respectively, according to the permutation $\sigma$ and thus
+$$
+    \bX\bA\bX^T = \left[ a_{\sigma(i)\sigma(j)} \right].
+$$
+Therefore, the Koopmans-Beckmann QAP can be formulated as
+\begin{equation}\label{eq:QAP_Koopmans_compact}
+\begin{array}{rl}
+    \displaystyle\min_{\bX \in \MC_n}  &  \inner{\bF, \bX \bD \bX^T} + \inner{\bB, \bX}
+\end{array}
+\end{equation} 
+% where $\MC_n$ is the set of $n\times n$ assignment matrices.
+
+\subsubsection{Trace Formulation}
+We first recall some well known properties that $\trace(A^TB) = \inner{A, B}$, $\trace(ABC)=\trace(CAB)=\trace(BCA)$ and $\trace(A)=\trace(A^T)$.
+Then the problem in \eqref{eq:QAP_Koopmans_compact} can be rewritten using the trace of a matrix as follows
+\begin{equation}\label{eq:QAP_Koopmans_trace}
+\begin{array}{rl}
+    \displaystyle\min_{\bX \in \MC_n}  &  \trace\cset{(\bF^T \bX \bD + \bB) \bX^T}.
+\end{array}
+\end{equation}
+
+\subsubsection{Kronecker Product and $\vec$ Formulation}
+Let $\bA$ be a real $m\times n$ matrix and $\bB$ be a real $p\times q$ matrix, 
+then the \textit{Kronecker product} between $\bA$ and $\bB$ is defined as $\bA \otimes \bB \in \RR^{mp\times nq}$
+$$
+    \bA \otimes \bB \bydef \cset{
+	\begin{array}{cccc}
+	    a_{11}\bB & a_{12}\bB & \cdots & a_{1n}\bB \\
+	    \vdots & \vdots & \ddots & \vdots \\
+	    a_{m1}\bB & a_{n2}\bB & \cdots & a_{mn}\bB \\
+	\end{array}
+    }.
+$$
+If we let $\vec(\bX) \in \RR^{n^2}$ be the vector formed by concatenating all the columns of a matrix $\bX \in \RR^{n\times n}$, 
+then the QAP can be formulated as
+\begin{equation}\label{QAP_Koopmans_vec}
+\begin{array}{rl}
+    \displaystyle\min_{\bX \in \MC_n}  &  \vec(\bX)^T (\bD \otimes \bF) \vec(\bX) + \vec(\bB)^T \vec(\bX).
+\end{array}
+\end{equation}
+
+Although extensive research has been done for more than five decades, the QAP, in contrast with its linear counterpart (LAP), remains one of
+the hardest optimization problems. 
+In fact, it was proved by Sahni and Gonzalez \cite{Sahni1976} in 1976 that the QAP is \textbf{NP-complete}. 
+Thus, a polynomial time algorithm for solving the problem is unlikely to exist. 
+Sahni and Gonzalez \cite{Sahni1976} further proved that any routine that finds even an $\eps$-approximate solution is also NP-complete, 
+making the QAP among ``the hardest of the hard'' of all combinatorial optimization problems.
+We refer to the following references for more details on the QAP: 
+\c{C}ela (1998) \cite{Cela1998}, Burkard \etal (1998) \cite{Burkard1998}, Burkard \etal (2009) \cite{Burkard2012}.
+
+\subsection{Graph Matching Formulations}
+\label{sec:GM_QAP_formulations}
+There are several ways to formulate a graph matching problem, for instance, those based on edit distance \cite{Gao2009},
+maximum common subgraph \cite{Pelillo1998, HIDOVIC2004} and adjacency disagreement \cite{Zaslavskiy2009}.
+However, it is worthwhile noting that the formulation of graph matching based on a norm of the adjacency disagreement
+has become extremely popular in computer vision, shape analysis \cite{Bronstein2006} and neuroscience \cite{Vogelstein2011}.  
+Thus, in this thesis, we focus on the adjacency disagreement formulation.
+
+In this formulation, graphs are used to represent geometric structures and the task is to minimize the matching distortion.
+Formally, let us assume $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ be two undirected graphs with adjacency matrices $\bA$ and $\bB$ respectively.
+We further assume that two graphs have the same number of vertices, that is, $|V_1| = |V_2| = n$.
+Then, the graph matching problem can be formulated as
+% \begin{equation}\label{eq:GM_QAP}
+%     \begin{array}{rll}
+% 	\min & \frob{\bA - \bX\bB\bX^T}^2 & \\
+% 	\textit{s.t.} & \displaystyle\sum_{i=1}^n x_{ij} \leq 1 	& \forall j=1,\ldots,n \\
+% 		    & \displaystyle\sum_{j=1}^n x_{ij} = 1 	& \forall i=1,\ldots,n \\
+% 		    & x_{ij} \in \set{0,1} 		   	& \forall i,n = 1,\ldots,n
+%     \end{array}
+% \end{equation}
+\begin{equation}\label{eq:GM_QAP}
+    \begin{array}{rl}
+	\displaystyle\min_{\bX \in \MC_n}  &  \frob{\bA - \bX\bB\bX^T}^2 . \\
+    \end{array}
+\end{equation}
+To better understand the objective function, one observes that $\bX\bB$ and $\bB\bX^T$ permute the rows and columns of $\bB$ respectively, 
+according to the permutation $\sigma$ associated to $\bX$ and thus
+$$
+    \bX\bB\bX^T = \left[ b_{\sigma(i)\sigma(j)} \right] .
+$$
+In other words, $\bX\bB\bX^T$ represents the adjacency matrix of the corresponding vertices in $V_2$.
+Hence, the objective function can be interpreted as the matching distortion caused by the assignment $\bX$ on adjacency matrices.
+
+Using properties of the $\trace$ and the \textit{Frobenius} norm, one can rewrite the objective function in \eqref{eq:GM_QAP} as a convex function.
+Given an $n\times n$ matrix $\bA$ and a permutation matrix $\bX \in \MC_n$, one has
+$\frob{\bA}^2 = \trace(\bA^T\bA) = \trace(\bA^T\bA\bX\bX^T) = \trace(\bX^T\bA^T\bA\bX) = \frob{\bA\bX}^2$.
+It means the \textit{Frobenius} norm of a matrix is invariant under a multiplication with $\bX$.
+Thus, the graph matching problem in \eqref{eq:GM_QAP} can be rewritten as
+\begin{equation}\label{eq:GM_QAP_QCV}
+\begin{array}{rl}
+    \displaystyle\min_{\bX \in \MC_n}  &  \frob{\bA\bX - \bX\bB}^2 
+\end{array}
+\end{equation}
+where the objective function is now a convex function as it is a composition of a norm and a linear mapping.
+However, the problem is still not a convex problem as the constraint $\MC_n$ is still a discrete set.
+
+By expanding the norm
+\begin{eqnarray*}
+    \frob{\bA\bX - \bX\bB}^2  &=& \frob{\bA\bX}^2 + \frob{\bX\bB}^2 - 2\trace(\bX^T\bA^T\bX\bB) \\
+    &=& \frob{\bA}^2 + \frob{\bB}^2 - 2\trace(\bX^T\bA^T\bX\bB) 
+\end{eqnarray*}
+and noticing that the Frobenius norms of adjacency matrices are constant, the graph matching problem can be written as
+\begin{equation}\label{eq:GM_QAP_INF}
+\begin{array}{rl}
+    \displaystyle\max_{\bX \in \MC_n}  &  \trace(\bX^T\bA^T\bX\bB) .
+\end{array}
+\end{equation}
+This formulation is clearly a special case of the Koopmans-Beckmann QAP given in \eqref{eq:QAP_Koopmans_trace} 
+where the linear term is missing.
+In fact, all the formulations above use just the structural compatibilities reflected by adjacency matrices.
+If now graph vertices also have labels and we would like to search for such correspondences that match not only the structures of the graphs
+but also vertices with similar labels, then both linear and quadratic terms will appear in the objective function.
+Specifically, let $\bD = [d_{ij}]$ with $d_{ij}$ be the similarity between
+vertex $i$ and vertex $j$ in two corresponding graphs, then one obtains the following problem
+$$
+    \max_{\bX \in \MC_n} \trace\cset{(\bA^T\bX\bB + \bD) \bX^T} .
+$$
+where the quadratic term $\trace(\bA^T\bX\bB\bX^T)$ is the same as in \eqref{eq:GM_QAP_INF} 
+and the linear term $\trace(\bD \bX^T) = \inner{\bD, \bX} = \sum_{i=1}^n\sum_{j=1}^n d_{ij} x_{ij}$ is added to represent pairwise similarities 
+between two vertices.
+
+Having established the connection between graph matching problem and the Koopmans-Beckmann QAP, 
+it is natural to ask if there also exists a Lawer version for graph matching as for the QAP.
+First, one expands the objective function in \eqref{eq:GM_QAP_INF} as
+\begin{eqnarray*}
+    \trace(\bX^T\bA^T\bX\bB) &=& \inner{\bX, \bA^T\bX\bB} \\
+    &=& \sum_{i=1}^n \sum_{j=1}^n \sum_{k=1}^n \sum_{l=1}^n a_{ij} b_{kl} x_{ik} x_{jl} . \\
+\end{eqnarray*}
+Replacing $a_{ij} b_{kl}$ by a more general function $c_{ijkl}$ gives us the Lawler version for graph matching as given in \eqref{eq:QAP_QIP}.
+The Lawler version allows us to define $\bC$ to be a general 4th order affinity tensor.
+In graph matching, $c_{ijkl}$ often measures the similarities between the edges $(i,j)$ and $(k,l)$ in two corresponding graphs.
+% Note that $\bC$ should be partially symmetric as well, that is, $c_{ijkl}=c_{jilk}$.
+% As long as these requirements are met, the Lawler's formulation in \eqref{eq:QAP_QIP} at least always makes sense for graph matching.
+% Using $\bx = \vec(\bX) \in \RR^{nn}$, one obtains the Lawler version as
+% \begin{equation}\label{eq:GM_QAP_Lawler}
+%     \max_{\bX \in \MC_n} \bx^T \bC \bx
+% \end{equation}
+
+A variety of algorithms have been proposed for solving quadratic graph matching problems.
+They can be categorized into heuristic algorithms, spectral methods and continuous optimization.
+Heuristic algorithms basically use tree search techniques to search for the optimal correspondence and at the same time, use heuristics
+to avoid enumeration of all the feasible permutations.
+They have in common that they might perform very well on small/medium-sized problems but almost come with no theoretical guarantee
+when scaling to large graphs. 
+
+The spectral methods meanwhile are based on the fact that the eigenvalues and eigenvectors of an adjacency matrix of a graph are invariant under
+permutation of vertices. Thus, if two graphs are isomorphic, their adjacency matrices will have the same eigenvalues and eigenvectors. 
+Unfortunately, the converse is not true, that is, neither the equality of eigenvalues nor the equality of eigenvectors 
+does imply the isomorphism between two graphs.
+Furthermore, spectral methods are purely structural as they cannot exploit node or edge attributes in graphs, which often convey very much 
+relevant information for matching.
+
+The literature devoted to heuristic and spectral methods counts hundreds over the past five decades, 
+but due to their limitations listed above, we will not review them within the scope of this thesis.
+Instead, we refer the reader to \cite{Conte2004, Foggia2014} for a comprehensive review, and focus on the continuous optimization techniques.
+
+In the next section, we will present the most popular relaxations for a quadratic matching problem.
+The corresponding algorithms will be reviewed in the following section.
+
+\subsection{Continuous Relaxations}
+\label{sec:GM_QAP_relaxations}
+% \begin{itemize}
+%     \item This section presents two major relaxations. They are all based on the adjacency disagreement formulation.
+%     \item convex relaxation
+%     \item indefinite relaxation
+%     \item emphasize that the indefinite relaxation almost always discover true permutation matrix 
+%     while convex relaxation often results in unsatisfying result. 
+%     This has recently been proved by a probabilistic approach ~\cite{Lyzinski2014}
+% \end{itemize}
+\subsubsection{Convex Relaxation}
+Relaxing the constraint set in \eqref{eq:GM_QAP_QCV} to the set of doubly stochastic matrices gives us a quadratic convex program 
+\begin{equation}\label{eq:GM_QAP_QCV_cont}
+    \bX_0 = \argmin_{\bX \in \DS} \frob{\bA\bX - \bX\bB}^2 
+\end{equation}
+which can be solved to global optimality in polynomial time.
+However, if this formulation is used for graph matching, the continuous solution $\bX_0$ must be projected back to the permutation matrix, 
+which is done by solving the following LAP
+$$
+    \bX_{out} = \argmax_{\bX \in \MC_n} \inner{\bX, \bX_0}.
+$$
+Although this can be efficiently solved by the Hungarian method, the problem of this approach is that if $\bX_0$ is far away from 
+being a permutation matrix, then the quality of $\bX_{out}$ may be very poor. 
+In fact, Vince \etal ~\cite{Lyzinski2014} has recently proved a theoretical result based on probability theory 
+that a convex relaxed program which is often tractable (i.e. can find global solution in realistic time)
+``almost always'' yields the wrong matching, meanwhile, an indefinite relaxed program (as presented below)
+which is intractable in practice ``almost always'' yields the correct matching.
+
+\subsubsection{Indefinite Relaxation}
+Relaxing the constraint in \eqref{eq:GM_QAP_INF} to a compact continuous domain $D$ leads to an indefinite quadratic program
+\begin{equation}\label{eq:GM_QAP_INF_cont}
+\begin{array}{rl}
+    \displaystyle\max_{\bX \in D}  &  \trace(\bX^T\bA^T\bX\bB).
+\end{array}
+\end{equation}
+Note that $D$ can be set to different continuous sets in different methods.
+A popular choice for $D$ is the set of doubly stochastic matrices.
+Unlike the convex relaxation, the objective function in this relaxation is neither convex nor concave 
+(in fact, the hessian has $\trace$ zero and therefore indefinite),
+and thus, the whole program is often intractable in practice.
+
+Using the notation $\bx = \vec(\bX)$ and $M = \Setbar{\bx \in \RR^{nn}}{\bX \in D}$ 
+and generalizing the above problem to the Lawler version, one obtains
+\begin{equation}\label{eq:GM_QAP_Lawler_cont}
+\begin{array}{rl}
+    \displaystyle\max_{\bx \in M}  &  \bx^T\bC\bx
+\end{array}
+\end{equation}
+where $\bC$ is a nonnegative symmetric matrix in $\RR^{n^2 \times n^2}$, which relates to the four-dimensional affinity tensor in \eqref{eq:QAP_QIP} 
+by a square matrix folding.
+In graph matching, one often defines $c_{(i,j)(k,l)} = d(a_{ij}, b_{kl})$, that is, $c_{(i,j)(k,l)}$ is a function of the attributes of two edges, namely
+$(i,j)$ in the first graph and $(k,l)$ in the second graph.
+Thus, the whole problem in \eqref{eq:GM_QAP_Lawler_cont} can be seen as maximization of the similarities between the edges of two graphs.
+Again, the objective function is not a convex function, thus, one obtains an indefinite program.
+
+The indefinite relaxations have been extensively used in literature
+\cite{Gold1996, Gold2002, Leordeanu2005, Cour, Leordeanu2009a, DelaTorre2012, Cho2012, Kang2013, Cho2014} 
+and have become one of the most successful relaxations for graph matching.
+The success of these relaxations is known just by their good practical performance 
+until Vince \etal ~\cite{Lyzinski2014} recently proved in a probabilistic way that, under mild conditions, 
+the optimal solution to these relaxed problems almost always coincide with the optimal solution of the original problem.
+
+\subsubsection{Spectral Relaxation}
+The spectral relaxation is done by relaxing the assignment constraint in \eqref{eq:GM_QAP_Lawler_cont} to the $l_2$ unit-norm constraint
+\begin{equation}\label{eq:GM_QAP_SM}
+\begin{array}{rl}
+    \displaystyle\max_{\norm{\bx}_2 = 1}  &  \bx^T \bC \bx .
+\end{array}
+\end{equation}
+where $\bC$ is a nonnegative symmetric matrix in $\RR^{n^2 \times n^2}$.
+Similar to the convex relaxation, the spectral relaxation program can also be globally solved by a power method.
+
+\subsection{Algorithms}
+\label{sec:GM_QAP_algorithms}
+% Cite the following methods: 
+%     linear approach to WGM \cite{Almohamad1993}, 
+%     softmax to softassign \cite{Gold1996}, GA \cite{Gold2002}, 
+%     SM \cite{Leordeanu2005}, SMAC \cite{Cour}, 
+%     path following algorithm \cite{Zaslavskiy2009}, IPFP \cite{Leordeanu2009a}, 
+%     unsupervised learning for GM \cite{Leordeanu2009}, learning GM \cite{Caetano2009},
+%     RRWM \cite{Cho2010}, SCGA \cite{Tian2012}, progressive GM \cite{Cho2012}, 
+%     FGM \cite{DelaTorre2012}, DFM \cite{Zhou2013}, FASM \cite{Kang2013}, MPM \cite{Cho2014}, 
+The aim of this section is to give an overview of quadratic graph matching algorithms.
+In particular, we focus on the state-of-the-art algorithms and recently proposed algorithms.
+We will show for each method which formulation and relaxation among those presented above that it uses to solve the problem.
+The advantages and disadvantages of each method will be discussed as well.
+
+\subsubsection{Linear Programming}
+The linear programming method proposed by Almohamad and Duffuaa \cite{Almohamad1993} in 1993 is among the first continuous 
+relaxation approaches for the quadratic graph matching problem.
+This approach uses the convex formulation in \eqref{eq:GM_QAP_QCV_cont} but replaces the Frobenius norm with the $l_1$ norm, 
+resulting in a linear program
+\begin{equation}\label{eq:Linear_WGM}
+\begin{array}{rl}
+    \displaystyle\min_{\bX \in \DS}  &   \norm{\bA\bX - \bX\bB}_1 .
+\end{array}
+\end{equation}
+The Sylvester equation $\bC = \bA\bX - \bX\bB$ can be rewritten in terms of $\vec$ operator as
+$$
+    \vec(\bC) = (\Id_n \otimes \bA - \bB^T \otimes \Id_n) \vec(\bX) .
+$$
+Using notation $\bx = \vec(\bX)$, the above problem becomes
+$$	
+    \min_{\bX \in \DS} \norm{(\Id_n \otimes \bA - \bB^T \otimes \Id_n) \bx}_1
+$$ which is clearly a linear program.
+Note that the matrix $(\Id_n \otimes \bA - \bB^T \otimes \Id_n)$ is not necessarily nonnegative even if $\bA$ and $\bB$ are nonnegative.
+Almohamad and Duffuaa \cite{Almohamad1993} then proposed a Simplex-based algorithm for solving this problem in $O(n^6L)$.
+While this approach seems to be simple and polynomial-time, its computational complexity is still very high, making it unscalable
+to large problems.
+
+\subsubsection{Graduated Assignment}
+The so-called Graduated Assignment Graph Matching (GAGM) algorithm was independently developed by Gold and Rangarajan \cite{Gold2002}
+and Ishii and Sato \cite{Ishii2002}. 
+Basically, they use the indefinite relaxation in \eqref{eq:GM_QAP_INF_cont} with the constraint set $D$ being the set of doubly stochastic matrices.
+The main idea of GAGM is to use simulated annealing to push the solution toward integer values.
+In particular, the algorithm starts with some annealing parameter $\beta > 0$ and subsequently adopts the softassign scheme \cite{Kosowsky1994} 
+to maximize the first order Taylor expansion of the objective around the previous approximate solution.
+Next, the annealing parameter is increased and the whole process is repeated until convergence.
+In the initial stages, when $\beta$ is small, the difference between the current iterate and the previous iterate will be small,
+thus, the Taylor approximation is supposed to be good. 
+As $\beta$ becomes large, the softassign will push the iterates torwards integer values.
+
+Rangarajan \etal ~\cite{Rangarajan1999} proved that GAGM locally converges under mild assumption, including the convexity assumption of 
+the objective function.
+Although this assumption can be resolved by adding an amplification term to the objective, 
+it is not clear how much this will affect the performance of GAGM in practice 
+as the amplification term can potentially make the algorithm get trapped at local optima.
+Another drawback of GAGM is that many parameters need to be tuned to obtain good performance.
+For instance, an annealing schedule must be setup in advance, including three parameters: 
+an initial temperature $\beta_0$, the annealing rate $\beta_r$ and a final temperature $\beta_f$ or some other stopping criterion \cite{Gold2002}.
+All of these parameters vary for different problem instances \cite{Ishii2002}.
+
+\subsubsection{Spectral Matching Approaches}
+The Spectral Matching (SM) method proposed by \cite{Leordeanu2005} adopts the spectral relaxation in \eqref{eq:GM_QAP_SM}.
+Note that this line of approaches is different from those spectral methods using eigendecomposition to represent graph vertices.
+In fact, the graph matching problem is formulated as a Rayleigh quotient maximization problem: $\max \frac{\bx^T\bC\bx}{\bx^T\bx}$, 
+which can be solved efficiently by a power method. 
+The optimal solution is known as the leading eigenvector of $\bC$, which is always nonnegative if $\bC$ is nonnegative 
+due to Perron-Frobenius's theorem.
+Although the leading eigenvector can always be found by power method,
+the quality of matching is often very poor as the one-to-one mapping constraints are totally dropped.
+
+To tackle this problem, Cour \etal ~\cite{Cour} proposed the Spectral Matching with Affine Constraint (SMAC) method, which is closely related to SM
+except that it can enforce affine constraints to the solution 
+(note that the set $\Setbar{\bx = \vec(\bX)}{\bX \in \DS}$ can always be represented by an affine constraint $\bD\bx = \bd$).
+In particular, SMAC solves the following program
+% \begin{equation}\label{eq:SMAC}
+% \begin{array}{rl}
+%     \displaystyle\max \displaystyle \frac{\bx^T\bC\bx}{\bx^T\bx} \textit{ s.t. } \bD\bx = \bd
+% \end{array}
+% \end{equation}
+\begin{equation}\label{eq:SMAC}
+\begin{array}{rl}
+    \displaystyle\max_{\bD\bx=\bd}  &  \displaystyle \frac{\bx^T\bC\bx}{\bx^T\bx} 
+\end{array}
+\end{equation}
+by reformulating it as a maximization of a Rayleigh quotient under affine constraint.
+In addition, Cour \etal ~\cite{Cour} suggest a preprocessing of affinity matrix by normalizing it into a doubly stochastic matrix.
+
+% \subsubsection{Path Following Approaches}
+% \cite{Zaslavskiy2009}, FGM \cite{DelaTorre2012}, DFM \cite{Zhou2013}
+
+\subsubsection{Integer Projected Fixed Point}
+While none of the aforementioned approaches are concerned with the discrete constraints during optimization, 
+Leordeanu \etal ~\cite{Leordeanu2009a} proposed an Integer Projected Fixed Point (IPFP) algorithm that takes this into account.
+Basically, IPFP uses the indefinite relaxation in \eqref{eq:GM_QAP_Lawler_cont} with the constraint $M = \Setbar{\bx \in \RR^{n^2}}{\bX \in \DS}$.
+The idea is to maximize the first order Taylor approximation of the objective function around the current iterate.
+This gives rise to solving a LAP at each step, which is done by the Hungarian method \cite{Kuhn1955}.
+The discrete solution to the LAP serves as a potential direction for largest increase in the objective function.
+The original objective function is then maximized along this direction using limited exact line search.
+In IPFP, although the solution at each iteration is continuous, 
+it keeps track of the best discrete value among all the search directions found by line search.
+This value is returned as the final solution instead of discretizing the last continuous solution as taken by other methods.
+
+\subsubsection{Reweighted Random Walk Matching}
+In 2010, Cho \etal ~\cite{Cho2010} introduced a random walk view on graph matching and proposed the Reweighted Random Walk Matching (RRWM) algorithm.
+RRWM adopts the same formulation with IPFP \cite{Leordeanu2009a}, that is to optimize a quadratic function over the two-way constraint
+$$
+    \displaystyle\max_{\bX \in \DS} \bx^T\bC\bx .
+$$
+In principle, each step of RRWM can be seen as the following fixed point update
+$$
+    \bx^{k+1}  = \alpha \bP \bx^k + (1-\alpha) f(\bC\bx^k)
+$$ where $\bP$ is a transition matrix calculated by normalizing the affinity matrix $\bC$ properly
+and $f$ denotes some reweighting function incorporating one-to-one mapping constraints.
+In RRWM, $f$ is computed using the softassign technique \cite{Kosowsky1994} which consists of a reweighting step and 
+a bi-stochastic normalization step.
+As $f$ does not have a closed formula, it is not a fixed function in general.
+From an algorithmic point of view, RRWM has some resemblance to SM \cite{Leordeanu2005}, GAGM \cite{Gold2002, Ishii2002} and IPFP \cite{Leordeanu2009a}.
+Without the reweighting jump (i.e. $\alpha = 1$), RRWM can be considered as the power iteration used in \cite{Leordeanu2005}.
+Similar to GAGM, the softassign has been used in RRWM to better reflect one-to-one constraints in the continuous domain.
+Finally, the value of the reweighting function $f$ can also be seen as a potential search direction for the algorithm.
+The next iterate $\bx^{k+1}$ is thus an $\alpha$-interpolation between the current iterate $\bx^k$ and the search direction, 
+with $\alpha$ being similar to the step size used in IPFP.
+However, different from IPFP which uses line search to find the optimal step size, $\alpha$ is fixed in RRWM.
+
+Regarding the performance, RRWM outperformed GAGM, SM, SMAC and IPFP in almost all the experiments reported in \cite{Cho2010}.
+However, as we will see in our experiments in Chapter \ref{chap:experiments}, the algorithm is outperformed by other methods 
+in the presence of large outliers.
+Besides, although RRWM is claimed with fast convergence in practice, the analysis of its convergence is still unknown in theory.
+In fact, the fixed point update of RRWM above can be seen as a dynamic Markov chain whose jump distribution is 
+dynamically varying and dependent on the current distribution of $\bx$.
+This makes the convergence analysis of RRWM much more challenging than that of conventional jumps in random walks \cite{Haveliwala2002}.
+
+\subsubsection{Max Pooling Matching}
+Recently, Cho \etal ~\cite{Cho2014} proposed a simple yet effective algorithm to deal with large outliers, namely Max Pooling Matching (MPM).
+MPM is mostly similar to SM \cite{Leordeanu2005}, which maximizes the Rayleigh quotient $\max \frac{\bx^T\bC\bx}{\bx^T\bx}$.
+However, unlike SM which directly uses power method to solve the problem, MPM tweaks the iteration of the power method such that 
+it becomes robust to outliers.
+
+Specifically, one considers one iteration of the power method
+$$
+    \bx^{k+1} = \displaystyle\frac{\bC\bx^k}{\norm{\bC\bx^k}_2} .
+$$
+Recall that given an assignment matrix $\bX \in \RR^{n\times n}$ and $\bx = \vec(\bX) \in \RR^{n^2}$, 
+then it holds $\bx_i = \bX_{i_1 i_2}$ with $i = (i_2-1)n + i_1$ for all $i = 1,\ldots,n^2$.
+In the context of graph matching, each element $\bx_i$ represents the correspondence between vertex $i_1$ in the first graph 
+and vertex $i_2$ in the second graph.
+Similarly, $\bx_j$ represents the correspondence between the vertices $j_1$ and $j_2$ in the two corresponding graphs.
+Hereafter, we let $i=(i_1,i_2)$ and $j = (j_1,j_2)$ and use these notations interchangeably.
+For every $i = 1,\ldots,n^2$, it holds
+\begin{eqnarray*}
+    (\bC\bx)_{i} = \sum_{j=1}^{n^2} \bC_{ij} \bx_j = \bC_{ii} \bx_i + \sum_{\substack{j=1\\j\neq i}}^{n^2} \bC_{ij} \bx_j 
+    = \bC_{ii} \bx_i + \sum_{j_1=1}^n \sum_{\substack{j_2=1\\ j_1 j_2 \neq i}}^n \bC_{i(j_1 j_2)} \bX_{j_1 j_2} .
+\end{eqnarray*}
+Replacing $i$ with $(i_1 i_2)$, one obtains
+\begin{eqnarray*}
+    (\bC\bx)_{(i_1 i_2)} = \bC_{(i_1 i_2)(i_1 i_2)} \bx_{(i_1 i_2)} + 
+    \sum_{j_1=1}^n \sum_{\substack{j_2=1\\ j_1 j_2 \neq i_1 i_2}}^n \bC_{(i_1 i_2)(j_1 j_2)} \bX_{j_1 j_2} .
+\end{eqnarray*}
+As the standard power method using this formula to calculate $\bx^{k+1}$, we have $\bx^{k+1}_{(i_1 i_2)} \propto (\bC\bx^k)_{(i_1 i_2)}$, 
+and thus,
+\begin{eqnarray*}
+    \bx^{k+1}_{(i_1 i_2)} \propto \bC_{(i_1 i_2)(i_1 i_2)} \bx^k_{(i_1 i_2)} + 
+    \sum_{j_1=1}^n \sum_{\substack{j_2=1\\ j_1 j_2 \neq i_1 i_2}}^n \bC_{(i_1 i_2)(j_1 j_2)} \bX^k_{j_1 j_2} . 
+\end{eqnarray*}
+Each correspondence of the new iterate can be seen as a weighted sum of all other correspondences in the current iterate.
+This sum of product terms is known as the \textit{sum-pooling}.
+The fact is that for each vertex $j_1$ in the first sum, there often exists only one vertex $j_2$ in the second sum that matches it well
+in the context of graph matching.
+But the current formula sums over almost all the correspondences $(j_1 j_2)$, making $\bx^{k+1}_{(i_1 i_2)}$ contain a lot of noise.
+
+MPM tackles this problem by replacing the \textit{sum-pooling} with a \textit{max-pooling} defined as
+$$
+    (\bC \ast \bx)_{(i_1 i_2)} \bydef \bC_{(i_1 i_2)(i_1 i_2)} \bx^k_{(i_1 i_2)} + 
+    \sum_{j_1=1}^n \max_{\substack{1\leq j_2\leq n\\ j_1 j_2 \neq i_1 i_2}} \bC_{(i_1 i_2)(j_1 j_2)} \bX^k_{j_1 j_2} 
+$$
+so that for each vertex $j_1$ in the first graph, only one vertex $j_2$ that matches $j_1$ the most is taken into account.
+In this way, MPM can suppress the noisy terms from outliers by ignoring most of them. 
+This is somewhat similar to the median filter in signal/image processing, which removes noise by taking the media value of 
+neighboring signals/pixels rather than the average value. 
+The new power iteration becomes
+$$
+    \bx^{k+1} = \displaystyle\frac{\bC \ast \bx^k}{\norm{\bC \ast \bx^k}_2} .
+$$
+
+While MPM has been shown to perform well in practical situations, especially in large outlier settings,
+the algorithm does not come with any theoretical guarantee.
+
+\subsubsection{Other Approaches}
+Other approaches for solving a quadratic graph matching problem include:
+Unsupervised Learning for Graph Matching \cite{Leordeanu2009}, Learning Graph Matching \cite{Caetano2009}, 
+Soft Constraint Graduated Assignment \cite{Tian2012}, Progressive Graph Matching \cite{Cho2012},
+Factorized Graph Matching \cite{DelaTorre2012}, Deformable Graph Matching \cite{Zhou2013},
+Fast Approximate Graph Matching \cite{Kang2013}.
+To review all of these algorithms is difficult and beyond the scope of this thesis,
+thus, we refer the readers to the appropriate literature.
+
+\section{Hypergraph Matching as Higher Order Assignment Problem}
+\label{sec:GM_HAP}
+This section is devoted to higher order assignment problems (HAPs).
+In particular, a brief historical review of the HAP will be given in Section \ref{sec:HAP}.
+In Section \ref{sec:GM_HAP_formulations}, we will formulate the hypergraph matching problem as a higher-order assignment problem and
+show its relation to some popular problems in multilinear algebra.
+Existing hypergraph graph matching algorithms will be discussed in Section \ref{sec:GM_HAP_algorithms}. 
+
+As a general statement, we will use $\MC_n$ and $\MC_{mn}$ as defined in Section \ref{sec:LAP} to denote the constraint sets
+for most of the formulations through out this section.
+
+\subsection{Higher Order Assignment Problem}
+\label{sec:HAP}
+% \begin{itemize}
+%     \item this dates back to the higher order formulation of Lawler ~\cite{Lawler1963}, where cubic, quartic and N-ardic problems were proposed.
+%     \item it is natural to formulate the higher order problem as a graph disagreement minimization problem
+%     \item explain the intuition of the affinity tensor
+% \end{itemize}
+In \cite{Lawler1963}, Lawler extended the quadratic assignment probem to cubic, quartic and even $n$-adic assignment problem.
+For instance, in the same fashion with the QAP, Lawler defined a cubic assignment problem by considering 
+a sixth-dimensional matrix $\bC = \sset{c_{ijpqrs}} (i,j,p,q,r,s=1\ldots,n)$. Then, the HAP is defined as
+\begin{equation}\label{eq:HAP_Lawler}
+    \begin{array}{rll}
+	\min & \displaystyle \sum_{i=1}^n \sum_{j=1}^n \sum_{p=1}^n \sum_{q=1}^n \sum_{r=1}^n \sum_{s=1}^n c_{ijpqrs} x_{ij} x_{pq} x_{rs} & \\
+	\textit{s.t.} & \displaystyle\sum_{i=1}^n x_{ij} = 1 & \forall j=1,\ldots,n, \\
+		    & \displaystyle\sum_{j=1}^n x_{ij} = 1 & \forall i=1,\ldots,n, \\
+		    & x_{ij} \in \set{0,1} 		   & \forall i,j = 1,\ldots,n. 
+    \end{array}
+\end{equation}
+We refer to \eqref{eq:HAP_Lawler} as the Lawler version of the higher order assignment problem, or the Lawler HAP for short.
+% Similar to the QAP, all higher order assignment problems are known as NP-hard because of the combinatorial nature of the constraint.
+
+\subsection{Hypergraph Matching Formulations}
+\label{sec:GM_HAP_formulations}
+Recall from Section \ref{sec:GM_QAP} that a quadratic graph matching problem can be formulated as the minimization of two weighted adjacency matrices
+or the maximization of similarities between the edges of two graphs.
+In both formulations, only a pair of edges is taken into account for finding correspondences.
+
+Compared to graphs, hypergraphs allow modeling relations which are not only pairwise but also involve groups of vertices.
+% The hypgergraph matching problem can be formulated in the same way as graph matching problems.
+In particular, consider two $m$-uniform hypergraphs $H_1=(V_1, E_1)$ and $H_2=(V_2, E_2)$, 
+that is each hyperedge in $E_1$ and $E_2$ contain $m$ vertices.
+Let $\AC$ and $\BC$ be two $m$-order tensors in $n$-dimensional space, that is $\AC, \BC \in \RR^{n^m}$, 
+representing the structure of $H_1$ and $H_2$ respectively.
+Recall from the graph matching formulation in Section \ref{sec:GM_QAP_formulations} that if $\bB$ is the adjacency matrix of 
+a graph $G$, then $\bX\bB\bX^T$ represents the adjacency matrix of $G$ after permuting the vertices according to $\bX$.
+With the tensor notations introduced in Chapter \ref{chap:background}, one can check that $\bX\bB\bX^T = \bB \otimes_1 \bX \otimes_2 \bX$.
+Extending \eqref{eq:GM_QAP} to higher order cases using tensor notations gives us the hypergraph matching formulation
+with respect to the assignment constraints
+\begin{equation}\label{eq:GM_HAP}
+	\displaystyle\min_{\bX \in \MC_n} \frob{\AC - \BC \otimes_1 \bX \cdots \otimes_m \bX}^2 . \\
+\end{equation}
+The intuition behind this formula is similar to what described in Section \ref{sec:GM_QAP_formulations}.
+That is, given $\bX \in \MC_n$, $\BC \otimes_1 \bX \cdots \otimes_m \bX$ represents the structure of $H_2$ 
+after permuting the vertices according to the assignment matrix $\bX$.
+Thus, the whole problem can be seen as the minimization of the number of hyperedge disagreement between two hypergraphs.
+
+By expanding the objective
+\begin{eqnarray*}
+    && \frob{\AC - \BC \otimes_1 \bX \otimes_2 \cdots \otimes_m \bX}^2  \\
+    &=& \frob{\bA}^2 + \frob{\BC \otimes_1 \bX \otimes_2 \cdots \otimes_m \bX}^2 
+    - 2 \inner{\AC, \BC \otimes_1 \bX \otimes_2 \cdots \otimes_m \bX} \\
+    &=& \frob{\bA}^2 + \frob{\bB}^2 
+     - 2 \sum_{i_1=1}^n \cdots \sum_{i_m=1}^n \sum_{j_1=1}^n \cdots \sum_{j_m=1}^n 
+     \AC_{i_1 \ldots i_m} \BC_{j_1 \ldots j_m} x_{i_1 j_1} \ldots x_{i_m j_m} \\
+\end{eqnarray*}
+and replacing $\AC_{i_1 \ldots i_m} \BC_{j_1 \ldots j_m}$ with a general affinity function, 
+that is $\FC_{i_1 \dots i_m j_1 \ldots j_m} := d(\AC_{i_1 \ldots i_m}, \BC_{j_1 \ldots j_m})$, one gets the Lawler's $m$-adic assignment problem
+\begin{equation}\label{eq:GM_HAP_general}
+\begin{array}{rl}
+    \displaystyle\max_{\bX \in \MC_n}  &  
+   \displaystyle\sum_{i_1=1}^n \cdots \sum_{i_m=1}^n \sum_{j_1=1}^n \cdots \sum_{j_m=1}^n 
+   \FC_{i_1 \ldots i_mj_1 \ldots j_m} x_{i_1 j_1} \ldots x_{i_m j_m} .
+\end{array}
+\end{equation}
+Using notation $\bx = \vec(\bX)$, the objective can be rewritten as $\hat{\FC}\otimes\bx\ldots\otimes\bx$, where $\hat{\FC}$ denotes a $m$-order tensor 
+folding of $\FC$.
+
+Compared to quadratic graph matching problems, hypergraph matching problems are much more difficult to solve.
+This is not only because of the combinatorial constraints but also due to the involvement of higher order polynomials in the optimization.
+One example is the case of spectral relaxation given in \eqref{eq:GM_QAP_SM}, where the assignment constraints are completely dropped.
+However, while this continuous problem can be globally solved using a power method, its higher order counterpart is still a hard problem, 
+and no global method for solving the problem is known until now.
+In fact, this problem can be casted as a \textit{best symmetric tensor rank-1 approximation} problem (see below), 
+which is NP-hard in general \cite{Hillar2013}.
+
+Given the hardness of hypergraph matching problems, efficient higher order approaches for solving these problems are desirable in practice.
+In addition, the use of higher order features which are more robust to geometric transformations also make higher order approaches more attractive
+than their second order counterparts.
+An example of such a feature is the three angles of a tuple of points $(m = 3)$, where $\FC_{i_1 i_2 i_3 j_1 j_2 j_3}$ can be accordingly defined as
+a similarity function between two triangles, namely $\bigtriangleup i_1 i_2 i_3$ and $\bigtriangleup j_1 j_2 j_3$, in two corresponding graphs.
+
+\subsection{Relation to Tensor Problems}
+The tensor problems presented below can be seen as the relaxations of higher-order assignment problems.
+
+\subsubsection{Best Symmetric Tensor Rank-1 Approximation Problem}
+\textit{
+Given a real $m$-order symmetric tensor $\AC \in \RR^{n^m}$, 
+the \textit{best tensor rank-1 approximation} problem is defined as finding a scalar $\lambda$ and an $l_2$ unit-norm vector $\bx$ 
+such that the $m$-order rank-1 tensor $\hat{\AC} \bydef \lambda \underbrace{\bx \circ \cdots \circ \bx}_{m \textrm{ times}}$ 
+minimizes the least-square cost function 
+\begin{equation}\label{eq:tensor_rank1_approx_prob}
+    f(\hat{\AC}) = \frob{\AC - \hat{\AC}}^2
+\end{equation}
+over the manifold of symmetric rank-1 tensors.
+}
+
+This problem can also be formulated as follows.
+\begin{theorem}[Kofidis and Regalia \cite{Kofidis2002}]\label{theo:tensor_rank1_approx_prob}
+    Given a real $m$-order symmetric tensor $\AC \in \RR^{n^m}$, 
+    then the minimization of the cost function \eqref{eq:tensor_rank1_approx_prob} is equivalent to the maximization,
+    over an $l_2$ unit-norm vector $\bx$, of the function 
+    $$
+	g(\bx,\ldots,\bx) = \abs{\AC \otimes_1 \bx \ldots \otimes_m \bx}^2 .
+    $$
+\end{theorem}
+\begin{proof}
+    See Lathauwer \etal ~\cite{Lathauwer2000} for the proof of the more general, nonsymmetric case.
+\end{proof}
+This problem has similar objective with the HAP \eqref{eq:GM_HAP_general},
+thus, it can bee seen as the spectral relaxation of the HAP, where the assignment constraint is replaced by the an $l_2$ unit-norm constraint.
+However, depending on different norms, one gets different tensor eigenvalue problems as presented below.
+
+\subsubsection{H-eigenvalue Problem of Nonnegative Supersymmetric Tensor}
+Given a nonnegative symmetric tensor $\AC \in \RR_+^{n^m}$, the maximum H-eigenvalue problem of $\AC$ can be defined as
+maximization of $\AC \otimes_1 \bx \ldots \otimes_m \bx$ over the $l_m$ unit-norm ball, that is,
+\begin{equation}\label{eq:tensor_H_prob}
+\begin{array}{rl}
+    \displaystyle\max_{\bx \in \RR^n}   &   \displaystyle\frac{\AC \otimes_1 \bx \ldots \otimes_m \bx}{\norm{\bx}_m^m} .
+\end{array}
+\end{equation}
+The optimal solution $\bx^*$ to \eqref{eq:tensor_H_prob} is known as the maximum H-eigenvector of $\AC$.
+Note that $\bx^*$ is always nonnegative as $\AC$ is nonnegative due to Perron-Frobenius theorem (see \cite{Chang2008}).
+While there exists efficient algorithms for solving this problem (see \cite{Zhou2013, Friedland2013a}, 
+they do not yield good results in graph matching as the $l_m$-norm often does not enforce sparsity.
+
+\subsubsection{Z-eigenvalue Problem of Nonnegative Supersymmetric Tensor}
+The Z-eigenvalue problem is defined with the $l_2$-norm instead of the $l_m$-norm of the H-eigenvalue problem
+\begin{equation}\label{eq:tensor_Z_prob}
+\begin{array}{rl}
+    \displaystyle\max_{\bx \in \RR^n}   &   \displaystyle\frac{\AC \otimes_1 \bx \ldots \otimes_m \bx}{\norm{\bx}_2^m} .
+\end{array}
+\end{equation}
+While the H-eigenproblem can be optimally solved under mild conditions \cite{Zhou2013, Friedland2013a}, 
+the Z-eigenproblem is known as a hard problem as it is closely related to the \textit{best tensor rank-1 approximation} problem.
+Existing algorithms \cite{Kolda2010, Kolda2014} proposed for this problem are all local methods with convergence guarantee known
+under the convexity assumption of the objective function.
+Even so, the Z-eigenvalue problem has become more and more popular in computer vision applications since Duchenne \etal ~\cite{Duchenne2009} introduced 
+a hypergraph matching algorithm based on its formulation, which outperformed previous approaches.
+
+\subsection{Algorithms}
+\label{sec:GM_HAP_algorithms}
+Like quadratic assignment problems, higher-order assignment problems are NP-hard in general.
+However, compared to the quadratic case, the higher-order problems are less studied in literature because of the difficulty 
+in handling the higher-order polynomial objective function.
+Besides, the fact that higher-order assignment problems concern with tensors while quadratic assignment problems concerns with matrices
+also pose certain difficulties to the HAP because tensors as a generalization of matrices are less studied and some properties hold for matrices
+but do not hold for tensors.
+Below, we discuss several state-of-the-art algorithms for solving the HAP in graph matching literature.
+
+\subsubsection{Probabilistic Approaches to Hypergraph Matching}
+In 2008, Ron Zass and Amnon Shashua \cite{Zass2008} introduced a probabilistic view on the hypergraph matching problem
+by assuming that different correspondences are statistically independent.
+This builds upon their previous work on the connection between low-rank tensors and conditional independence \cite{Shashua2006}.
+In their approach, the higher order affinity tensor is marginalized into a probability vector, avoiding the need for higher order rank-1 approximation.
+This probability vector is then refined by projecting it into the space of assignment vectors by minimizing a Bregman measure.
+
+Inspired by this work, Chertok and Keller \cite{Chertok2010} proposed to marginalize the tensor into a matrix and then use spectral technique to
+find the leading eigenvector. 
+
+As a common, these two approaches all perform tensor marginalization.
+Thus, they potentially lose relevant information for graph matching.
+
+\subsubsection{Tensor Matching}
+In 2009, Duchenne \etal ~\cite{Duchenne2009} proposed a Tensor Matching (TM) algorithm, 
+which is based on higher order power method, to solve a $3$-uniform hypergraph matching problem.
+The use of $3$-uniform hypergraph allows TM to incorporate higher order geometric consistency into the model, thus, being more robust to 
+geometric transformations. 
+The corresponding hypergraph matching problem is formulated as maximization of a multilinear objective function 
+over assignment constraints.
+This function is defined by a 3rd order nonnegative symmetric tensor, $\AC$, representing the affinities between tuples of features
+$$
+    f(\bx) = \AC \otimes_1 \bx \otimes_2 \bx \otimes_3 \bx .
+$$
+From an algorithmic point of view, TM is closely related to the Z-eigenvalue problem introduced above.
+However, instead of using $l_2$ unit-norm constraint on the whole variable $\bx \in \RR^{nn}$, 
+TM enforces the unit-norm constraint along each row of $\bX\in\RR^{n\times n}$ to better reflect assignment constraints.
+Using $\bx = \vec(\bX)$, each iteration of the algorithm can be formulated as
+$$
+\begin{array}{l}
+    \textrm{1. }\bx^{k+1} = \AC \otimes_1 \bx^k \otimes_2 \bx^k \\
+    \textrm{2. }\textrm{normalize by row: } \forall i, \bX^{k+1}_{i:} = \displaystyle\frac{\bX^{k+1}_{i:}}{\norm{\bX^{k+1}_{i:}}_2} .
+\end{array}
+$$ 
+where $\bX_{i:}$ denotes the $i$-th row of $\bX$.
+To further enforce the sparsity of the solution, TM adopted the $l_1$ norm and then solves it in a similar way as for the $l_2$ norm. 
+To do this, TM uses a variable transformation, that is, $\by_i^2 = \bx_i \forall i$, to turn the $l_1$ constraint on $\bx$ into the $l_2$ constraint
+on $\by$.
+Then, the maximization of $f(\bx)$ w.r.t the $l_1$ constraint is equivalent to the maximization of the new function 
+$g(\by) = \sum_{i,j,k=1}^n \AC_{ijk} \by_i^2 \by_j^2 \by_k^2$ w.r.t the $l_2$ constraint.
+As the new problem can no longer be solved by a higher order power method, TM solves it in a similar fashion
+$$
+\begin{array}{l}
+    \textrm{1. }\by^{k+1} = \nabla g(\by^k) \\
+    \textrm{2. }\textrm{normalize by row: } \forall i, \bY^{k+1}_{i:} = \displaystyle\frac{\bY^{k+1}_{i:}}{\norm{\bY^{k+1}_{i:}}_2} .
+\end{array}
+$$
+
+TM has been shown with significant improvement over its second-order counterpart SM\cite{Leordeanu2005} and 
+the previous higher order approach HGM\cite{Zass2008} in different noise setting.
+Note that after the variable transformation, the objective function of TM may have even more local optima 
+because the new polynomial has an order of $6$, compared to $3$ as before.
+But even though TM, to some extent, optimizes this multimodal function in a loose way,
+its improvement over previous approaches has revealed/strengthen two important factors in the success of graph matching algorithms:
+the use of higher order features and the handling of the assignment constraint.
+Theoretically, the convergence of TM is known under the convexity assumption of the objective.
+In this perspective, TM can also be seen as a first-order method in convex maximization.
+Besides, TM has some resemblance to the Shifted Power Method for computing Tensor Z-eigenpairs \cite{Kolda2010} except that
+the spherical constraint has been replaced by row norm constraints.
+
+\subsubsection{Reweight Random Walk Hypergraph Matching}
+In 2011, Lee \etal ~\cite{Lee2011} extended the Reweighted Random Walk \cite{Cho2010} for graph matching 
+to the corresponding algorithm (RRWHM) for hypergraph matching.
+Thus, the idea of the RRWM as described in Section \ref{sec:GM_QAP_algorithms} can be directly translated to the RRWHM.
+The core element of both methods is still the reweighting scheme, which is used to reflect one-to-one matching constraint.
+
+In \cite{Lee2011}, they showed that RRWHM outperformed all previously proposed higher order approaches 
+in both outlier and deformation setting.
+This further emphasized the importance of incorporating and handling the mapping constraints in the optimization process.
+However, as already mentioned, the convergence of RRWHM as well as RRWM is still unknown in theory.
+
+    

@@ -1,0 +1,157 @@
+\title{Keyframe-based Visual-Inertial Odometry for Small Workspace}
+\author{Xi Li}
+
+% You can use the \\ command to list multiple previous degrees
+%       \prevdegrees{B.S., University of California (1978) \\
+%                    S.M., Massachusetts Institute of Technology (1981)}
+\department{Department of Computer Science}
+
+% If the thesis is for two degrees simultaneously, list them both
+% separated by \and like this:
+% \degree{Doctor of Philosophy \and Master of Science}
+\degree{Master of Science in Computer Science}
+
+% As of the 2007-08 academic year, valid degree months are September, 
+% February, or June.  The default is June.
+\degreemonth{June}
+\degreeyear{2016}
+\thesisdate{June 1, 2016}
+
+%% By default, the thesis will be copyrighted to SAAR.  If you need to copyright
+%% the thesis to yourself, just specify the `vi' documentclass option.  If for
+%% some reason you want to exactly specify the copyright notice text, you can
+%% use the \copyrightnoticetext command.  
+% \copyrightnoticetext{\copyright Quynh Nguyen Ngoc. All rights reserved.}
+
+% If there is more than one supervisor, use the \supervisor command
+% once for each.
+\supervisor{Roland Angst}{Dr.}
+
+% This is the department committee chairman, not the thesis committee
+% chairman.  You should replace this with your Department's Committee
+% Chairman.
+\chairman{Prof}{Chairman, Department Committee on Graduate Theses}
+
+% Make the titlepage based on the above information.  If you need
+% something special and can't use the standard form, you can specify
+% the exact text of the titlepage yourself.  Put it in a titlepage
+% environment and leave blank lines where you want vertical space.
+% The spaces will be adjusted to fill the entire page.  The dotted
+% lines for the signatures are made with the \signature command.
+
+% \maketitle
+\noindent
+\begin{titlepage}
+\includegraphics[width=4cm,natwidth=520,natheight=210]{logo_saarland.png}
+\hfill
+\begin{minipage}{8cm}
+\centering
+\vspace{-1.5cm} 
+\textbf{Universit\"at des Saarlandes \\ Max-Planck-Institut f\"ur Informatik}
+\end{minipage}
+\hfill
+\includegraphics[width=2.8cm,natwidth=300,natheight=244]{mpg.png}
+\vfill
+
+\Large
+\textbf{Keyframe-based Visual-Inertial Odometry for Small Workspace}
+\vfill
+
+\large
+Masterarbeit im Fach Informatik \\
+Master's Thesis in Computer Science \\
+von / by \\
+\textbf{Xi Li} \\
+\vfill
+
+angefertigt unter der Leitung von / supervised by \\
+\large{\textsc{Dr. Roland Angst}}\\
+\vfill
+
+betreut von / advised by \\
+\large{\textsc{Dr. Roland Angst}} \\
+\vfill
+
+begutachtet von / reviewers \\
+\large{\textsc{Dr. Roland Angst \\ Prof. Dr. Joachim Weickert}} \\
+\vfill
+
+Saarbr\"ucken, June 2016
+\end{titlepage}
+
+
+% The abstractpage environment sets up everything on the page except
+% the text itself.  The title and other header material are put at the
+% top of the page, and the supervisors are listed at the bottom.  A
+% new page is begun both before and after.  Of course, an abstract may
+% be more than one page itself.  If you need more control over the
+% format of the page, you can use the abstract environment, which puts
+% the word "Abstract" at the beginning and single spaces its text.
+
+%% You can either \input (*not* \include) your abstract file, or you can put
+%% the text of the abstract directly between the \begin{abstractpage} and
+%% \end{abstractpage} commands.
+
+% First copy: start a new page, and save the page number.
+\cleardoublepage
+% Uncomment the next line if you do NOT want a page number on your
+% abstract and acknowledgments pages.
+% \pagestyle{empty}
+% \setcounter{savepage}{\thepage}
+% \begin{abstractpage}
+%     \input{ABSTRACT/abstract}
+% \end{abstractpage}
+
+% Additional copy: start a new page, and reset the page number.  This way,
+% the second copy of the abstract is not counted as separate pages.
+% Uncomment the next 6 lines if you need two copies of the abstract
+% page.
+% \setcounter{page}{\thesavepage}
+% \begin{abstractpage}
+% \input{abstract}
+% \end{abstractpage}
+
+\cleardoublepage
+\pagestyle{empty}
+\setcounter{savepage}{\thepage}
+\subsubsection*{Eidesstattliche Erkl{\"a}rung}
+Ich erkl{\"a}re hiermit an Eides Statt, dass ich die vorliegende Arbeit selbstst{\"a}ndig verfasst und
+keine anderen als die angegebenen Quellen und Hilfsmittel verwendet habe.
+\subsubsection*{Statement in Lieu of an Oath}
+I hereby confirm under oath that I have written this thesis on my own and that I have not
+used any other media or materials than the ones referred to in this thesis.
+
+\vspace{1cm}
+
+\subsubsection*{Eidesstattliche Erkl{\"a}rung}
+Ich erkl{\"a}re hiermit an Eides Statt, dass die vorliegende Arbeit mit der elektronischen Version {\"u}bereinstimmt.
+\subsubsection*{Statement in Lieu of an Oath}
+I hereby confirm the congruence of the contents of the printed data and the electronic version of the thesis.
+
+\vspace{1cm}
+
+\subsubsection*{Einverst{\"a}ndniserkl{\"a}rung}
+Ich bin damit einverstanden, dass meine (bestandene) Arbeit in beiden Versionen in die
+Bibliothek der Informatik aufgenommen und damit ver{\"o}ffentlicht wird.
+
+\subsubsection*{Declaration of Consent}
+I agree to make both versions of my thesis (with a passing grade) accessible to the public 
+by having them added to the library of the Computer Science Department.
+
+\vspace{3cm}
+
+\par\noindent\makebox[2in]{\hrulefill} 		\hfill\makebox[2in]{\hrulefill}%
+\par\noindent\makebox[2in][l]{(Datum / Date)}	\hfill\makebox[2in][l]{(Unterschrift / Signature)}%
+
+\newpage
+\section*{Acknowledgments}
+
+
+\pagestyle{empty}
+\setcounter{savepage}{\thepage}
+\begin{abstractpage}
+    \input{ABSTRACT/abstract}
+\end{abstractpage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% -*-latex-*-

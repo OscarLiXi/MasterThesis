@@ -1,0 +1,974 @@
+%% This is an example first chapter.  You should put chapter/appendix that you
+%% write into a separate file, and add a line \include{yourfilename} to
+%% main.tex, where `yourfilename.tex' is the name of the chapter/appendix file.
+%% You can process specific files by typing their names in at the 
+%% \files=
+%% prompt when you run the file main.tex through LaTeX.
+\chapter{A Tensor Block Coordinate Ascent Framework for Hypergraph Matching}
+\label{chap:bcagm}
+In this chapter, we present our main contributions.
+We mathematically formulate our hypergraph matching problem in Section \ref{sec:hgm_formulation}.
+Then, we give some motivations for our work in Section \ref{sec:motivation_bca} and Section \ref{sec:motivation}.
+In particular, we first motivate the use of one-to-one mapping constraints at each step in Section \ref{sec:motivation_bca} by considering 
+a counter example where they are not fully taken into account.
+Specifically, we investigate a simple block-coordinate-ascent scheme 
+that optimizes at each step one and only one row of $\bX$ but omits the global constraints of the whole variable.
+Next, Section \ref{sec:motivation} gives motivations for our work from technical aspects by specifying a result in the quadratic case that
+one can directly optimize over the one-to-one constraints through a power-method like framework.
+This motivates us to extend the result to higher order cases as done in Section \ref{sec:math_foundation}.
+In Section \ref{sec:math_foundation}, we present all the mathematical foundations as well as the main ideas of our approach.
+Proposed algorithms will be presented in Section \ref{sec:proposed_algorithms}.
+
+\section{Hypergraph Matching Formulation}
+\label{sec:hgm_formulation}
+We formulate the correspondence problem as a hypergraph matching problem. 
+Hypergraphs allow modeling relations which are not only pairwise as in graphs but involve groups of vertices. 
+We consider in this thesis $3$-uniform hypergraphs, that is each hyperedge contains $3$ vertices. 
+$k$-uniform hypergraphs can be modeled as $k$-th order tensors which is the point of view we take in this thesis.
+
+Given two attributed point sets $G=(V,A)$ and $G'=(V',A')$ the matching problem can be formulated as finding a subset $\X$ 
+in the set of correspondences $V \times V'$. 
+The subset $\X$ can be represented by the binary assignment matrix 
+$X \in \{0,1\}^{n_1 \times n_2}$ where $n_1=|V|$, $n_2=|V'|$ with $X_{ij}=1$ if $v_{i} \in V$ matches $v'_{j} \in V'$ and $X_{ij}=0$ else. 
+Without loss of generality, we assume that $n_1 < n_2$. 
+Then, a one-to-one matching $X$ is an element of the set
+\[ \MC_{n_1 n_2}=\big\{\bX \in \{0,1\}^{n_1 \times n_2} \,\big|\, \sum_{i=1}^{n_1} x_{ij}\leq 1, \quad \sum_{j=1}^{n_2} x_{ij} = 1\big\},\]
+that is we consider an one-to-one (injective) matching from $V$ to $V'$.
+%We assume to have a function $w:(E_1,A_1) \times (E_2,A_2) \rightarrow \R_+$ which assigns to the attributed edges $e_1=\{i_1,\ldots,i_k\} \in E_1$ with $i_r \in V_1, r=1,\ldots,k$ and 
+%$e_2=\{j_1,\ldots,j_k\} \in E_2$ with $j_s \in V_2, s=1\,ldots,k$.
+%the corresponding similarity value $w\big( \{i_1,\ldots,i_k\}, \{j_1,\ldots,j_k\}\big)=W_{(i_1,j_1),(i_2,j_2),\ldots,(i_k,j_k)}$. The score $S$ of a matching %$X$ can then be defined as
+%\[ S(X)=\sum_{e_1 \in E_1, e_2 \in E_2} 
+We further assume that we have a function 
+$\FC^3: (V \times V')^3 \rightarrow \R_+$ which assigns to each chosen triple $\{v_{i_1},v_{i_2},v_{i_3}\}\subset V_1$ and 
+$\{v'_{j_1},v'_{j_2},v'_{j_3}\} \subset V_2$ its similarity weight $\FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)}$.
+Finally, the score $S$ of a matching $X$ can then be defined as
+\[ S(\bX)=\sum_{i_1=1}^{n_1}\sum_{i_2=1}^{n_1}\sum_{i_3=1}^{n_1} \sum_{j_1=1}^{n_2}\sum_{j_2=1}^{n_2}\sum_{j_3=1}^{n_2} 
+\FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)} x_{i_1 j_1} x_{i_2 j_2} x_{i_3 j_3}.\]
+% In order to facilitate notation we introduce a linear ordering in $V \times V'$  
+% and thus can rewrite $\bX$ as a vector $\bx \in \{0,1\}^{n}$ with $n=n_1 n_2$
+% and $\FC^3$ becomes a tensor in $\R^{n \times n \times n}$ so that the score, $S^3:\R^n \rightarrow \R$, is finally written as
+In order to facilitate notation, we use $\bx = \vec(\bX) \in \RR^{n}$ with $n = n_1 n_2$,
+and introduce the corresponding one-to-one constraint on $\bx$ as
+$$
+    M = \Setbar{\bx \in \RR^{n_1 n_2}}{\bX \in \MC_{n_1 n_2}}
+$$
+Thus, $\FC^3$ becomes a tensor in $\R^{n \times n \times n}$ and the score, $S^3:\R^n \rightarrow \R$, is finally written as
+\begin{equation}\label{eq:score}
+    S^3(\bx) \bydef \MF^3(\bx,\bx,\bx) = \sum_{i=1}^n\sum_{j=1}^n\sum_{k=1}^n \,\FC^3_{ijk}\, \bx_i\, \bx_j\, \bx_k.
+\end{equation}
+% By abuse of notation, through out this chapter, we write $\bX \in M$ and $\bx \in M$ to refer to the one-to-one matching constraints above.
+The hypergraph matching problem is therefore defined as
+\begin{equation}\label{eq:original_problem}
+    \max_{\bx \in M}  S^3(\bx)
+\end{equation}
+From this point forward, we refer to \eqref{eq:original_problem} as the original problem.
+In the following we will use the notation $\FC^m$ for $m$-th order tensors and $S^m$ for the associated score function.
+% Note that as $S^3$ is written as the sum of the componentwise product of the tensor $\FC^3$ with the symmetric tensor $\GC^3_{ijk}=\bx_i\bx_j\bx_k$.
+% Thus any antisymmetric part of $\FC^3$ is ``averaged'' out
+% \footnote{
+%     Illustration: any matrix $A_{ij}$ can be decomposed as $A_{ij}=A_{ij}^s+A_{ij}^a$ into symmetric part $A^s_{ij}=\frac{1}{2}(A_{ij}+A_{ji})$ and 
+%     antisymmetric part $A^{a}_{ij}=\frac{1}{2}(A_{ij}-A_{ji})$. 
+%     Note that $\sum_{i,j=1}^n A_{ij}x_ix_j= \sum_{i,j=1}^n A^s_{ij}x_i x_j$.
+% } 
+% and thus we can without loss of generality assume that $\FC^3$ is a symmetric tensor 
+% \footnote{
+%     If $\FC^3$ is not already symmetric, 
+%     then one can define $\tilde{\FC^3}_{ijk}=\frac{1}{\abs{\Pi\Set{i,j,k}}}\sum_{\pi \in \Pi\Set{i,j,k}}\FC^3_{\pi(1)\pi(2)\pi(3)}$, $i,j,k=1,\ldots,n$ 
+%     where $\Pi\Set{i,j,k}$ is the set of all distinct permutations of three elements $\Set{i,j,k}$
+% },
+% that is \[ \FC^3_{ijk}=\FC^3_{ikj}=\FC^3_{kij}=\FC^3_{kji}=\FC^3_{jki}=\FC^3_{jik}, \; \forall i,j,k.\]
+The following lemma allows us to assume without loss of generality that $\FC^3$ is a symmetric tensor.
+\begin{lemma}
+    Given a non-symmetric tensor $\FC \in \RR^{n^m}$.
+    Let $\Pi\set{i_1,\ldots,i_m}$ denotes the set of all distinct permutations of $m$ elements $\Set{i_1,\ldots,i_m}$ (possibly repeated)
+    and $\pi \in \Pi$ denotes an element of the set. 
+    
+    For instance, $\Pi\set{1,2,1} = \set{\set{1,1,2},\set{1,2,1},\set{2,1,1}}$, and $\pi = \set{\pi_1, \pi_2, \pi_3} = \set{1, 2, 1} \in \Pi$.
+    Let $\FC'$ be a symmetrized version of $\FC$ defined as 
+    $$
+	\FC'_{i_1\ldots i_m} = \frac{1}{\abs{\Pi\set{i_1,\ldots,i_m}}} \sum_{\pi \in \Pi\set{i_1,\ldots,i_m}}\FC_{\pi_1\ldots\pi_m}
+    $$ 
+    then it holds that $\MF(\underbrace{\bx,\ldots,\bx}_{m \textrm{ times}}) = \MF'(\underbrace{\bx,\ldots,\bx}_{m \textrm{ times}})$.
+\end{lemma}
+\begin{proof}
+    One first observes that $\FC'_{i_1\ldots,i_m} = \FC'_{\pi_1\ldots\pi_m}$ for any $\pi \in \Pi\set{i_1,\ldots,i_m}$.
+    Thus, $\FC'$ is invariant under any permutation of its indices, and thus, is a symmetric tensor. 
+    One has
+    \begin{eqnarray}
+	\MF(\bx,\ldots,\bx) &=& \displaystyle\sum_{i_1 \ldots i_m=1}^n \FC_{i_1\ldots,i_m} \bx_{i_1} \cdots \bx_{i_m} \label{eq:step1} \\
+	&=& \displaystyle\sum_{\substack{i_1 \ldots i_m=1 \\ i_1\leq \cdots \leq i_m}}^n \sum_{\pi \in \Pi\set{i_1,\ldots,i_m}} \FC_{\pi_1\ldots\pi_m} \bx_{\pi_1}\cdots\bx_{\pi_m} \label{eq:step2} \\
+	&=& \displaystyle\sum_{\substack{i_1 \ldots i_m=1 \\ i_1\leq \cdots \leq i_m}}^n \bx_{i_1} \cdots \bx_{i_m} \sum_{\pi \in \Pi\set{i_1,\ldots,i_m}} \FC_{\pi_1\ldots\pi_m}  \label{eq:step3} \\
+	&=& \displaystyle\sum_{\substack{i_1 \ldots i_m=1 \\ i_1\leq \cdots \leq i_m}}^n \bx_{i_1} \cdots \bx_{i_m} \abs{\Pi\set{i_1,\ldots,i_m}} \FC'_{i_1\ldots,i_m} \label{eq:step4} \\
+	&=& \displaystyle\sum_{\substack{i_1 \ldots i_m=1 \\ i_1\leq \cdots \leq i_m}}^n \bx_{i_1} \cdots \bx_{i_m} \sum_{\pi \in \Pi\set{i_1,\ldots,i_m}} \FC'_{\pi_1\ldots\pi_m} \label{eq:step5} \\
+	&=& \displaystyle\sum_{\substack{i_1 \ldots i_m=1 \\ i_1\leq \cdots \leq i_m}}^n \sum_{\pi \in \Pi\set{i_1,\ldots,i_m}} \FC'_{\pi_1\ldots\pi_m} \bx_{\pi_1}\cdots\bx_{\pi_m} \label{eq:step6} \\
+	&=& \displaystyle\sum_{i_1\ldots i_m}^n \FC'_{i_1\ldots,i_m} \bx_{i_1} \cdots \bx_{i_m}  \nonumber \\
+	&=& \FC'(\bx,\ldots,\bx) \nonumber
+    \end{eqnarray}
+    In above expansion, Step \ref{eq:step2} decomposes the sum into smaller sums with ordered indices, i.e. $i_1\leq \ldots \leq i_m$.
+Steps \ref{eq:step3} and \ref{eq:step6} use the property that 
+$\bx_{i_1}\cdots\bx_{i_m} = \bx_{\pi_1}\cdots\bx_{\pi_m}$ for all $\pi \in \Pi\set{i_1,\ldots,i_m}$.
+Step \ref{eq:step4} uses the definition of $\FC'$.
+Step \ref{eq:step5} uses the symmetry of $\FC'$.
+\end{proof}
+
+In principle, one can integrate into this framework unary terms on the diagonal $\FC^3_{iii}$, $i=1,\ldots,n$
+and pairwise potentials $\FC^3_{ijj}, \FC^3_{jij}, \FC^3_{jji}$, $i\neq j$. 
+However, the tensors we consider in Chapter \ref{chap:experiments} have just terms of order $3$, 
+that is $\FC^3_{ijk}=0$ if $i=j$ or $i=k$ or $j=k$.
+
+\section{Motivation from Block Coordinate Ascent}
+\label{sec:motivation_bca}
+In this section, we attempt to derive a simple block-coordinate-ascent-based approach for solving \eqref{eq:original_problem} 
+based on a simple observation on affinity tensor. 
+% For simplicity, we consider only $3$-uniform hypergraphs, that is, each hyperedge contains a triple of vertices.
+% Extension of this approach to $k$-uniform hypergraph with $k > 3$ is straightforward.
+% 
+% Let $H_1=(V_1, E_1)$ and $H_2=(V_2, E_2)$ denote two $3$-uniform hypgergraphs with $|V_1| = m, |V_2| = n$.
+% Without loss of generality, we assume that $m < n$ and define the task as finding an assignment matrix $\bX = \sset{x_{ij}} \in \RR^{m\times n}$
+% such that it minimizes structural differences between two graphs.
+% In particular, following the standard formulation of the HAP in \eqref{eq:GM_HAP_general},
+% we define a $3$-uniform hypergraph matching problem as 
+As presented in the previous section, the original problem can be formulated as $$\max_{\bX\in\MC_{n_1 n_2}} S(\bX)$$ and thus,
+\begin{equation*}
+    \begin{array}{rl}
+	\max & f(\bX) \bydef \displaystyle\sum_{i_1=1}^{n_1} \sum_{i_2=1}^{n_1} \sum_{i_3=1}^{n_1} \sum_{j_1=1}^{n_2} \sum_{j_2=1}^{n_2} \sum_{j_3=1}^{n_2} 
+	\FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)} x_{i_1 j_1} x_{i_2 j_2} x_{i_3 j_3} \\
+	\textit{s.t.} & \displaystyle\sum_{j=1}^{n_2} x_{ij} = 1, \forall i=1,\ldots,n_1, \\
+		      & \displaystyle\sum_{i=1}^{n_1} x_{ij} \leq 1, \forall j=1,\ldots,n_2, \\
+		      & x_{ij} \in \Set{0,1}, \forall i=1,\ldots,n_1 \textrm{ and } j=1,\ldots,n_2.
+    \end{array}
+\end{equation*}
+By dropping the second constraint and relax the third to continuous domain,
+we end up with the row norm constraints as proposed by Duchenne \etal ~\cite{Duchenne2009}
+\begin{equation}
+    \begin{array}{rl}
+	\max & \displaystyle\sum_{i_1=1}^{n_1} \sum_{i_2=1}^{n_1} \sum_{i_3=1}^{n_1} \sum_{j_1=1}^{n_2} \sum_{j_2=1}^{n_2} \sum_{j_3=1}^{n_2} 
+	\FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)} x_{i_1 j_1} x_{i_2 j_2} x_{i_3 j_3} \\
+	\textit{s.t.} & \displaystyle\sum_{j=1}^{n_2} x_{ij} = 1, \forall i=1,\ldots,n_1, \\
+		      & x_{ij} \in \sset{0,1}, \forall i=1,\ldots,n_1 \textrm{ and } j=1,\ldots,n_2.
+    \end{array}
+\end{equation}
+Considering each row of $\bX$ as a separate variable, i.e. $\bX^{(i)} = \sset{x_{ij}}_{j=1}^{n_2} \in \RR^{n_2}$, 
+the problem can be rewritten as
+\begin{equation}\label{eq:bca_formulation}
+    \begin{array}{rl}
+	\min & \displaystyle\sum_{i_1=1}^{n_1} \sum_{i_2=1}^{n_1} \sum_{i_3=1}^{n_1} 
+	\sum_{j_1=1}^{n_2} \sum_{j_2=1}^{n_2} \sum_{j_3=1}^{n_2} 
+	\FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)} \bX^{(i_1)}_{j_1} \bX^{(i_2)}_{j_2} \bX^{(i_3)}_{j_3} \\
+	\textit{s.t.} & \inner{\ones, \bX^{(i)}} = 1, \forall i=1,\ldots,n_1, \\
+		      & \bX^{(i)} \geq 0, \forall i=1,\ldots,n_1.
+    \end{array}
+\end{equation}
+Let
+$$
+    \MG(\bX^{(i_1)}, \bX^{(i_2)}, \bX^{(i_3)}) \bydef \sum_{j_1=1}^{n_2} \sum_{j_2=1}^{n_2} \sum_{j_3=1}^{n_2} 
+    \FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)} \bX^{(i_1)}_{j_1} \bX^{(i_2)}_{j_2} \bX^{(i_3)}_{j_3}
+$$
+and decomposing $\bX$ into $n_1$ row variables $\bX = \sset{\bX^{(1)}, \ldots, \bX^{(n_1)}}^T$, 
+one can rewrite the objective in \eqref{eq:bca_formulation} as 
+$$f(\bX) = g(\bX^{(1)}, \ldots, \bX^{(n_1)}) \bydef \sum_{i_1=1}^{n_1} \sum_{i_2=1}^{n_1} \sum_{i_3=1}^{n_1} \MG(\bX^{(i_1)}, \bX^{(i_2)}, \bX^{(i_3)}).$$
+One observes that $\MG(\bX^{(i_1)}, \bX^{(i_2)}, \bX^{(i_3)})$ is a multilinear function w.r.t $\bX^{(i_1)}$, $\bX^{(i_2)}$ and $\bX^{(i_3)}$ 
+if and only if $i_1 \neq i_2$ and $i_1 \neq i_3$ and $i_2 \neq i_3$.
+Therefore, $g(\bX^{1}, \ldots, \bX^{n_1})$ is a multilinear function in $\Set{\bX^{1}, \ldots, \bX^{n_1}}$ if 
+$\MG(\bX^{(i_1)}, \bX^{(i_2)}, \bX^{(i_3)}) = 0$ whenever $i_1=i_2$ or $i_1=i_3$ or $i_1=i_3$.
+From the definition of $\MG$, it turns out that these conditions always hold in pure higher-order assignment problems 
+where each hyperedge contains only distinct vertices, that is,
+$$
+    \FC^3_{(i_1,j_1)(i_2,j_2)(i_3,j_3)} = \left\lbrace
+    \begin{array}{ll}
+	d(\AC_{i_1 i_2 i_3}, \BC_{j_1 j_2 j_3}) & \textrm{if } i_1\neq i_2 \neq i_3 \textrm{ and } j_1 \neq j_2 \neq j_3 \\
+	0 & \textrm{otherwise}
+    \end{array}
+    \right.
+$$ 
+where $d$ is a similarity function, $\AC$ and $\BC$ are the weighted adjacency tensors of two corresponding hypergraphs (see \eqref{eq:GM_HAP_general}).
+\begin{algorithm}
+    \caption{BCA} 
+    \KwIn {
+	Affinity tensor $\FC^3 \in \RR^{n_1\times n_1\times n_1\times n_2\times n_2\times n_2}$ \\
+        Starting point $\bX_0 \in \RR^{n_1\times n_2}$, iteration counter $k = 0$
+    }
+    \textbf{Repeat}
+	\begin{enumerate}
+	    \item $i = k \textrm{ mod } n_1$
+	    \item $\bX_{k+1}^{(j)} = \bX_{k}^{(j)}, \forall 1\leq j\leq n_1, j \neq i$ 
+	    \item $\bX_{k+1}^{(i)} = \argmax_{\substack{\inner{\ones,\ba}=1, \ba \geq 0}} \inner{\ba, (\nabla f(\bX^k))^{(i)}}$
+	    \item \textbf{if } $i = 0 \textrm{ and } f(\bx_{k+1}) = f(\bx_{k})$ \textbf{ then return}
+	    \item $k = k + 1$
+	\end{enumerate}
+    \label{algo:bca}
+\end{algorithm}
+
+Since the objective function $g$ is multilinear, one can fix all but one $\bX^{(i)}$, leading to a simple row-wise optimization scheme.
+Because $f$ is linear in each row $\bX^{(i)}$, it holds that $f(\bX) = \inner{\bX^{(i)}, (\nabla f(\bX))^{(i)}}$, 
+where $(\nabla f(\bX))^{(i)}$ is independent of $\bX^{(i)}$.
+Thus, fixing all rows but the $i^{th}$ row at each step leads to optimization of a linear function 
+over the stardard simplex whose optimal solution can be easily obtained.
+% Let $P$ denotes the solver for this program, that is, $P(\bx) \bydef \argmax_{\substack{\inner{\ones,\by}=1, \by \geq 0}} \inner{\bx, \by}$,
+The whole idea is summarized in Algorithm \ref{algo:bca} that we refer to as BCA.
+% One can check that BCA achieves monotonic ascent in the objective and converges after a finite number of iterations.
+
+\begin{figure*}[htb!]
+\begin{center}
+    \subfloat[Random starting point]{ \includegraphics[width=0.47\linewidth]{fig_paper/BCD/BCDexact_rand} } 
+    \subfloat[Uniform starting point]{ \includegraphics[width=0.47\linewidth]{fig_paper/BCD/BCDexact_uniform} }
+\end{center}    
+\caption{Iterations of BCA on a matching task with $30$ points in each image chose from the House dataset.
+Top left: true assignment matrix. (Best viewed in color.)}
+\label{fig:bca}
+\end{figure*}
+
+% \subsubsection{Discussion}
+Figure \ref{fig:bca} shows the iterations of BCA on an example image matching task with $30$ points in each image.
+In this example, BCA stops after $30$ iterations after all the rows of $\bX$ are updated.
+As can be seen, both output assignment matrices at iteration $30$ have the diagonal characteristic of ground truth
+as most of the large entries scattered around near the main diagonal.
+However, there are still quite many incorrect matches. This can be explained due to the local optimality of BCA at each iteration.
+In fact, each iterate of BCA optimizes only one row of $\bX$ but omits the constraints on other rows.
+This leads to the situation where an early wrong match caused by updating some row would subsequently negatively affect the remaining rows
+as it spoils the computation of gradient at next steps.
+For illustration, Figure \ref{fig:bca} shows that the wrong matches at iteration $5$ 
+caused more and more incorrect results at the following iterations.
+
+In principle, BCA may easily go wrong as long as it does not take into account the global structure of variables at each iteration.
+Besides, the row norm constraints used in BCA as well asl in \cite{Duchenne2009} cannot guarantee that the output mapping will be injective.
+Thus, we proposed in next sections other algorithms to treat this problem.
+Like BCA, our approach is also based on the idea of block-wise optimization.
+However, we directly optimize the objective over the original mapping constraints at each iteration instead of relaxing them to the row norm constraints.
+We give a motivation for how to make this possible in the next section.
+
+\section{Motivation from Power Methods}
+\label{sec:motivation}
+The use of spectral relaxation for quadratic assignment problems has been established in recent works \cite{Leordeanu2005, Cour}.
+These methods use power method as a core element for finding the leading eigenvector of a matrix/tensor, 
+which is known as the optimal solution of the relaxed matching problem.
+Given the particular success of these approaches in context of graph matching, 
+we provide below a few motivations for our work from the algorithmic perspective.
+
+Let $\bA$ be a square nonnegative symmetric matrix, then it is well-known that spectral relaxation techniques concerns with
+the maximization of $\bx^T\bA\bx$ over the unit sphere.
+\cite{Leordeanu2005, Cour} solve the problem by using a power method which computes at each iterate
+$$
+    \bx^{k+1} = \displaystyle\frac{\bA \bx^k}{\norm{\bA \bx^k}_2}
+$$
+This can also be written as
+\begin{equation}\label{eq:power_method_2}
+    \begin{array}{l}
+	\bx^{k+1} = \displaystyle\frac{\bA \by^k}{\norm{\bA \by^k}_2} \\
+	\by^{k+1} = \displaystyle\frac{\bA \bx^{k+1}}{\norm{\bA \bx^{k+1}}_2}
+    \end{array}
+\end{equation}
+While the first formula is more friendly to work with, the second one gives us a new perspective of power method.
+In fact, if $\bA$ is viewed as a second-order tensor associated with its multilinear form $\AF(\bx,\by) \bydef \sum_i \sum_j \bA_{ij} \bx_i \by_j$, 
+then \eqref{eq:power_method_2} can be seen as the alternative updates between two arguments of $\AF(\bx,\by)$.
+Specifically, each argument is set to the maximizer of the objective function over an unit sphere given that the other argument is fixed.
+A natural generalization of this to a 3rd order symmetric tensor $\FC^3$ leads to the following scheme
+\begin{equation*}
+    \begin{array}{l}
+	\bx^{k+1} = \displaystyle\frac{\FC^3 \otimes_2 \by^k \otimes_3 \bz^k}{\norm{\FC^3 \otimes_2 \by^k \otimes_3 \bz^k}_2} \\
+	\by^{k+1} = \displaystyle\frac{\FC^3 \otimes_1 \bx^{k+1} \otimes_3 \bz^k}{\norm{\FC^3 \otimes_1 \bx^{k+1} \otimes_3 \bz^k}_2} \\
+	\bz^{k+1} = \displaystyle\frac{\FC^3 \otimes_1 \bx^{k+1} \otimes_2 \by^{k+1}}{\norm{\FC^3 \otimes_1 \bx^{k+1} \otimes_2 \by^{k+1}}_2} \\
+    \end{array}
+\end{equation*}
+which is known as a higher order power method \cite{Kofidis2002, Lathauwer2000} in multilinear algebra.
+% Note that if one wants to use this approach for hypergraph matching then one needs to guarantee that the maximizers of $\MF^3(\bx,\bx,\bx)$ and 
+% the maximizers of $\MF^3(\bx,\by,\bz)$ agree on the unit sphere.
+% One can check that such a property always holds for the matrix case if the quadratic function is convex 
+% \footnote{For a positive semidefinite matrix $\bA$, it holds: $\max\frac{\bx^T\bA\bx}{\norm{\bx}_2} = \max\frac{\bx^T\bA\by}{\norm{\bx}_2\norm{\by}_2}$}.
+A common characteristic between the two aforementioned schemes is that each update of one variable can be seen as 
+maximization of the corresponding linear function over the unit sphere.
+For instance, the update of $\bx^{k+1}$ above can be written as 
+$$
+    \bx^{k+1} = \argmax_{\norm{\bx}_2=1} \inner{\bx, \FC^3 \otimes_2 \by^k \otimes_3 \bz^k}.
+$$
+Thus, it is now natural to ask if one can generalize the unit sphere in these updates by a more general constraint set $D \subset \RR^n$, that is,
+\begin{equation*}
+    \begin{array}{l}
+	\bx^{k+1} = \argmax_{\bx \in D} \FC^3 \otimes_1 \bx \otimes_2 \by^k \otimes_3 \bz^k \\
+	\by^{k+1} = \argmax_{\by \in D} \FC^3 \otimes_1 \bx^{k+1} \otimes_2 \by \otimes_3 \bz^k \\
+	\bz^{k+1} = \argmax_{\bz \in D} \FC^3 \otimes_1 \bx^{k+1} \otimes_2 \by^{k+1} \otimes_3 \bz 
+    \end{array}
+\end{equation*}
+However, if one wants to use this iterative scheme for solving the original problem in \eqref{eq:original_problem},
+then one needs to guarantee that the optimization of $\MF^3(\bx,\bx,\bx)$ and the optimization of $\MF^3(\bx,\by,\bz)$ are equivalent on $D$, 
+that is, $\max_{\bx\in D} \MF^3(\bx,\bx,\bx) = \max_{\bx,\by,\bz\in D} \MF^3(\bx,\by,\bz)$.
+The following lemma shows that such a property always holds in the matrix case given the convexity of the objective function.
+\begin{lemma}\label{lem:main_order2}
+    If the function $f(\bx) = \bx^T \bA \bx$ is convex on $\RR^n$ then it holds for any set $D \subset \RR^n$ and $\bx,\by \in D$ that
+    \begin{enumerate}[leftmargin=*]
+	\item $\bx^T\bA\by \leq \max \Set{\bx^T\bA\bx, \by^T\bA\by}$
+	\item $\displaystyle\max_{\bx\in D} \bx^T\bA\bx = \max_{\bx,\by\in D} \bx^T\bA\by$
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    It is sufficient to prove the first statement of the lemma as the second statement can be seen as a consequence of the first 
+    by taking the maximum of both sides over $D$.
+    In fact, the convexity of $f$ implies that $\bA$ is positive semidefinite.
+    Then, it holds for all $\bx,\by \in D \subset \RR^n$ that 
+    $0 \leq (\bx-\by)^T\bA(\bx-\by) = \bx^T\bA\bx+\by^T\bA\by -2\bx^T\bA\by$.
+    Thus, $2\bx^T\bA\by \leq \bx^T\bA\bx + \by^T\bA\by \leq 2 \max \Set{\bx^T\bA\bx, \by^T\bA\by}$ for all $\bx,\by \in D$.
+\end{proof}
+
+The question now is whether or not there exists a similar result in higher order tensors.
+In fact, we will show in Section \ref{sec:math_foundation} that this property continues to hold for 4th order tensor, 
+which enables us to derive higher-order-power-method-like algorithms which use at each step a block-coordinate ascent update.
+Moreover, the capability of optimizing over any constraint set $D$ allows our algorithms
+to efficiently handle one-to-one constraints motivated from the previous section.
+
+In context of graph matching, our approach has some relation to \cite{Duchenne2009, Leordeanu2005, Cour}, 
+where they all use power method as a core element.
+However, there are some crucial differences, in particular, 
+our framework can be seen as an extension of their algorithms from different points of view.
+While their approaches mainly work with the original function, our framework works with a more general function, i.e. a multilinear form.
+While they use the unit-norm constraints, we use the original mapping conditions.
+As we will see, the ability to integrate one-to-one correspondences into optimization of our algorithms allow them to achieve better performance
+than previous approaches. 
+Meanwhile, the optimization of a multilinear form gives us more flexibilities in designing algorithms as can be seen in the next sections.
+
+\section{Mathematical Foundations}
+\label{sec:math_foundation}
+Given the motivations presented in Section \ref{sec:motivation_bca} and \ref{sec:motivation},
+in this section, we will derive the basis for our tensor block coordinate ascent method to optimize the score $S^3(\bx)$ directly over the set $M$ of 
+binary assignment matrices. Even though we use techniques from convex analysis, the algorithm is not optimizing a relaxation but directly the discrete combinatorial problem.
+The main idea is to optimize instead of a higher-order polynomial function, the multilinear form associated to it.
+
+\subsection{Lifting the Tensor and Multilinear Form}
+\label{sec:lifting_tensor}
+Instead of optimizing the third order problem in Equation \eqref{eq:score}, we will define a corresponding 4th order problem by lifting the 
+3rd order tensor to a 4th order tensor. This might be counter-intuitive at first in particular as previous works
+\cite{Zass2008,Chertok2010} have done the opposite way by reducing the third order problem to a second order problem by tensor unfolding. 
+
+One can lift any third-order symmetric tensor $\FC^3$ to a symmetric fourth-order $\FC^4$ via
+\begin{equation}\label{eq:gmTensor4}
+    \FC^4_{ijkl} = \FC^3_{ijk} + \FC^3_{ijl} + \FC^3_{ikl} + \FC^3_{jkl}
+\end{equation}
+and the new score function can be defined as
+\begin{eqnarray}\label{eq:eqS4S3}
+	S^4(\bx) \bydef \MF^4(\bx,\bx,\bx,\bx) = 4\,\MF^3(\bx,\bx,\bx) \,\sum_{i=1}^n \bx_i = 4\,S^3(\bx)\,\sum_{i=1}^n \bx_i
+\end{eqnarray}
+It is straightforward that $\sum_{i=1}^n \bx_i=n_1, \; \forall \bx \in M$, therefore, one has the equivalence between the optimization problems
+\begin{equation}\label{eq:liftedProblem}
+    \max\limits_{\bx \in M} \MF^4(\bx,\bx,\bx,\bx)\;\equiv\; \max\limits_{\bx \in M} \MF^3(\bx,\bx,\bx)
+\end{equation} 
+
+Lifting the tensor from a 3rd order tensor to a 4th order tensor allows us to use structure of even order tensor which is not present
+for tensors of odd order. In particular, the score function associated to the 3rd order tensor, namely $S^3$, is not convex.
+\begin{lemma}
+Let $S^3$ be defined as in Equation \ref{eq:score}. If $S^3$ is not constant zero, then $S^3:\R^n \rightarrow \R$ is not convex.
+\end{lemma}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proof}
+The Hessian $HS^3(\bx)$ of $S^3$ is a matrix in $\RR^{n\times n}$ given as $HS^3(\bx)_{jk} = 6 \sum_{i=1}^n \FC^3_{ijk} \bx_i$,  for all $1\leq j,k\leq n$. Thus, $HS^3(\bx)=6\MF^3(\bx,\cdot,\cdot)$.
+% where $\MF^3:\R^n \times \R^n \times \R^n \rightarrow \R$ is the multilinear form, 
+% $\MF^3(\bx,\by,\bz)=\sum_{i,j,k=1}^n \FC^3_{ijk} \bx_i \by_j \bz_k$, associated to the third order tensor $\FC^3$. 
+Suppose that $S^3$ is convex, that is $\inner{\by,HS^3(\bx)\by} = 6 \MF^3(\bx,\by,\by)\geq 0$ for all $\bx,\by \in\R^n$. 
+However, for any $\bx \in \R^n$, $\MF^3(-\bx,\by,\by)=-\MF^3(\bx,\by,\by)\leq 0$ 
+which contradicts that $S^3$ is convex unless $\MF^3(\bx,\by,\by)=0$, $\forall \bx,\by \in\R^n$ 
+which implies $S^3(\bx)=0$ for all $\bx \in \R^n$. 
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The next section will instead show that we can always make $S^4$ become convex.
+The convexity of a score function is crucial to derive our block coordinate ascent framework.
+In particular, it allows us to extend the results of Lemma \ref{lem:main_order2} from matrix to fourth order tensor,
+which makes it possible to optimize instead of the function $S^4$ the multilinear form associated to it over any constraint set.
+
+\subsection{Convexifying the Matching Score Function}
+\label{sec:convexify_4thOrder_score_function}
+The following proposition shows that we can always make the function $S^4$ convex.
+\begin{proposition}\label{prop:convexify}
+    Let $\FC^4$ be a 4th-order symmetric tensor. 
+    Then for any $\alpha \geq 3\norm{\FC}_2$, 
+%     where $\norm{\FC}_2=\sqrt{\sum_{i,j,k,l=1}^n \big(\FC_{ijkl}\big)^2}$, 
+    the function
+    \begin{equation}\label{eq:convexMod}
+	 S^4_\alpha(\bx) := S^4(\bx) + \alpha \,\norm{\bx}_2^4
+    \end{equation}
+     is convex on $\RR^n$, and for any $\bx \in M$,
+     \begin{equation}\label{eq:Modconstant}
+	 S^4_\alpha(\bx)=S^4(\bx) + \alpha\, n_1^2.
+     \end{equation}
+\end{proposition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proof}
+The gradient and the hessian of $S^4_\alpha(\bx)$ can be computed as:
+\begin{equation*}
+      \nabla S^4_\alpha(\bx) = 4 \MF^4(\bx,\bx,\bx,\cdot) + 4 \alpha \norm{\bx}_2^2 \bx 
+\end{equation*}
+\begin{equation*}
+      HS^4_\alpha(\bx) = 12 \MF^4(\bx,\bx,\cdot,\cdot) + 8 \alpha \bx \bx^T + 4 \alpha \norm{\bx}_2^2 I
+\end{equation*} where $I$ is the identity matrix.
+$S^4_\alpha$ is convex if and only if it holds for all $\bx,\by \in \R^n$ that $\< \by, HS^4_\alpha(\bx) \by\> \geq 0$, which is equivalent to
+\begin{equation*}\label{eq:hessian_S_alpha}
+    12 \MF^4(\bx,\bx,\by,\by)  + 8 \alpha \inner{\bx,\by}^2 + 4 \alpha \norm{\bx}_2^2\norm{\by}^2_2 \geq 0 
+\end{equation*} 
+Moreover, one has
+\begin{eqnarray*}
+\abs{\MF^4(\bx,\bx,\by,\by)} &=& \abs{\sum_{i,j,k,l=1}^n \FC^4_{ijkl} \bx_i \bx_j \by_k \by_l} \nonumber \\
+		&\leq& \sqrt{\sum_{i,j,k,l=1}^n \big(\FC^4_{ijkl}\big)^2 \sum_{i,j,k,l=1}^n \bx_i^2 \bx_j^2 \by_k^2 \by_l^2} \nonumber\\
+		&=& \norm{\FC^4}_2 \norm{\bx}^2_2 \norm{\by}^2_2,
+\end{eqnarray*}
+where the Cauchy-Schwarz has been used in the second step. 
+Thus for $\alpha \geq 3\norm{\FC^4}_2$, the inequality \eqref{eq:hessian_S_alpha} is fulfilled for any $\bx,\by \in \R^n$.
+
+Finally, note that $\norm{\bx}_2^2=n_1$ for any $\bx \in M$, which yields the second statement of the proposition.
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+As mentioned earlier, one of the key aspects of the proposed algorithms is that we optimize the multilinear form $\MF^4$ instead of the function $S^4$.
+However, this requires that we are able to extend the modification $S^4_\alpha$ to a tensor resp. multilinear form, which requires an
+extension of $\norm{\bx}^4_2$ to a multlinear form which is done next.
+\begin{proposition}
+    The symmetric tensor $\GC$ with corresponding symmetric multilinear form defined as
+    \begin{equation*}
+	\MG^4(\bx,\by,\bz,\bt) = \displaystyle \frac{1}{3} \<\bx,\by\>\<\bz,\bt\> + \frac{1}{3} \<\bx,\bz\>\<\by,\bt\> + \\
+		\displaystyle \frac{1}{3} \<\bx,\bt\>\<\by,\bz\>
+	\label{eq:multilinear_form_of_quad_term}
+    \end{equation*}
+    satisfies $\MG^4(\bx,\bx,\bx,\bx) = \norm{\bx}_2^4$.
+    \label{prop:tensor_of_quad_term}
+\end{proposition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \begin{proof}
+	The proof requires two parts: 1) there exists a symmetric tensor $\GC$ such that its multilinear form can be computed as in
+	Equation \ref{eq:multilinear_form_of_quad_term},
+	2) its multilinear form satisfies $\MG^4(\bx,\bx,\bx,\bx) = \norm{\bx}_2^4$.
+	
+	In fact, we consider the following 4th order symmetric tensor:
+	\begin{eqnarray*}
+	    \GC_{ijkl} = \left\{ 
+	    \begin{array}{ll}
+		1 & \textrm{if } i=j=k=l, \\
+		1/3 & \textrm{if } (i=j \land k=l) \lor (i=k \land j=l) \lor (i=l \land j=k), \\
+		0 & \textrm{else}.
+	    \end{array}
+	    \right.
+	\end{eqnarray*}
+
+	Then, the multilinear form associated to $\GC$ is computed as:
+	$$
+	    \begin{array}{lll}
+		\MG(\bx,\by,\bz,\bt) &=& \displaystyle \sum_{i,j,k,l=1}^n \GC_{ijkl} \bx_i \by_j \bz_k \bt_l \\
+		&=& \displaystyle \sum_{i=1}^n \bx_i \by_i \bz_i \bt_i + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i < j}} \bx_i \by_i \bz_j \bt_j +
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i < j}} \bx_j \by_j \bz_i \bt_i + \\ 
+		&& \displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i < j}} \bx_i \by_j \bz_i \bt_j + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i < j}} \bx_j \by_i \bz_j \bt_i + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i < j}} \bx_i \by_j \bz_j \bt_i + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i < j}} \bx_j \by_i \bz_i \bt_j \\
+		
+		&=& \displaystyle \sum_{i=1}^n \bx_i \by_i \bz_i \bt_i + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i \neq j}} \bx_i \by_i \bz_j \bt_j + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i \neq j}} \bx_i \by_j \bz_i \bt_j + 
+		\displaystyle \frac{1}{3} \sum^n_{\substack{i,j=1 \\ i \neq j}} \bx_i \by_j \bz_j \bt_i \\
+		
+		&=& \displaystyle \frac{1}{3} \<\bx,\by\>\<\bz,\bt\> + \frac{1}{3} \<\bx,\bz\>\<\by,\bt\> + 
+		\displaystyle \frac{1}{3} \<\bx,\bt\>\<\by,\bz\> 
+	    \end{array}.
+	$$ 
+	As a result, we have $\MG(\bx,\bx,\bx,\bx) = \norm{\bx}_2^4$.
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Equivalence of Optimization Problems}
+\label{sec:equivalence_of_problems}
+The use of tensors resp. multilinear forms corresponding to convex score functions is crucial in the proposed algorithms.
+\begin{proposition} \label{prop:convex_equiv}
+    Let $\FC^4$ be a fourth order symmetric tensor, then $S^4(\bx)=\MF^4(\bx,\bx,\bx,\bx)$ is convex on $\RR^n$ 
+    if and only if $\MF^4(\bx,\bx,\by,\by) \geq 0$, for all $\bx,\by \in \RR^n$.
+\end{proposition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proof}
+We compute gradient and Hessian of $S^4(\bx)$, where we use the symmetry of $\FC^4$,
+\begin{eqnarray*}
+ \nabla S^4(\bx) &=& 4 \MF^4(\bx,\bx,\bx,\cdot),\\
+	\mathrm{HS}^4(\bx) &=& 12 \MF^4(\bx,\bx,\cdot,\cdot).
+\end{eqnarray*}
+	$S^4$ is convex if and only if the Hessian $HS^4(\bx)$
+	is positive semi-definite for all $\bx \in \R^n$ which is equivalent to
+	\[ \inner{\by,\mathrm{HS}^4(\bx)\,\by} = 12 \MF^4(\bx,\bx,\by,\by)\geq 0, \; \forall \bx,\by \in \R^n\]
+\end{proof} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Assuming the convexity of $S^4$, the following lemma extends the first result of Lemma \ref{lem:main_order2} to 4th order tensor.
+It also shows, to some extent, that even if we optimize the multilinear form $\MF^4$ instead of $S^4$ we get ascent in $S^4$.
+We can either fix all but one argument or all but two arguments, 
+which lead to the two variants of the algorithm in Section \ref{sec:proposed_algorithms}.
+\begin{lemma}\label{lem:main_order4}
+    Let $\FC^4$ be a 4th-order symmetric tensor.
+    If $S^4$ is convex, then for all $\bx, \by, \bz,\bt \in \RR^n$, it holds
+    \begin{enumerate}[leftmargin=*]
+	\item $\MF^4(\bx,\bx,\by,\by) \leq \max\{\MF^4(\bx,\bx,\bx,\bx), \MF^4(\by,\by,\by,\by) \}$
+	\item $\MF^4(\bx,\by,\bz,\bt) \leq \displaystyle \max_{\bu \in \{ \bx,\by,\bz,\bt \}} \MF^4(\bu,\bu,\bu,\bu)$
+    \end{enumerate}
+\end{lemma}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \begin{proof}
+	In fact, it is sufficient to prove just the second inequality as the first one can be seen as a consequence of the second
+	when applying to the tuple $(\bx,\by,\bz,\bt) = (\bx,\by,\bx,\by)$ and using the symmetry of $\MF$.
+	However, the proof of the first inequality presented below is still necessary because it will be used later in proving the second.
+	\begin{enumerate}
+	    \item
+		Using Proposition \ref{prop:convex_equiv},
+		it holds for all $\bx, \by \in \RR^n$ that:
+		  \begin{eqnarray*}
+			  0 &\leq& \MF^4(\bx-\by,\bx-\by,\bx+\by,\bx+\by) \\
+			  &=& \MF^4(\bx,\bx,\bx,\bx) + \MF^4(\by,\by,\by,\by) - 2 \MF^4(\bx,\bx,\by,\by)  
+		  \end{eqnarray*} where the multilinearity of $\MF$ has been used above. Thus, one has
+		  \begin{eqnarray*}
+			  2 \MF^4(\bx,\bx,\by,\by) &\leq& \MF^4(\bx,\bx,\bx,\bx) + \MF^4(\by,\by,\by,\by) \\
+			  &\leq& 2 \max\{\MF^4(\bx,\bx,\bx,\bx), \MF^4(\by,\by,\by,\by) \} 
+		  \end{eqnarray*}
+	    \item Similarly, it holds for all $\bx,\by,\bz,\bt \in \RR^n$
+		  \begin{equation}\label{eq:ineq1}
+		  \begin{array}{lll}
+			  0 &\leq& \MF^4(\bx+\by, \bx+\by, \bz-\bt, \bz-\bt) \\
+			  &=& \MF^4(\bx,\bx,\bz,\bz) + \MF^4(\bx,\bx,\bt,\bt) + \MF^4(\by,\by,\bz,\bz) \\ 
+			  && + \MF^4(\by,\by,\bt,\bt) + 2\MF^4(\bx,\by,\bz,\bz) + 2\MF^4(\bx,\by,\bt,\bt) \\
+			  && - 2\MF^4(\bx,\bx,\bz,\bt) - 2\MF^4(\by,\by,\bz,\bt) - 4\MF^4(\bx,\by,\bz,\bt) 
+		  \end{array}
+		  \end{equation}
+		  Switching the variables from ($\bx,\by,\bz,\bt$) to ($\bz,\bt,\bx,\by$) and applying the same inequality, one obtains:
+		  \begin{equation}\label{eq:ineq2} 
+		  \begin{array}{lll}
+			  0 &\leq& \MF^4(\bx-\by, \bx-\by, \bz+\bt, \bz+\bt) \\
+			  &=& \MF^4(\bx,\bx,\bz,\bz) + \MF^4(\bx,\bx,\bt,\bt) + \MF^4(\by,\by,\bz,\bz) \\ 
+			  && + \MF^4(\by,\by,\bt,\bt) - 2\MF^4(\bx,\by,\bz,\bz) - 2\MF^4(\bx,\by,\bt,\bt) \\
+			  && + 2\MF^4(\bx,\bx,\bz,\bt) + 2\MF^4(\by,\by,\bz,\bt) - 4\MF^4(\bx,\by,\bz,\bt) 
+		  \end{array}
+		  \end{equation}
+		  Summing up inequalities \eqref{eq:ineq1} and \eqref{eq:ineq2} gives us:
+		  \begin{equation*}
+			4\MF^4(\bx,\by,\bz,\bt) \leq \MF^4(\bx,\bx,\bz,\bz) + \MF^4(\bx,\bx,\bt,\bt) + \MF^4(\by,\by,\bz,\bz) + \MF^4(\by,\by,\bt,\bt) 
+		  \end{equation*}
+		  From here, one can apply the first result to finish the proof.
+	\end{enumerate}
+\end{proof}
+
+We are now ready to extend the second result of Lemma \ref{lem:main_order2} to 4th order tensor.
+The following theorem shows that the optimization of the functions $\MF^4(\bx,\by,\bz,\bt)$ and the function $\MF^4(\bx,\bx,\by,\by)$ 
+and $S^4(\bx)=\MF^4(\bx,\bx,\bx,\bx)$ are all equivalent to each other in the sense that there exists
+a globally optimal solution of one problem which is also a globally optimal solution of the other problems.
+\begin{theorem}\label{theo:main_order4}
+    Let $\FC$ be a 4th order symmetric tensor and suppose that $S^4(\bx)=\MF^4(\bx,\bx,\bx,\bx)$ is convex on $\R^n$. 
+    Then it holds for any compact constraint set $D \subset \R^n$ that
+	  \begin{equation*}
+	      \max\limits_{\bx \in D} \MF^4(\bx,\bx,\bx,\bx)
+	      = \max\limits_{\bx,\by \in D} \MF^4(\bx,\bx,\by,\by) 
+	      = \max\limits_{\bx,\by,\bz,\bt \in D} \MF^4(\bx,\by,\bz,\bt) 
+	  \end{equation*}
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proof}
+   For any compact set $D \subset \RR^n$ it holds:
+   \begin{equation*}
+      \max\limits_{\bx \in D} \MF^4(\bx,\bx,\bx,\bx) 
+	  \leq \max\limits_{\bx,\by \in D} \MF^4(\bx,\bx,\by,\by) 
+	  \leq \max\limits_{\bx,\by,\bz,\bt \in D} \MF^4(\bx,\by,\bz,\bt) 
+   \end{equation*}
+   However, the second inequality in Lemma \ref{lem:main_order4} shows that
+   \begin{equation}
+      \MF^4(\bx,\by,\bz,\bt) \leq \displaystyle \max_{\bu \in \{ \bx,\by,\bz,\bt \}} \MF^4(\bu,\bu,\bu,\bu) 
+   \end{equation}
+   This leads to
+   \begin{equation}
+      \max\limits_{\bx,\by,\bz,\bt \in D} \MF^4(\bx,\by,\bz,\bt) \leq \max\limits_{\bx \in D} \MF^4(\bx,\bx,\bx,\bx),
+   \end{equation} which finishes the proof.
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+One can see the combination of Lemma \ref{lem:main_order4} and Theorem \ref{theo:main_order4} as an extension of Lemma \ref{lem:main_order2} 
+for 4th order tensor.
+With these results, we can optimize the multilinear form $\MF^4$ over any constraint set without losing the equivalence to the original problem
+as motivated by Sections \ref{sec:motivation_bca} and \ref{sec:motivation}.
+The use of multilinear form gives us more flexibilities in designing optimization algorithms, 
+in particular, block-coordinate-ascent updates can be easily adopted in a similar fashion with higher-order power methods 
+(see Section \ref{sec:motivation}).
+
+\section{Proposed Algorithms}
+\label{sec:proposed_algorithms}
+\subsection{Main Ideas}
+\label{sec:general_ideas}
+The aim of this section is to summarize the crucial ideas of our tensor block coordinate ascent framework.
+
+Since the optimization of $S^3$ in \eqref{eq:original_problem} is an NP-hard optimization problem, for which there exists no polynomial time
+global method, we propose an approximate method which optimizes instead of $S^3$ the multilinear form associated to it.
+Note that the new optimization problem is still NP-hard due to the combinatorial nature of the constraint set, therefore we can only seek for 
+a local solution. 
+
+On one hand, we do not lose much by shifting from the original objective function to the multlinear form
+since the global optimality of the new problem can be made equivalent to that of the original problem.
+On the other hand, we obtain several advantages for this shift.
+First of all, all the variables in the multilinear form become decoupled so that a block coordinate ascent type method can be applied. 
+For instance, the function $\MF^4(\bx,\by,\bz,\bt)$ has four decoupled variables $\bx,\by,\bz,\bt$, and the function $\MF^4(\bx,\bx,\by,\by)$
+has two decoupled variables $\bx$, $\by$.
+Second, apart from enjoying all the benefits of a block coordinate method (parameter free, easy to implement, etc), this model also allows us to 
+embed existing robust lower order techniques into the framework as the main problem is turned into a sequence of lower order subproblems.
+
+To connect the optimization of the original polynomial function and the optimization of its associated multilinear form, 
+we proposed to use the lifted score function $S^4(\bx)=\MF^4(\bx,\bx,\bx,\bx)$ respectively the lifted multilinear form
+$\MF^4(\bx,\by,\bz,\bt)$, where the equivalence between the optimization of these functions can be established via Lemma \ref{lem:main_order4}
+and the convexification of $S^4$.
+As a result, we finally optimize $S^4_\alpha(\bx)$ respectively the associated multilinear form $\MF^4_\alpha(\bx,\by,\bz,\bt)$. 
+
+In the two algorithms presented below, we directly optimize over the discrete set $M$ of assignment constraints, that is there is no relaxation involved.
+This is clearly an advantage of our algorithms over most previous works as they mainly work with the relaxed constraint 
+and take into account the original constraint only at the final projection step.
+To the best of our knowledge, IPFP \cite{Leordeanu2009a} is among very few methods concerned with the original constraint 
+as it keeps track of the best discrete solution through all the iterates, but still, the method is optimizing over the relaxed domain.
+The importance of handling the original discrete constraints in graph matching is reflected
+by our experimental results in Chapter \ref{chap:experiments}.
+Our results also strengthen one important point observed in \cite{Leordeanu2009a}
+that a well-designed algorithm with local optimality in the original domain can have a greater impact on the final solution 
+than the global optimality in the relaxed domain.
+
+Lastly, it should be emphasized that even though we work with the lifted objects, our algorithms prove monotonic ascent 
+with respect to the original score function $S^3(\bx)$ over the discrete set $M$. 
+The central element of both algorithms is Lemma \ref{lem:main_order4} and the idea to optimize the multilinear form, 
+instead of the score function directly, combined with the fact that for assignment matrices both modifications (lifting and convexification) 
+are constant and thus do not change the problem.
+
+Hereafter, in order to simplify the notation in the algorithms we discard the superscript and write $\MF_\alpha$ instead of
+$\MF^4_\alpha$ as the algorithms only involve $4$th order tensors.
+
+\subsection{Tensor Block Coordinate Ascent via Linear Assignment Problems}
+\label{sec:bcagm}
+The first algorithm uses a block coordinate ascent scheme to optimize the multilinear function $\MF_\alpha(\bx,\by,\bz,\bt)$.
+Fixing all but one argument and maximizing that over all assignment matrices $M$ leads to a linear
+assignment problem which can be solved globally optimal by the Hungarian algorithm \cite{Kuhn1955,Burkard2012}
+- this is used for steps 1)-4) in Algorithm \ref{algo:linear}. 
+However, optimization of the multilinear function is not equivalent to optimizing the score function. 
+This is the reason why we use in step 5) the second inequality in Lemma \ref{lem:main_order4}
+to come back to the original problem, where one can show a monotonic ascent in the original score function.
+For initialization, we first run steps 1)-4) of Algorithm \ref{algo:linear} with $\alpha=0$ until there is no further improvement in the objective.
+The output of this process serves as a starting point for the whole algorithm.
+The following theorem summarizes the properties of Algorithm \ref{algo:linear}.
+
+\begin{algorithm}
+    \caption{BCAGM} 
+    \KwIn {Lifted affinity tensor $\FC$, $\alpha = 3\norm{\FC}_2$\\
+           $(\bx_0,\by_0,\bz_0,\bt_0) \in M\times M\times M\times M,\, k = 0,\, m=0$}
+    \KwOut {$\bx^* \in M$}
+    %\begin{itemize}
+	  \textbf{Repeat} 
+	    \begin{enumerate}
+		\item $\tbx^{k+1} = \displaystyle \argmax_{\bx \in M} \MF_\alpha(\bx,\by^{k},\bz^{k},\bt^{k})$ 
+		\item $\tby^{k+1} = \displaystyle \argmax_{\by \in M} \MF_\alpha(\tbx^{k+1},\by,\bz^{k},\bt^{k})$ 
+		\item $\tbz^{k+1} = \displaystyle \argmax_{\bz \in M} \MF_\alpha(\tbx^{k+1},\tby^{k+1},\bz,\bt^{k})$ 
+		\item $\tbt^{k+1} = \displaystyle \argmax_{\bt \in M} \MF_\alpha(\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\bt)$ 
+		\item \textbf{if} $\MF_\alpha (\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\tbt^{k+1}) = 
+					\MF_\alpha (\bx^{k},\by^{k},\bz^{k},\bt^{k})$ \textbf{then }
+		    \begin{itemize}
+			%\item[--] \textbf{if} $\bx^{k+1} = \by^{k+1} = \bz^{k+1} = \bt^{k+1}$ 
+		%		  \textbf{then} \textbf{return} $\bx^{k+1}$
+			\item[--] $\bu^{m+1} = \argmax_{\bu \in \{ \tbx^{k+1},\tby^{k+1},\tbz^{k+1},\tbt^{k+1} \}} 
+					  \MF_\alpha(\bu,\bu,\bu,\bu)$
+		  \item[--]\textbf{if} $\MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1})=\MF_\alpha (\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\tbt^{k+1})$ 
+		        \textbf{then return}
+% 			\item[--] $\bx^{k+2} = \by^{k+2} = \bz^{k+2} = \bt^{k+2} = \bu^{m+1}$
+% 			\item[--] $k =k + 1$, $m =m+1$
+			\item[--] $\bx^{k+1} = \by^{k+1} = \bz^{k+1} = \bt^{k+1} = \bu^{m+1}$
+			\item[--] $m = m + 1$
+		  \end{itemize}
+		  \textbf{else} $\bx^{k+1} = \tbx^{k+1}$, $\by^{k+1} = \tby^{k+1}$, $\bz^{k+1}=\tbz^{k+1}$, $\bt^{k+1} = \tbt^{k+1}$
+		\item[] \textbf{end}
+		\item $k = k + 1$
+	    \end{enumerate}
+	%\textbf{Until} \text{stopping criteria} 
+    %\end{itemize}
+     \label{algo:linear}
+\end{algorithm}
+\begin{theorem}
+    Let $\FC$ be a 4th order symmetric tensor.
+    Then the following holds for Algorithm \ref{algo:linear}:
+    \begin{enumerate}
+    \item The sequence $\MF_\alpha (\bx^{k},\by^{k},\bz^{k},\bt^{k})$ is strictly monotonically increasing or the 
+          sequence terminates.
+	  \item The sequence of scores $S^4(\bu^m)$ is strictly monotonically increasing or the sequence terminates. 
+	        All the $\bu^m \in M$ are valid assignment matrices.
+	  \item The sequence of original third-order scores $S^3(\bu^m)$ is strictly monotonically increasing or the sequence
+	        terminates.
+	  \item The algorithm terminates after a finite number of iterations.
+% 	\item The return solution is always homogeneous, i.e. $\bx^* = \by^*=\bz^*=\bt^*$, and if $D$ is a convex compact set then
+% 	  $\bx^*$ will be a stationary point of the original problem \ref{eq:org_prob}.
+    \end{enumerate}
+    \label{theo:linear}
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proof} 
+    From the definition of steps $1)-4)$ in Algorithm \ref{algo:linear}, we get
+    \begin{eqnarray*}
+	\MF_{\alpha,k} &:=& \MF_\alpha(\bx^k,\by^{k},\bz^{k},\bt^{k}) \\
+	&\leq& \MF_\alpha(\tbx^{k+1},\by^{k},\bz^{k},\bt^{k}) \\
+	&\leq& \MF_\alpha(\tbx^{k+1},\tby^{k+1},\tbz^{k},\bt^{k}) \\
+	&\leq& \MF_\alpha(\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\bt^{k}) \\
+	&\leq& \MF_\alpha(\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\tbt^{k+1}) =: \MF_{\alpha,k+1}
+    \end{eqnarray*}
+    Either $\MF_{\alpha,k+1}>\MF_{\alpha,k}$ in which case 
+    \[ \bx^{k+1} = \tbx^{k+1}, \;\by^{k+1} = \tby^{k+1},\; \bz^{k+1}=\tbz^{k+1},\; \bt^{k+1} = \tbt^{k+1},\]
+    and we clearly have \[ \MF_\alpha(\bx^{k+1},\by^{k+1},\bz^{k+1},\bt^{k+1}) > \MF_\alpha(\bx^{k},\by^{k},\bz^{k},\bt^{k}),\]
+    or $\MF_{\alpha,k+1}=\MF_{\alpha,k}$ and the algorithm enters step 5. 
+    Note that since $S_\alpha^4$ is convex for the chosen value of $\alpha$ by Proposition \ref{prop:convexify}, we get by Lemma \ref{lem:main_order4} 
+    \begin{eqnarray*}
+	\MF_\alpha(\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\tbt^{k+1}) &\leq& 
+	\max\big\{ \MF_\alpha(\tbx^{k+1},\tbx^{k+1},\tbx^{k+1},\tbx^{k+1}) , \\
+	&& \MF_\alpha(\tby^{k+1},\tby^{k+1},\tby^{k+1},\tby^{k+1}) , \\
+	&& \MF_\alpha(\tbz^{k+1},\tbz^{k+1},\tbz^{k+1},\tbz^{k+1}) , \\
+	&& \MF_\alpha(\tbt^{k+1},\tbt^{k+1},\tbt^{k+1},\tbt^{k+1}) \big\} \\
+	&=& \MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1}) = S^4_\alpha(\bu^{m+1})\;
+    \end{eqnarray*}
+    If the inequality is an equality, then the termination condition of the algorithm is met. Otherwise, we get:
+    \begin{eqnarray*}
+	\MF_\alpha(\tbx^{k+1},\tby^{k+1},\tbz^{k+1},\tbt^{k+1}) &<& \MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1}) \\
+	&=& S^4_\alpha(\bu^{m+1}) \\
+	&=& \MF_\alpha(\bx^{k+1},\by^{k+1},\bz^{k+1},\bt^{k+1})
+    \end{eqnarray*}
+    This proves the first statement of the theorem.
+	  
+    As $S^4_\alpha(\bu^{m+1})=\MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1})=\MF_\alpha(\bx^{k+1},\by^{k+1},\bz^{k+1},\bt^{k+1})$ 
+    it is a subsequence of $\MF_\alpha (\bx^{k},\by^{k},\bz^{k},\bt^{k})$ and thus it holds either $S^4_\alpha(\bu^{m+1})=S^4_\alpha(\bu_{m})$ 
+    in which case the algorithm terminates or $S^4_\alpha(\bu^{m+1})>S^4_\alpha(\bu^m)$.
+    However, by Equation \ref{eq:Modconstant} the additional term which has been added to $S^4$ to get a convex function is constant on $M$, 
+    that is we have for any $\bx \in M$, \[ S^4_\alpha(\bx)=S^4(\bx) + \alpha n_1^2,\]
+    Thus it follows that either $S^4(\bu^{m+1})=S^4(\bu_{m})$ and the algorithm terminates or $S^4(\bu^{m+1})>S^4(\bu_{m})$ 
+    which proves the second part of the theorem.
+	  
+    Finally, we can translate back the result to original score function by Equation \ref{eq:eqS4S3}. We have for any $\bx \in M$,
+    \begin{eqnarray*}
+	S^4(\bx) &=& \MF^4(\bx,\bx,\bx,\bx)=4\MF^3(\bx,\bx,\bx)\sum_{i=1}^n \bx_i \\
+	&=& 4\,n_1\,S^3(\bx).
+    \end{eqnarray*}
+    Thus the statements made for $S^4$ directly translate into corresponding statements for the original third order score $S^3$ thus proving the second last statement.   
+	   
+    Finally, the algorithm yields a strictly monotonically increasing sequence $S^4(\bu^m)$ or it terminates. 
+    However, there are only a finite number of possible assignment matrices. Thus the sequence has to terminate after a finite number of steps.    
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Discussion}
+First, it should be mentioned that if the binary constrain in $M$ is relaxed to its continuous counterpart, 
+then all the steps 1)-4) are not affected as the Hungarian method always returns an optimal discrete solution.
+
+As already mentioned, Algorithm \ref{algo:linear} consists of two phases.
+The first phase known as initialization phase maximizes $\MF_\alpha$ with $\alpha = 0$, that is,
+$\MF_\alpha(\bx,\by,\bz,\bt) \equiv \MF(\bx,\by,\bz,\bt)$.
+It turns out that we optimizes in this phase the multilinear form associated to the score function $S^4$, 
+thus, the whole phase can be seen as solving a relaxed problem.
+The use of $\alpha = 0$ also helps to avoid situations where the original function is already a convex function (or almost a convex function),
+which has been observed in \cite{Duchenne2011}.
+In the second phase, $\alpha$ is set according to Proposition \ref{prop:convexify}, 
+and the full steps of Algorithm \ref{algo:linear} are adopted to make sure that our algorithm ends up with a feasible solution of the original problem,
+i.e. $\bx=\by=\bz=\bt$.
+Step $5$ is also a way for our algorithm to keep improving the objective value by jumping over the current optima.
+
+Finally, one can view these two phases from the perspective of a homotopy-like method 
+which gradually increases $\alpha$ from $0$ to some upper bound and solves
+the problem at each step by using previous output as starting point.
+
+\subsection{Tensor Block Coordinate Ascent via Quadratic Assignment Problems}
+\label{sec:bcagm+mp}
+The second algorithm uses a block coordinate ascent scheme to optimize the function $\MF_\alpha(\bx,\bx,\by,\by)$
+where now two arguments are fixed and one maximizes over the other two.
+However, as there are only two different variables, namely $\bx$ and $\by$, 
+fixing one variable and optimizing over the other one would result in a quadratic assignment problem which is known to be NP-hard. 
+Thus a globally optimal solution as we had for the linear assignment problem as in Algorithm \ref{algo:linear} is out of reach.
+Instead we require a sub-algorithm $\Psi$ which delivers monotonic ascent for the quadratic assignment problem
+\begin{equation}\label{eq:quadratic}
+    \min\limits_{\bx \in M} \inner{\bx,A\bx}=\sum_{i,j=1}^n A_{ij} \bx_i\bx_j,
+\end{equation} where $A \in \R^{n\times n}$ is a non-negative symmetric matrix. 
+Finally, as in Algorithm \ref{algo:linear} we go back to the optimization of the score function in step 3)
+using the first inequality in Lemma \ref{lem:main_order4}. 
+The initialization procedure is done in the same fashion as for Algorithm \ref{algo:linear}, 
+where we starts with $\alpha=0$, and then restart the algorithm with $\alpha$ being the lower bound defined in Proposition \ref{prop:convexify}.
+The following theorem summarizes the properties of Algorithm \ref{algo:quadratic}.
+
+\begin{algorithm}
+    \caption{BCAGM-$\Psi$}
+    \KwIn {Lifted affinity tensor $\FC^4$, $\alpha = 3\norm{\FC}_2$\\
+    $(\bx_0,\by_0) \in M\times M,\, k = 0,\, m=0$,\\ $z=\Psi(A,x^k)$ is an algorithm for the quadratic assignment problem in \eqref{eq:quadratic}
+    which provides monotonic ascent compared to its starting point, that is $\inner{z,Az}\geq \inner{x^k,Ax^k}$ and where $z,x^k \in M$.}
+    \KwOut {$\bx^* \in M$}
+    \textbf{Repeat} 
+	    \begin{enumerate}
+		\item $\tbx^{k+1} = \Psi\big(\MF_\alpha(\cdot,\cdot,\by^{k},\by^{k}),\,\bx^k\big)$ 
+		\item $\tby^{k+1} = \Psi\big(\MF_\alpha(\tbx^{k+1},\tbx^{k+1},\cdot,\cdot),\by^k\big)$
+		\item \textbf{if} $\MF_\alpha (\tbx^{k+1},\tbx^{k+1},\tby^{k+1},\tby^{k+1}) = 
+					\MF_\alpha (\bx^{k},\bx^{k},\by^{k},\by^{k})$ \textbf{then }
+		    \begin{itemize}
+		    	\item[--] $\bu^{m+1} = \displaystyle\argmax_{\bu \in \{ \tbx^{k+1},\tby^{k+1} \}} 
+					  \MF_\alpha(\bu,\bu,\bu,\bu)$
+			\item[--] \textbf{if} $\MF_\alpha (\tbx^{k+1},\tbx^{k+1},\tby^{k+1},\tby^{k+1})=\MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1})$ 
+				  \textbf{then return}
+% 			\item[--] $\bx^{k+2} = \by^{k+2} = \bu^{m+1}$
+% 			\item[--] $k = k + 1$, $m=m+1$
+			\item[--] $\bx^{k+1} = \by^{k+1} = \bu^{m+1}$
+			\item[--] $m=m+1$
+		    \end{itemize}
+	     \textbf{else} $\bx^{k+1}=\tbx^{k+1}$, $\by^{k+1}=\tby^{k+1}$.\\
+	      \textbf{end}
+		\item $k = k + 1$
+	    \end{enumerate}
+    %\end{itemize}
+    \label{algo:quadratic} 
+\end{algorithm}
+
+\begin{theorem}
+    Let $\FC$ be a 4th order symmetric tensor
+    and let $\Psi$ be an algorithm for the quadratic assignment problem which yields monotonic ascent.
+    Then the following holds for Algorithm \ref{algo:quadratic}:
+    \begin{enumerate}
+    \item The sequence $\MF_\alpha (\bx^{k},\bx^{k},\by^{k},\by^{k})$ is strictly monotonically increasing or the 
+          sequence terminates.
+	  \item The sequence of scores $S^4(\bu^m)$ is strictly monotonically increasing or the sequence terminates. 
+	        All the $\bu^m \in M$ are valid assignment matrices.
+	  \item The sequence of original third-order scores $S^3(\bu^m)$ is strictly monotonically increasing or the sequence
+	        terminates.
+	  \item The algorithm terminates after a finite number of iterations.
+% 	\item The return solution is always homogeneous, i.e. $\bx^* = \by^*=\bz^*=\bt^*$, and if $D$ is a convex compact set then
+% 	  $\bx^*$ will be a stationary point of the original problem \ref{eq:org_prob}.
+    \end{enumerate}
+    \label{theo:quadratic}
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proof} 
+    From the definition of steps $1)-2)$ in Algorithm \ref{algo:quadratic}, we get
+	\begin{eqnarray*}
+		\MF_{\alpha,k} &:=& \MF_\alpha(\bx^k,\bx^k,\by^{k},\by^{k}) \\
+		&\leq& \MF_\alpha(\tbx^{k+1},\tbx^{k+1},\by^{k},\by^{k}) \\
+		&\leq& \MF_\alpha(\tbx^{k+1},\tbx^{k+1},\tby^{k+1},\tby^{k+1}) =: \MF_{\alpha,k+1}
+	\end{eqnarray*}
+		Either $\MF_{\alpha,k+1} > \MF_{\alpha,k}$ in which case \[ \bx^{k+1}=\tbx^{k+1},\quad \by^{k+1}=\tby^{k+1},\]
+		and thus
+		\[ \MF_\alpha(\bx^{k+1},\bx^{k+1},\by^{k+1},\by^{k+1}) > \MF_\alpha(\bx^{k},\bx^{k},\by^{k},\by^{k}),\]
+		or $\MF_{\alpha,k+1} = \MF_{\alpha,k}$ and the algorithm enters step 3. 
+		Note that since $S_\alpha^4$ is convex for the chosen value of $\alpha$ by Proposition \ref{prop:convexify}, 
+		we get by Lemma \ref{lem:main_order4} 
+	\begin{eqnarray*}
+	       \MF_\alpha(\tbx^{k+1},\tbx^{k+1},\tby^{k+1},\tby^{k+1}) &\leq& 
+	       \max\big\{ \MF_\alpha(\tbx^{k+1},\tbx^{k+1},\tbx^{k+1},\tbx^{k+1}), \\
+	        && \MF_\alpha(\tby^{k+1},\tby^{k+1},\tby^{k+1},\tby^{k+1})\big\} \\
+		&=& \MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1}) = S^4_\alpha(\bu^{m+1})\;
+	\end{eqnarray*}
+    If the inequality is an inequality, then the termination condition of the algorithm is met.
+    Otherwise, we get $\MF_\alpha(\tbx^{k+1},\tbx^{k+1},\tby^{k+1},\tby^{k+1}) < \MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1}) 
+    = S^4_\alpha(\bu^{m+1}) = \MF_\alpha(\bx^{k+1},\bx^{k+1},\by^{k+1},\by^{k+1})$. 
+    This proves the first statement of the theorem.
+	  
+    As $S^4_\alpha(\bu^{m+1}) = \MF_\alpha(\bu^{m+1},\bu^{m+1},\bu^{m+1},\bu^{m+1}) = \MF_\alpha(\bx^{k+1},\bx^{k+1},\by^{k+1},\by^{k+1})$ 
+    it is a subsequence of $\MF_\alpha (\bx^{k},\bx^{k},\by^{k},\by^{k})$ and thus it holds either $S^4_\alpha(\bu^{m+1})=S^4_\alpha(\bu_{m})$ 
+    in which case the algorithm terminates or $S^4_\alpha(\bu^{m+1})>S^4_\alpha(\bu^m)$.
+    However, by \eqref{eq:Modconstant} the additional term which has been added to $S^4$ to get a convex function is constant on $M$, 
+    that is we have for any $\bx \in M$, \[ S^4_\alpha(\bx)=S^4(\bx) + \alpha n_1^2,\]
+    Thus it follows that either $S^4(\bu^{m+1})=S^4(\bu_{m})$ and the algorithm terminates or $S^4(\bu^{m+1})>S^4(\bu_{m})$ 
+    which proves the second part of the theorem.
+    
+    Finally, we can translate back the result to original score function by Equation \ref{eq:eqS4S3}. We have for any $\bx \in M$,
+    \begin{eqnarray}
+	S^4(\bx) &=& \MF^4(\bx,\bx,\bx,\bx)=4\MF^3(\bx,\bx,\bx)\sum_{i=1}^n \bx_i \nonumber\\
+	&=& 4\,n_1\,S^3(\bx).
+    \end{eqnarray}
+    Thus the statements made for $S^4$ directly translate into corresponding statements for the original third order score $S^3$ thus proving the second last statement. 
+    Finally, the algorithm yields a strictly monotonically increasing sequence $S^4(\bu^m)$ or it terminates. 
+    However, there are only a finite number of possible assignment matrices. Thus the sequence has to terminate after a finite number of steps.
+\end{proof}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% SHORT VERSION %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The initialization procedure is done as for Algorithm \ref{algo:linear}. 
+
+\subsubsection{Discussion}
+Similar to what discussed for Algorithm \ref{algo:linear}, Algorithm \ref{algo:quadratic} consists of two phases.
+The first phase can be seen as solving a relaxed problem, where one optimizes the multilinear form associated to the original function.
+The second phase restarts the algorithm with full steps and $\alpha$ is set to the lower bound in Proposition \ref{prop:convexify}.
+
+Concerning the sub-routine $\Psi$, there are available methods in literature one can choose from.
+In principle, $\Psi(\bA, \bx^k)$ could be any function that delivers monotonic ascent in the quadratic function,
+that is to have $\Psi(\bA, \bx^k) = \bz \in M$ such that $\inner{\bz,\bA\bz}\geq \inner{\bx^k,\bA\bx^k}$.
+
+Among existing second order methods for graph matching, IPFP \cite{Leordeanu2009a} is known to have such a theoretical guarantee 
+as the algorithm uses limited line search to compute iterates.
+However, restricting $\Psi$ to those algorithms with monotonic ascent guarantee would limit the application of our framework
+since this omits the potential of other second-order methods. 
+MPM \cite{Cho2014} is one of them, which has recently been shown very robust to outliers even though it comes without any theoretical guarantee.
+
+In order to circumvent this problem, we tweak a little bit steps $1)$ and $2)$ in Algorithm \ref{algo:quadratic}.
+In particular, the solution returned by a sub-solver will be projected onto the set of assignment matrices and compare with the current iterate.
+% Then $\bx^{k+1}$ will be assigned to this value if it gives us an ascent in the objective and unchanged otherwise.
+Mathematically, let $f$ denotes a QAP solver and $f(\bA, \bx^k)$ denotes the solution returned by $f$ given
+$\bx^k$ as a starting point, then we define $\Psi(\bA, \bx^k)$ in Algorithm \ref{algo:quadratic} as follows
+$$
+    \Psi(\bA, \bx^k) = \left\lbrace
+    \begin{array}{ll}
+	H_M (f(\bA, \bx^k)) & \textrm{if } \inner{H_M (f(\bA, \bx^k)), \bA\bx^k} \geq \inner{\bx^k,\bA\bx^k} \\
+	\bx^k & \textrm{otherwise}
+    \end{array}
+    \right.
+$$ where $H_M$  denotes a projection onto assignment matrices.
+
+In this way, we can guarantee monotonic ascent in the original objective function 
+regardless of whether the chosen sub-solver $f$ has such a property or not.
+In fact, this is not something unreasonable in practice since most of quadratic solvers for graph matching often 
+return a better solution than its starting point no matter if they achieve ascent in each iteration.
+While this leaves room for improvement, it turns out that the combination of our tensor block coordinate ascent scheme using
+existing second order methods as a sub-routine yields very good performance on all datasets.
+
+% Another possible way is to run the subalgorithm  until the quadratic objective function ceases to increase (see Algorithm \ref{algo:psi2}).
+% However, our practical experiments have shown that, for some second order methods like MPM, the algorithm may terminate
+% so early that the resulting iterate is not good enough to lead the iterates torwards a satisfying
+% In contradiction, in the first approach, we let a sub-algorithm run until it terminates and only adapt the result at the end.
+% This allows us to take full advantage of different second order methods, including MPM.
+% Therefore, we follow the first approach for all our experiments in Chapter \ref{chap:experiments}.
+% \begin{algorithm}
+%     \caption{$\Psi(A, x^k)$}
+%     \KwIn {
+% 	$x^k \in M$, \\
+% 	$\Phi(A, \bx^k)$ is a second order method that returns its next iterate given $\bx^k$ as its current iterate
+%     }
+%     \KwOut {$\bz \in M$ such that $\inner{z,Az}\geq \inner{x^k,Ax^k}$}
+%     \textbf{Repeat} 
+% 	    \begin{enumerate}
+% 		\item compute the next iterate: $\bx^{k+1} = \Phi(A, \bx^k)$
+% 		\item projecting onto the set of assignment matrices: $\bv = \argmin_{\bv \in M} \norm{\bv - \bx^{k+1}}_2^2$ 
+% 		\item check ascent condition: \textbf{if} $\inner{\bv, A \bv} < \inner{\bx^k,A \bx^k}$ 
+% 		      \textbf{then return} $\bx^k$
+% 		\item $\bx^{k+1} = \bv$     
+% 	    \end{enumerate}
+%     \label{algo:psi2} 
+% \end{algorithm}
+
+% \section{Complexity Analysis}
+% While it is difficult to upperbound the number of iterations our algorithms need to converge, we briefly show the complexity at each iteration.
+% Let $m, n$ be the the number of vertices in each graph.
+% For BCAGM, the cost at each iteration includes the Hungarian method and the gradient computation of a 4th order multilinear form.
+% For the Hungarian method, to treat the case where $m \neq n$, 
+% we simply add zero columns/rows such that the problem can be solved by the standard implementation, resulting the complexity of $O(max(m,n)^3)$. 
+% In literature, there exists other implementations of the Hungarian with better running time,
+% but we chosen the standard one because of its simplicity.
+% For BCAGM-$\Psi$, the cost of each iteraion depends totally on 

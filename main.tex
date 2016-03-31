@@ -1,0 +1,252 @@
+%\documentclass[12pt,vi,twoside]{mitthesis}
+%%
+%%  If you want your thesis copyright to you instead of MIT, use the
+%%  ``vi'' option, as above.
+%%
+%\documentclass[12pt,twoside,leftblank]{mitthesis}
+%%
+%% If you want blank pages before new chapters to be labelled ``This
+%% Page Intentionally Left Blank'', use the ``leftblank'' option, as
+%% above. 
+
+\documentclass[12pt,oneside]{SETUP/mitthesis}
+\pagestyle{plain}
+\usepackage{SETUP/lgrind}
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+\usepackage[svgnames]{xcolor}
+\hypersetup{colorlinks,breaklinks,
+      linkcolor = NavyBlue,
+      urlcolor  = NavyBlue,
+      citecolor = NavyBlue,
+      anchorcolor = NavyBlue,
+      linkcolor = NavyBlue
+}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{epstopdf}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,epsfig}
+\usepackage{placeins}
+% \usepackage{bbm,vector}
+\usepackage{enumitem}
+%\usepackage[english, algoruled, noline, norelsize]{algorithm2e}
+\usepackage[english, algoruled, noline]{algorithm2e}
+\usepackage{url}	
+\usepackage[caption=false]{subfig}
+\usepackage[titletoc]{appendix}
+% for typing vietnamese
+% \usepackage[utf8]{inputenc}
+% \usepackage[vietnam]{babel}
+
+\newcommand{\EXAMPLE}[1]{%
+  \begin{center}\fbox{\begin{minipage}{0.95\textwidth}{\sf{}#1}\end{minipage}}%
+  \end{center}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Problem}
+\newenvironment{proof}{\par\noindent{\bf Proof:\ }}{\hfill$\Box$\\[2mm]}
+%\newcommand{\etal}{\textit{et al.}}
+
+\def\HH{\mathbb{H}}
+\def\BB{\mathbb{B}}
+\def\CC{\mathbb{C}}
+\def\NN{\mathbb{N}}
+\def\RR{\mathbb{R}}
+\def\ZZ{\mathbb{Z}}
+\def\PP{\mathbb{P}}
+
+\def\HC{\mathcal{H}}
+\def\AC{\mathcal{A}}
+\def\BC{\mathcal{B}}
+\def\FC{\mathcal{F}}
+\def\EC{\mathcal{E}}
+\def\TC{\mathcal{T}}
+\def\GC{\mathcal{G}}
+\def\SC{\mathcal{S}}
+\def\MC{\mathcal{M}}
+\def\DS{\mathcal{DS}^n}
+
+\def\bx{\mathbf{x}}
+\def\by{\mathbf{y}}
+\def\bz{\mathbf{z}}
+\def\bt{\mathbf{t}}
+\def\ba{\mathbf{a}}
+\def\bd{\mathbf{d}}
+\newcommand{\bu}{\mathbf{u}}
+\def\bv{\mathbf{v}}
+\def\be{\mathbf{e}}
+\def\bX{\mathbf{X}}
+\def\bY{\mathbf{Y}}
+\def\bA{\mathbf{A}}
+\def\bB{\mathbf{B}}
+\def\bC{\mathbf{C}}
+\def\bD{\mathbf{D}}
+\def\bE{\mathbf{E}}
+\def\bF{\mathbf{F}}
+\def\bI{\mathbf{I}}
+\def\bP{\mathbf{P}}
+\def\bW{\mathbf{W}}
+\def\tbx{\tilde{\mathbf{x}}}
+\def\tby{\tilde{\mathbf{y}}}
+\def\tbz{\tilde{\mathbf{z}}}
+\def\tbt{\tilde{\mathbf{t}}}
+
+\def\AF{\textit{A}}
+\def\MF{\textit{F}}
+\def\ME{\textit{E}}
+\def\MT{\textit{T}}
+\def\MH{\textit{H}}
+\def\MG{\textit{G}}
+\def\eps{\epsilon}
+\def\permut{\mathfrak{G}}
+\def\<{\left\langle}
+\def\>{\right\rangle}
+\def\rank{\operatorname{\textit{rank}}}
+\def\mod{\operatorname{\textit{mod}}}
+\def\vec{\operatorname{\textit{vec}}}
+\def\unvec{\operatorname{\textit{unvec}}}
+\def\trace{\operatorname{\textit{trace}}}
+\newcommand{\form}[1]{\mathcal{#1}}
+\newcommand{\frob}[1]{\norm{#1}_F}
+\renewcommand{\span}[1]{\<#1\>}
+\newcommand{\dual}[1]{{#1}^{*}}
+\def\tensorProd{\otimes_{\TC}}
+
+\def\set#1{\{ #1 \}}
+\def\sset#1{\left[ #1 \right]}
+\def\cset#1{\left( #1 \right)}
+\def\Set#1{\left\{ #1 \right\}}
+\def\Bigbar#1{\mathrel{\left|\vphantom{#1}\right.}}
+\def\Setbar#1#2{\Set{#1 \Bigbar{#1 #2} #2}}
+\newcommand{\multsum}{\sum_{i_1=1}^{I_1} \sum_{i_2=1}^{I_2} \cdots \sum_{i_m=1}^{I_m}}
+
+% macros of matthias
+\newcommand{\inner}[1]{\left\langle#1\right\rangle}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\abs}[1]{\left|#1\right|}
+\def\bydef{:=}
+\def\H{\mathcal{H}}
+\def\Pr{\mathrm{P}}
+\def\E{\mathcal{E}}
+\def\G{\mathcal{G}}
+\def\tG{{\tilde{\mathcal{G}}}}
+\def\A{\mathcal{A}}
+\def\X{\mathcal{X}}
+\def\Y{\mathcal{Y}}
+\def\R{\mathbb{R}}
+\def\C{\mathbb{C}}
+\def\D{\mathcal{D}}
+\def\N{\mathbb{N}}
+\def\M{\mathcal{M}}
+\def\L{\mathcal{L}}
+\def\F{\mathcal{F}}
+\def\K{\mathcal{K}}
+\def\KK{\mathbb{K}}
+\def\B{\mathcal{B}}
+\def\U{\mathcal{U}}
+\def\P{\mathcal{P}}
+\def\Span{\textrm{span}}
+\def\Pr{\mathrm{P}}
+\def\Nc{\mathcal{N}}
+\def\Z{\mathbb{Z}}
+
+\def\mean{\mathop{\rm mean}\nolimits}
+\def\median{\mathop{\rm median}\nolimits}  
+\def\sgn{\mathop{\rm sgn}\nolimits}
+\def\diam{\mathop{\rm diam}\nolimits}
+\def\esssup{\mathop{\rm ess\,sup}\nolimits}
+\def\conv{\mathop{\rm conv}\nolimits}
+\def\sconv{\mathop{\rm sconv}\nolimits}
+\def\tr{\mathop{\rm tr}\nolimits}
+\def\det{\mathop{\rm det}\nolimits}
+\def\mstar{\mathop{\rm star}\nolimits}
+\def\card{\mathop{\rm card}\nolimits}
+\def\dom{\mathop{\rm dom}\nolimits}
+\def\epi{\mathop{\rm epi}\nolimits}
+\def\mspan{\mathop{\rm span}\nolimits}
+\def\cspan{\mathop{\rm \overline{span}}\nolimits}
+\def\conv{\mathop{\rm conv}\nolimits}
+\def\cconv{\mathop{\rm \overline{conv}}\nolimits}
+\def\aconv{\mathop{\rm absconv}\nolimits}
+\def\acconv{\mathop{\rm \overline{absconv}}\nolimits}
+\def\supp{\mathop{\rm supp}\nolimits}
+\def\ker{\mathop{\rm ker}\nolimits}
+\def\ran{\mathop{\rm ran}\nolimits}
+\def\id{\mathop{\rm id}\nolimits}
+\def\im{\mathop{\rm im}\nolimits}
+\def\Exp{\mathbb{E}}
+\def\vol{\mathop{\rm vol}\nolimits}
+\def\div{\mathop{\rm div}\nolimits}
+\def\grad{\mathop{\rm grad}\nolimits}
+\def\inj{\mathrm{inj}}
+\def\var{\mathrm{var}}
+\newcommand{\Id}{\mathbbm{1}}
+\def\ones{\mathbf{1}}
+
+\def\argmax{\mathop{\rm arg\,max}\limits}%    a math operator.
+\def\argmin{\mathop{\rm arg\,min}\limits}%    a math operator.
+\def\sign{\mathop{\rm sign}\limits}
+% \def\min{\mathop{\rm min}\nolimits}
+% \def\max{\mathop{\rm max}\nolimits}
+      
+% % \includeonly{CONTENT/content, CONTENT/background, CONTENT/bcagm, CONTENT/experiment BIB/biblio}
+% \includeonly{CONTENT/content, CONTENT/intro, BIB/biblio}
+% \includeonly{CONTENT/content, CONTENT/motivation, BIB/biblio}
+
+%%My definitions
+\usepackage{expl3}
+\ExplSyntaxOn
+\newcommand\latinabbrev[1]{
+  \peek_meaning:NTF . {% Same as \@ifnextchar
+    #1\@}%
+  { \peek_catcode:NTF a {% Check whether next char has same catcode as \'a, i.e., is a letter
+      #1.\@ }%
+    {#1.\@}}}
+\ExplSyntaxOff
+
+%Omit final dot from each def.
+\def\eg{\latinabbrev{e.g}}
+\def\etal{\latinabbrev{et al}}
+\def\etc{\latinabbrev{etc}}
+\def\ie{\latinabbrev{i.e}}
+
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\def\W{\mathcal{W}}
+\def\I{\mathcal{I}}
+\def\C{\mathcal{C}}
+\def\F{\mathcal{F}}
+
+%%My definitions end
+
+\begin{document}
+  
+\include{COVER/cover}
+\include{signature}
+\pagestyle{plain}
+\mbox{}
+\thispagestyle{empty}
+\newpage
+\include{CONTENT/tableofcontents}
+\include{CONTENT/intro}
+\include{CONTENT/review}
+\include{CONTENT/background}
+% \include{CONTENT/gpm}
+%\include{CONTENT/motivation}
+\include{CONTENT/SensorFusing}
+\include{CONTENT/experiment}
+% \include{CONTENT/discuss}
+\include{CONTENT/summary}
+\appendix
+\include{APPENDIX/integration}
+\include{APPENDIX/approximation}
+\include{BIB/biblio}
+
+\end{document}
+

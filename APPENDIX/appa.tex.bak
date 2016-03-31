@@ -1,0 +1,37 @@
+\chapter{Implementation for $\Psi$ of BCAGM+LIN}
+\label{chap:appendix}
+% \begin{table}
+% \caption{Armadillos}
+% \label{arm:table}
+% \begin{center}
+% \begin{tabular}{||l|l||}\hline
+% Armadillos & are \\\hline
+% our	   & friends \\\hline
+% \end{tabular}
+% \end{center}
+% \end{table}
+\begin{algorithm}
+    \caption{$\Psi(\bA, \bx^0)$} 
+    \KwIn {
+	$\bA \in \RR^{n\times n}$, $\bx^0 \in \RR^n$ as starting point
+    }
+    \KwOut {
+	$\bx^* \in \RR^n$ s.t. $\inner{\bx^*, \bA\bx^*} \geq \inner{\bx^0, \bA\bx^0}$
+    }
+    \textbf{Repeat} 
+    \begin{enumerate}
+	\item $\bx^{k+1} = \displaystyle\argmax_{\bx \in M} \inner{\bx, \bA\bx^k}$ 
+	\item \textbf{if} $\inner{\bx^{k+1}, \bA\bx^{k+1}} = \inner{\bx^k, \bA\bx^k}$ \textbf{then break}
+	\item $k = k + 1$
+    \end{enumerate}
+    \textbf{if } $\inner{\bx^k, \bA\bx^k} \geq \inner{\bx^0, \bA\bx^0}$ \textbf{then return } $\bx^k$
+    \textbf{else return } $\bx^0$
+\end{algorithm}
+This scheme can be seen as optimization of $\inner{\bx, \bA\by}$ over $\bx$ interleaved with that over $\by$.
+Thus, it can be seen as a simplified version of Algorithm \ref{algo:quadratic} made for a quadratic case.
+Tian \etal ~\cite{Tian2012} proved that this scheme converges to either a circular solution or a fixed point under particular conditions.
+Besides, they showed how it can be further improved by replacing the projection onto discrete domain at each step
+by a ``soft'' counterpart in continuous domain by using softmax \cite{Gold1996}.
+
+\clearpage
+\newpage

@@ -1,0 +1,68 @@
+%% This is an example first chapter.  You should put chapter/appendix that you
+%% write into a separate file, and add a line \include{yourfilename} to
+%% main.tex, where `yourfilename.tex' is the name of the chapter/appendix file.
+%% You can process specific files by typing their names in at the 
+%% \files=
+%% prompt when you run the file main.tex through LaTeX.
+\chapter{Introduction}
+\label{chap:intro}
+
+\section{Motivation and Contribution}
+\label{sec:motiv_contrib}
+
+\section{Outline of the Thesis}
+\label{sec:outline}
+The rest of the thesis is organized as follows. 
+\begin{itemize}
+    \item Chapter \ref{chap:background} starts the thesis with a background on multilinear algebra
+    which is essential for understanding our work.
+    Section \ref{sec:tensor} gives the definition of tensors and some essential operations on tensors.
+    Tensors will be used to formulate a hypergraph matching problem, where they represent the structural affinities between two graphs.
+    Section \ref{sec:mult_form} introduces the multilinear form as a multivariate multilinear function associated to a tensor.
+    Mutilinear forms play a crucial role in the derivation of our hypergraph matching framework in Chapter \ref{chap:bcagm}.
+    
+    \item Chapter \ref{chap:review} provides a systematic review of graph and hypergraph matching.
+    Section \ref{sec:assignments} gives a historical overview of assignment problems.
+    Section \ref{sec:GM_LAP} introduces the linear assignment problem and the Hungarian algorithm as an optimal solver for it.
+    Section \ref{sec:GM_QAP} introduces the quadratic assignment problem (QAP) in history and presents its relation to graph matching.
+    In particular, a graph matching problem can be seen as a special case of the QAP. 
+    Several relaxation techniques and state-of-the-art second-order methods will be discussed in this section.
+    Section \ref{sec:GM_HAP} is devoted to hypergraph matching as well as higher order assignment problems.
+    In particular, we show how a hypergraph matching problem can be formulated by naturally extending the formulation of quadratic graph matching
+    to the higher order case.
+    We draw the connection between hypergraph matching problems and some famous problems in multilinear algebra, including 
+    the best tensor rank-1 approximation problem, the H-eigenvalue problem and the Z-eigenvalue problem.
+    State-of-the-art algorithms for hypergraph matching will be discussed lastly.
+        
+    \item Chapter \ref{chap:bcagm} introduces our tensor block-coordinate ascent framework. 
+    Section \ref{sec:hgm_formulation} defines the hypergraph matching problem we consider in this thesis.
+    Section \ref{sec:motivation_bca} gives the motivation for using block-coordinate ascent as well as the use of one-to-one mapping constraints at each step.
+    Section \ref{sec:motivation} gives the motivation in terms of technical aspects by investigating a result from matrix case.
+    Section \ref{sec:math_foundation} presents all the mathematical foundations required for understanding our framework.
+    Most importantly, we will show the connection between the optimization of the original score function and the optimization of its associated multilinear form.
+    Section \ref{sec:proposed_algorithms} presents two algorithms as special instances of our general framework as well as their theoretical guarantee.
+    
+    \item Chapter \ref{chap:experiments} describe all the experiments we conducted and gives the discussion on the achieved results.
+    Section \ref{sec:experiment_overview} presents the basic setups in all our experiments.
+    Section \ref{sec:generation_of_affinity_tensors} describes how we construct the affinity tensor for hypergraph matching.
+    Sections \ref{sec:synthetic_dataset}, \ref{sec:house_dataset}, \ref{sec:realistic_image_dataset}
+    present our experimental results, where we show that our algorithms outperform all previous works in terms of both objective value and accuracy.
+    Besides, we show that our tensor framework allow to boost the performance of some second order methods, making them robust to more geometric 
+    transformations. 
+    Section \ref{sec:runtime} discusses the running time of our algorithms.
+    
+    \item Chapter \ref{chap:summary} summarizes the thesis with additional discussions and proposes directions for possible improvements.
+\end{itemize}
+
+\section{Notations}
+We introduce some elementary notations and use them throughout this thesis if not specified otherwise.
+
+Vectors will be denoted by bold lowercase letters (e.g. $\bx, \by$) while bold uppercase letters (e.g. $\bA$) will denote matrices. 
+Accordingly, given a vector $\bx$, its entries can be accessed via $\bx_i$.
+However, for a given matrix $\bX$, we use non-bold lower case letters to access its entries, that is, $\bX = \sset{x_{ij}}$.
+Higher order tensors will be denoted by bold, caligraphic, uppercase letters (e.g., $\AC, \BC, \FC$). 
+If $\bA$ is an $m\times n$ matrix then $\vec(\bA)$ denotes the $mn \times 1$ vector that is built by concatenating columns of $\bA$.
+% The opposite operator to $\vec$ is denoted as $\unvec$, that is, $\bA = \unvec(\ba) \in \RR^{m\times n}$ if $\ba = \vec(\bA) \in \RR^{mn}$.
+In most of context, one considers $\bA$ and $\vec(\bA)$ as different forms of the same variable.
+The set of permutations of $n$ integers $\Set{1,2,\ldots,n}$ is denoted as $\permut_n$.
+The set of $n\times n$ doubly stochastic matrices is denoted as $\DS$.

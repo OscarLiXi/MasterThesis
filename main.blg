@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: main.aux
+A level-1 auxiliary file: COVER/cover.aux
+A level-1 auxiliary file: signature.aux
+A level-1 auxiliary file: CONTENT/tableofcontents.aux
+A level-1 auxiliary file: CONTENT/intro.aux
+A level-1 auxiliary file: CONTENT/review.aux
+A level-1 auxiliary file: CONTENT/background.aux
+A level-1 auxiliary file: CONTENT/SensorFusing.aux
+A level-1 auxiliary file: CONTENT/experiment.aux
+A level-1 auxiliary file: CONTENT/summary.aux
+A level-1 auxiliary file: APPENDIX/integration.aux
+A level-1 auxiliary file: APPENDIX/approximation.aux
+A level-1 auxiliary file: BIB/biblio.aux
+The style file: plain.bst
+Database file #1: BIB/mybiblio.bib
+Warning--to sort, need author or key in Figure1-1_IMU_Sensor
+You've used 21 entries,
+            2118 wiz_defined-function locations,
+            631 strings with 8064 characters,
+and the built_in function-call counts, 8115 in all, are:
+= -- 847
+> -- 307
+< -- 13
++ -- 122
+- -- 100
+* -- 510
+:= -- 1223
+add.period$ -- 72
+call.type$ -- 21
+change.case$ -- 112
+chr.to.int$ -- 0
+cite$ -- 22
+duplicate$ -- 338
+empty$ -- 686
+format.name$ -- 100
+if$ -- 1814
+int.to.chr$ -- 0
+int.to.str$ -- 21
+missing$ -- 17
+newline$ -- 107
+num.names$ -- 40
+pop$ -- 154
+preamble$ -- 1
+purify$ -- 91
+quote$ -- 0
+skip$ -- 265
+stack$ -- 0
+substring$ -- 569
+swap$ -- 124
+text.length$ -- 13
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 84
+warning$ -- 1
+while$ -- 80
+width$ -- 23
+write$ -- 238
+(There was 1 warning)

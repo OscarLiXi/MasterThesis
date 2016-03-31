@@ -1,0 +1,90 @@
+%% This is an example first chapter.  You should put chapter/appendix that you
+%% write into a separate file, and add a line \include{yourfilename} to
+%% main.tex, where `yourfilename.tex' is the name of the chapter/appendix file.
+%% You can process specific files by typing their names in at the 
+%% \files=
+%% prompt when you run the file main.tex through LaTeX.
+\chapter{Summary, Discussion and Future Works}
+\label{chap:summary}
+In this thesis, we proposed a tensor-based block coordinate ascent framework for hypergraph matching, 
+which is formulated as an optimization problem of a 3rd order polynomial function over assignment constraints.
+The main idea of our approach is to optimize instead of the original objective function the multilinear form associated to it.
+However, this translation to a multilinear form turns out to be a relaxation of the original problem 
+if there is no assumption on the objective.
+Thus, we lifted the original 3rd order function to a 4th order function, where the translation can be done equivalently in the sense that 
+the maximizer of the new problem is also a maximizer of the original problem.
+% We proved the equivalence between these optimization problems based on the convexity of the lifted function.
+
+The two major steps adopted by our approach, i.e. the lifting and the translation, 
+might be counter-intuitive at first as previous works have done the opposite ways
+by reducing the order of the problem and/or directly optimizing the high order objective function.
+However, there are several benefits one can get for these steps.
+
+First, at least we do not lose much information as those methods reducing the order of tensor via marginalization \cite{Zass2008, Chertok2010}.
+
+Second, the optimization of a multilinear form gives us more flexibility in designing our algorithms as the function is relaxed to a certain extent.
+Again, this contrasts with previous approaches which mainly relax the assignment constraints to a continuous domain but 
+none of them relaxed the objective function to best of our knowledge.
+By keeping the original constraint and relaxing the function, we place more importance on the mapping conditions 
+which deserve special attentions as realized by \cite{Leordeanu2009a, Cho2010, Lee2011}.
+Furthermore, the use of discrete constraint gave us a chance to speed up our algorithms,
+which has been shown by a low running time for most of our algorithms in all experiments.
+
+Third, while being more flexible, a multilinear form also allows us to adopt a simple yet effective block-wise optimization framework, 
+and thus, enjoys all the advantages of it, e.g. being simple, easy to implement and parameter free.
+Also, a block-type algorithm gives us the ability to reuse as subroutines many existing lower order methods,
+which might potentially enhance the quality of mapping results. 
+An example is the case of MPM \cite{Cho2014}, one of those second order methods with robustness to outliers, 
+which have been shown with excellent results in higher order settings when integrated into our framework.
+
+Finally, one may argue that lifting to 4th order tensor increases the multimodality of the objective function, 
+potentially making the algorithm get trapped at local optima.
+However, this is not necessarily the case as we do not directly optimize the lifted function but its relaxed version, 
+i.e. a multilinear form. 
+Considering the function $\MF(\bx,\by,\bz, \bt)$ for example, our algorithm subsequently and repeatedly update $\bx, \by, \bz$ and $\bt$.
+Assume $\bx$ was trapped at a local optima at some step, then the update of $\by$ at the following step does not necessarily suffer
+from this because $\by$ is updated based on the current values of not only $\bx$ but also $\bz$ and $\bt$.
+The involvement of $\bz$ and $\bt$ in computation of $\by$ may lessen the chance that $\by$ will be negatively affected by $\bx$.
+Loosely speaking, if one think of $\bx$ as a mixture of true matches and noise to what extent depending on its local optimality,
+then a little amount of noise has been transferred to $\by$.
+At next steps, this noise keeps propagating to the values of $\bz$ and $\bt$ with decreasing magnitude.
+After one cycle of updates, as long as the remaining variables have not been dominantly affected by $\bx$ yet,
+it is possible that the algorithm will jump over the local optima of $\bx$ as it is re-computed in the next cycle.
+In contradiction, if one directly optimizes $\MF(\bx,\bx,\bx,\bx)$, then due to its high multimodality, 
+an accidentally bad value of $\bx$ at early stages may spoil the computation of gradient, hessian, \etal, 
+and thus, possibly spoil the whole update of $\bx$.
+The fact that our algorithms achieve better objective scores than most of previous works shows, to some extent, 
+that our approaches do not suffer from this problem, or to a slight magnitude if yes.
+As a summary for this point, one has to admit that the choice of the objective function only contributes a part to
+the performance of graph matching algorithms because in practice, it is decided by many other factors,
+for instance, the handling of assignment constraints and the sub-solver adopted at each iteration whose importance has been established 
+by our experiments.
+
+Regarding experimental results, our algorithms significantly outperform state-of-the-art methods in terms of both 
+objective score and matching accuracy. 
+This holds even for very challenging settings where different forms of noise, e.g. outliers, deformation and scaling, are present in the data.
+The running time of our methods on average are comparable to or faster than most of existing algorithms.
+As already mentioned, our tensor framework also enjoys particular flexibilities, which may open up possibilities for improvement.
+% While the application of our framework in solving other tensor optimization problems is possible, we leave this for future work.
+
+\subsubsection{Future Works}
+There are potential rooms for improvement in our tensor-based hypergraph matching framework.
+
+First, the lifting from a 3rd order tensor to a 4th order tensor may be unnecessary if our theory can be extended to 3rd order tensors.
+To do that, one needs a convexification scheme as done in Proposition \ref{prop:convexify} 
+and to prove similar results to Lemma \ref{lem:main_order4} for the 3rd order case.
+Given that these two steps are feasible, one might end up with different algorithms, one of which could be alternating between QAP and LAP solvers.
+Even though it is not sure yet in which case we will achieve better result, 
+the optimization of a 3rd order tensor could lead to a reduction in running time as the degree of the objective function decreases by one.
+
+Second, on the feature side, one can integrate not only third-order but also lower order information, for instance, 
+those based on local appearance and those derived from pairwise distances or other similarities, into our framework.
+While third-order features are good at preserving the global geometric structures of objects, lower order features might help to disambiguate 
+objects in terms of appearance. 
+Thus, their combination is expected to lead to an improvement in matching accuracy in realistic settings.
+One thing we should be aware is that our framework requires the objective function to be a multilinear form.
+Thus, all lower order features need to be transformed into appropriate higher order forms so that the resulting objective function becomes homogeneous,
+to which it is possible to associate a multilinear form.
+These steps can be done in the same fashion with \eqref{eq:gmTensor4}.
+
+

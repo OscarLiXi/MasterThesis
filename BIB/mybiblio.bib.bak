@@ -1,0 +1,82 @@
+@inproceedings{klein2007parallel,
+  title={Parallel tracking and mapping for small AR workspaces},
+  author={Klein, Georg and Murray, David},
+  booktitle={Mixed and Augmented Reality, 2007. ISMAR 2007. 6th IEEE and ACM International Symposium on},
+  pages={225--234},
+  year={2007},
+  organization={IEEE}
+}
+
+@inproceedings{forster2014svo,
+  title={SVO: Fast semi-direct monocular visual odometry},
+  author={Forster, Christian and Pizzoli, Matia and Scaramuzza, Davide},
+  booktitle={Robotics and Automation (ICRA), 2014 IEEE International Conference on},
+  pages={15--22},
+  year={2014},
+  organization={IEEE}
+}
+
+@inproceedings{davison2003real,
+  title={Real-time simultaneous localisation and mapping with a single camera},
+  author={Davison, Andrew J},
+  booktitle={Computer Vision, 2003. Proceedings. Ninth IEEE International Conference on},
+  pages={1403--1410},
+  year={2003},
+  organization={IEEE}
+}
+
+@inproceedings{eade2007monocular,
+  title={Monocular SLAM as a graph of coalesced observations},
+  author={Eade, Ethan and Drummond, Tom},
+  booktitle={Computer Vision, 2007. ICCV 2007. IEEE 11th International Conference on},
+  pages={1--8},
+  year={2007},
+  organization={IEEE}
+}
+
+@inproceedings{strasdat2010real,
+  title={Real-time monocular slam: Why filter?},
+  author={Strasdat, Hauke and Montiel, JMM and Davison, Andrew J},
+  booktitle={Robotics and Automation (ICRA), 2010 IEEE International Conference on},
+  pages={2657--2664},
+  year={2010},
+  organization={IEEE}
+}
+
+@inproceedings{mourikis2007multi,
+  title={A multi-state constraint Kalman filter for vision-aided inertial navigation},
+  author={Mourikis, Anastasios and Roumeliotis, Stergios and others},
+  booktitle={Robotics and Automation, 2007 IEEE International Conference on},
+  pages={3565--3572},
+  year={2007},
+  organization={IEEE}
+}
+
+@inproceedings{forster2015imu,
+  title={IMU Preintegration on Manifold for Efficient Visual-Inertial Maximum-a-Posteriori Estimation},
+  author={Forster, Christian and Carlone, Luca and Dellaert, Frank and Scaramuzza, Davide},
+  booktitle={Robotics: Science and Systems (RSS)},
+  year={2015}
+}
+
+@inproceedings{ling2011imusim,
+  title={IMUSim: Simulating inertial and magnetic sensor systems in Python},
+  author={Ling, Martin and Young, Alex}
+}
+
+@misc{Quaternion2015Joan,
+  author = {Joan Sola},
+  title = {Quaternion kinematics for the error-state KF},
+  year = {2015},
+  howpublished = "\url{http://www.iri.upc.edu/people/jsola/JoanSola/objectes/notes/kinematics.pdf}",
+  note = {[Online; accessed 07-October-2015]}
+}
+
+ @misc{wiki:Robotics,
+   author = "Wikipedia",
+   title = "Robotics --- Wikipedia{,} The Free Encyclopedia",
+   year = "2016",
+   url = "\url{https://en.wikipedia.org/w/index.php?title=Robotics&oldid=710494654}",
+   note = "[Online; accessed 22-March-2016]"
+ }
+

@@ -1,0 +1,63 @@
+% %% This is an example first chapter.  You should put chapter/appendix that you
+% %% write into a separate file, and add a line \include{yourfilename} to
+% %% main.tex, where `yourfilename.tex' is the name of the chapter/appendix file.
+% %% You can process specific files by typing their names in at the 
+% %% \files=
+% %% prompt when you run the file main.tex through LaTeX.
+% 
+% \chapter{Motivation for Block Coordinate Ascent}
+% \label{chap:motivation}
+% The use of spectral relaxation for quadratic assignment problems has been established in recent works ~\cite{Leordeanu2005, Cour, Duchenne2009}.
+% These methods use power method as a core element for finding the leading eigenvector of a matrix/tensor, 
+% which is known as the optimal solution of the relaxed matching problem.
+% Given the particular success of these approaches in context of graph matching, 
+% we provide below a few motivations for our work from the algorithmic perspective.
+% 
+% Let $\bA$ be a square symmetric matrix such that $\bA_{ij}$ measuring the similarity between 
+% the correspondence indexed by $i=(i_1, i_2)$ and the correspondence indexed by $j = (j_1, j_2)$.
+% Then, each iterate of a power method has the form
+% $$
+%     \bx^{k+1} = \displaystyle\frac{\bA \bx^k}{\norm{\bA \bx^k}_2}
+% $$
+% which can also be rewritten as
+% \begin{equation}\label{eq:power_method_2}
+%     \begin{array}{l}
+% 	\bx^{k+1} = \displaystyle\frac{\bA \by^k}{\norm{\bA \by^k}_2} \\
+% 	\by^{k+1} = \displaystyle\frac{\bA \bx^{k+1}}{\norm{\bA \bx^{k+1}}_2}
+%     \end{array}
+% \end{equation}
+% While the first form of update is more friendly to work with, the second one gives us an insight into power method.
+% In fact, if $\bA$ is viewed as a second-order tensor, then \eqref{eq:power_method_2} can be seen 
+% as an interleave update between two arguments of its associated multilinear form $\AF(\bx,\by) \bydef \sum_i \sum_j \bA_{ij} \bx_i \by_j$.
+% Specifically, the update of each argument is the maximizer of the objective function given the other argument fixed.
+% Generalizing this to a 3rd order tensor $\AC$, one arrives at the following update
+% \begin{equation*}
+%     \begin{array}{l}
+% 	\bx^{k+1} = \displaystyle\frac{\AC \otimes_1 \by^k \otimes_2 \bz^k}{\norm{\AC \otimes_1 \by^k \otimes_2 \bz^k}_2} \\
+% 	\by^{k+1} = \displaystyle\frac{\AC \otimes_1 \bx^{k+1} \otimes_2 \bz^k}{\norm{\AC \otimes_1 \bx^{k+1} \otimes_2 \bz^k}_2} \\
+% 	\bz^{k+1} = \displaystyle\frac{\AC \otimes_1 \bx^{k+1} \otimes_2 \by^{k+1}}{\norm{\AC \otimes_1 \bx^{k+1} \otimes_2 \by^{k}}_2} \\
+%     \end{array}
+% \end{equation*}
+% which is known as a higher order power method in literature.
+% Again, each variable is computed by maximizing the objective function while fixing other variables.
+% Therefore, it is natural to ask if one can replace the $l_2$ norm constraint in the higher order power method by some constraint $D$ and obtains
+% the following update scheme
+% \begin{equation*}
+%     \begin{array}{l}
+% 	\bx^{k+1} = \argmax_{\bx \in D} \AC \otimes \bx \otimes \by^k \otimes \bz^k \\
+% 	\by^{k+1} = \argmax_{\by \in D} \AC \otimes \otimes \bx^{k+1} \otimes \by \otimes \bz^k \\
+% 	\bz^{k+1} = \argmax_{\bz \in D} \AC \otimes \bx^{k+1} \otimes \by^{k+1} \otimes \bz 
+%     \end{array}
+% \end{equation*}
+% If possible, then there should be assumptions on the objective and/or the constraint set so that the convergence of this iterative scheme 
+% can be achieved. 
+% Another problem with such an approach, that is, the obtained solution $(\bx^*, \by^*, \bz^*)$ is not necessarily 
+% related to the original problem which concerns with optimization of the function $\AF(\bx,\bx,\bx)$.
+% These problems will be tackled in the next section where we prove that any constraint $D$ can be used in principle
+% and the relation between the optimization of a function and its associated multilinear form is established.
+% 
+% In context of graph matching, our approach has some relation to the work of Duchenne \etal \cite{Duchenne2009, Leordeanu2005, Cour}, 
+% where a power method lies at the heart of their algorithms.
+% While they mainly work with the original function, our method works with its associated multilinear form.
+% While different forms of norm constraints are used in their methods, we use the original constraint.
+% Therefore, our framework can be seen as a generalization of their approach from this point of view.

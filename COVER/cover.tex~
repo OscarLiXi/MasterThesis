@@ -1,0 +1,184 @@
+\title{A Tensor Block Coordinate Ascent Framework for Hyper Graph Matching}
+\author{Nguyen Ngoc Quynh}
+
+% You can use the \\ command to list multiple previous degrees
+%       \prevdegrees{B.S., University of California (1978) \\
+%                    S.M., Massachusetts Institute of Technology (1981)}
+\department{Department of Computer Science}
+
+% If the thesis is for two degrees simultaneously, list them both
+% separated by \and like this:
+% \degree{Doctor of Philosophy \and Master of Science}
+\degree{Master of Science in Computer Science}
+
+% As of the 2007-08 academic year, valid degree months are September, 
+% February, or June.  The default is June.
+\degreemonth{Jannuary}
+\degreeyear{2015}
+\thesisdate{Jan 22, 2015}
+
+%% By default, the thesis will be copyrighted to SAAR.  If you need to copyright
+%% the thesis to yourself, just specify the `vi' documentclass option.  If for
+%% some reason you want to exactly specify the copyright notice text, you can
+%% use the \copyrightnoticetext command.  
+% \copyrightnoticetext{\copyright Quynh Nguyen Ngoc. All rights reserved.}
+
+% If there is more than one supervisor, use the \supervisor command
+% once for each.
+\supervisor{Matthias Hein}{Professor}
+
+% This is the department committee chairman, not the thesis committee
+% chairman.  You should replace this with your Department's Committee
+% Chairman.
+\chairman{Prof}{Chairman, Department Committee on Graduate Theses}
+
+% Make the titlepage based on the above information.  If you need
+% something special and can't use the standard form, you can specify
+% the exact text of the titlepage yourself.  Put it in a titlepage
+% environment and leave blank lines where you want vertical space.
+% The spaces will be adjusted to fill the entire page.  The dotted
+% lines for the signatures are made with the \signature command.
+
+% \maketitle
+\noindent
+\begin{titlepage}
+\includegraphics[width=4cm,natwidth=520,natheight=210]{logo_saarland.png}
+\hfill
+\begin{minipage}{8cm}
+\centering
+\vspace{-1.5cm} 
+\textbf{Universit\"at des Saarlandes \\ Max-Planck-Institut f\"ur Informatik}
+\end{minipage}
+\hfill
+\includegraphics[width=2.8cm,natwidth=300,natheight=244]{mpg.png}
+\vfill
+
+\Large
+\textbf{A Tensor Block Coordinate Ascent Framework for Hypergraph Matching}
+\vfill
+
+\large
+Masterarbeit im Fach Informatik \\
+Master's Thesis in Computer Science \\
+von / by \\
+\textbf{Nguyen Ngoc Quynh} \\
+\vfill
+
+angefertigt unter der Leitung von / supervised by \\
+\large{\textsc{Prof. Dr. Matthias Hein}}\\
+\vfill
+
+betreut von / advised by \\
+\large{\textsc{Prof. Dr. Matthias Hein\\ Antonie Gautier}} \\
+\vfill
+
+begutachtet von / reviewers \\
+\large{\textsc{Prof. Dr. Matthias Hein \\ Prof. Dr. Joachim Weickert}} \\
+\vfill
+
+Saarbr\"ucken, Jannuary 2015
+\end{titlepage}
+
+
+% The abstractpage environment sets up everything on the page except
+% the text itself.  The title and other header material are put at the
+% top of the page, and the supervisors are listed at the bottom.  A
+% new page is begun both before and after.  Of course, an abstract may
+% be more than one page itself.  If you need more control over the
+% format of the page, you can use the abstract environment, which puts
+% the word "Abstract" at the beginning and single spaces its text.
+
+%% You can either \input (*not* \include) your abstract file, or you can put
+%% the text of the abstract directly between the \begin{abstractpage} and
+%% \end{abstractpage} commands.
+
+% First copy: start a new page, and save the page number.
+\cleardoublepage
+% Uncomment the next line if you do NOT want a page number on your
+% abstract and acknowledgments pages.
+% \pagestyle{empty}
+% \setcounter{savepage}{\thepage}
+% \begin{abstractpage}
+%     \input{ABSTRACT/abstract}
+% \end{abstractpage}
+
+% Additional copy: start a new page, and reset the page number.  This way,
+% the second copy of the abstract is not counted as separate pages.
+% Uncomment the next 6 lines if you need two copies of the abstract
+% page.
+% \setcounter{page}{\thesavepage}
+% \begin{abstractpage}
+% \input{abstract}
+% \end{abstractpage}
+
+\cleardoublepage
+\pagestyle{empty}
+\setcounter{savepage}{\thepage}
+\subsubsection*{Eidesstattliche Erkl{\"a}rung}
+Ich erkl{\"a}re hiermit an Eides Statt, dass ich die vorliegende Arbeit selbstst{\"a}ndig verfasst und
+keine anderen als die angegebenen Quellen und Hilfsmittel verwendet habe.
+\subsubsection*{Statement in Lieu of an Oath}
+I hereby confirm under oath that I have written this thesis on my own and that I have not
+used any other media or materials than the ones referred to in this thesis.
+
+\vspace{1cm}
+
+\subsubsection*{Eidesstattliche Erkl{\"a}rung}
+Ich erkl{\"a}re hiermit an Eides Statt, dass die vorliegende Arbeit mit der elektronischen Version {\"u}bereinstimmt.
+\subsubsection*{Statement in Lieu of an Oath}
+I hereby confirm the congruence of the contents of the printed data and the electronic version of the thesis.
+
+\vspace{1cm}
+
+\subsubsection*{Einverst{\"a}ndniserkl{\"a}rung}
+Ich bin damit einverstanden, dass meine (bestandene) Arbeit in beiden Versionen in die
+Bibliothek der Informatik aufgenommen und damit ver{\"o}ffentlicht wird.
+
+\subsubsection*{Declaration of Consent}
+I agree to make both versions of my thesis (with a passing grade) accessible to the public 
+by having them added to the library of the Computer Science Department.
+
+\vspace{3cm}
+
+\par\noindent\makebox[2in]{\hrulefill} 		\hfill\makebox[2in]{\hrulefill}%
+\par\noindent\makebox[2in][l]{(Datum / Date)}	\hfill\makebox[2in][l]{(Unterschrift / Signature)}%
+
+\newpage
+\section*{Acknowledgments}
+First of all, I would like to thank Prof. Dr. Matthias Hein for giving me the opportunity to work on this exciting project.
+His advices and scientific experience helped me to shape out my thesis.
+He also showed me how a good research should work.
+Under his supervision, I have not only learned a lot but also grown as a researcher.
+I would like to thank him even more for his valuable help in one of the most difficult situations in my life.
+
+I would like to thank Prof. Dr. Joachim Weickert for agreeing to review my master thesis 
+and for initiating an excellent Visual Computing Program at Saarland University.
+His lectures on Image Processing and Computer Vision has improved my general knowledge a lot and 
+made me quickly become interested in the field, in particular in computer vision, 
+which has positively influenced my work in this thesis in some specific way.
+
+I am also thankful to Antoine Gautier for being my advisor. 
+He dedicated a lot of time to reading and giving feedback to many of my reports as well as proof reading of this thesis.
+I will not forget all the useful discussions that we had in various contexts.
+Thanks also go to Francesco Tudisco for our useful discussions on the convexity of polynomial
+and for joining me all the times for relaxing outside activities.
+
+I thank all the members of the Machine Learning group -- Dagmar Glaser, Thomas Buehler, 
+Antoine Gautier, Moritz Gerlach, Pratik Jawanpuria, Syama Sundar Rangapuram, Francesco Tudisco, Vikram Tankasali -- for the friendly environment, 
+motivation and positive influence on my knowledge of machine learning, optimization and general mathematics.
+I am thankful to Syama and Thomas for their help in some technical problems that I encountered at the early stage of my thesis.
+
+I would like to thank the International Max Planck Research School for Computer Science for giving me the opportunity to study at Saarland University.
+I am deeply grateful to the constant support from Jennifer Gerling and Stephanie J\"org during all the time of my studies. 
+
+Last but not least, special thanks I want to give to my family for their unlimited love, support and encouragement 
+regardless of thousands of kilometers that separated us.
+
+\pagestyle{empty}
+\setcounter{savepage}{\thepage}
+\begin{abstractpage}
+    \input{ABSTRACT/abstract}
+\end{abstractpage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% -*-latex-*-
