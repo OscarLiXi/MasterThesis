@@ -12,6 +12,12 @@ Maxim~A Batalin, Gaurav~S Sukhatme, and Myron Hattig.
 \newblock In {\em Robotics and Automation, 2004. Proceedings. ICRA'04. 2004
   IEEE International Conference on}, volume~1, pages 636--641. IEEE, 2004.
 
+\bibitem{breckenridge1999quaternions}
+WG~Breckenridge.
+\newblock Quaternions proposed standard conventions.
+\newblock {\em Jet Propulsion Laboratory, Pasadena, CA, Interoffice Memorandum
+  IOM}, pages 343--79, 1999.
+
 \bibitem{davison2003real}
 Andrew~J Davison.
 \newblock Real-time simultaneous localisation and mapping with a single camera.
@@ -47,11 +53,28 @@ Christian Forster, Matia Pizzoli, and Davide Scaramuzza.
 \newblock In {\em Robotics and Automation (ICRA), 2014 IEEE International
   Conference on}, pages 15--22. IEEE, 2014.
 
+\bibitem{guennebaud2010eigen}
+G~Guennebaud and B~Jacob.
+\newblock The eigen c++ template library for linear algebra.
+\newblock {\em http:/eigen. tuxfamily. org}, 2010.
+
+\bibitem{hamilton1844ii}
+William~Rowan Hamilton.
+\newblock Ii. on quaternions; or on a new system of imaginaries in algebra.
+\newblock {\em The London, Edinburgh, and Dublin Philosophical Magazine and
+  Journal of Science}, 25(163):10--13, 1844.
+
 \bibitem{hesch2014consistency}
 Joel~A Hesch, Dimitrios~G Kottas, Sean~L Bowman, and Stergios~I Roumeliotis.
 \newblock Consistency analysis and improvement of vision-aided inertial
   navigation.
 \newblock {\em Robotics, IEEE Transactions on}, 30(1):158--176, 2014.
+
+\bibitem{hess2007essential}
+Roland Hess.
+\newblock {\em The essential Blender: guide to 3D creation with the open source
+  suite Blender}.
+\newblock No Starch Press, 2007.
 
 \bibitem{klein2007parallel}
 Georg Klein and David Murray.

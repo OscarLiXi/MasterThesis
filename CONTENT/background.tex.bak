@@ -7,9 +7,22 @@
 \chapter{Background on Quaternion Algebra}
 \label{chap:background}
 
+One important task for this master thesis is to integrate IMU data over time to estimate camera pose (\eg, position and orientation). By assuming movement model, it is straightforward to integrate position in Cartesian space, however integrating orientation in manifold space is often not a easy task. In this chapter, we introduce the quaternion algebra, and explore the way to operate quaternion over time.
+
 \section{Definition of Quaternion}
 \label{sec:def_of_quat}
 
+A quaternion $Q$ is defined as,
+\begin{equation}\label{q1}
+	Q = q_w + q_xi + q_yj + q_zk
+\end{equation}
+where $\{q_w,q_x,q_y,q_z\} \in \mathbb{R}$, and $\{i,j,k\}$ are three imaginary unit length, \eg, $i^2=j^2=k^2=ijk=-1$.
+
+In most cases, we represent quaternion $Q$ as a four-element vector $\textbf{q}$ composed by above four real number $\{q_w,q_x,q_y,q_z\}$, \ie,
+\begin{equation}\label{q2}
+	\mathbf{q} \triangleq \left[q_w \ \mathbf{q_v}\right] = \left[q_w \ q_x \ q_y \ q_z \right]^T
+\end{equation}
+where $q_w$ is the real part of $\textbf{q}$, and $q_v$ is a 3-vector to represent imaginary part of $\textbf{q}$. It is worth to be noted that there are two different conventions of quaternion $\textbf{q}$, \textit{Hamilton way}~\cite{hamilton1844ii} and \textit{JPL way}~\cite{breckenridge1999quaternions}. In Hamilton convention, the real part $q_w$ is the first component of $\textbf{q}$, \ie, $\left[q_w \ \mathbf{q_v}\right]$, whereas in JPL way, the real part is the fourth component, \ie, $\left[\mathbf{q_v} \ q_w\right]$. To avoid confusions, and considering Hamilton way is more common to use, especially for implementation~\cite{guennebaud2010eigen, hess2007essential}, we hereby claim that we use \textit{Hamilton way} to represent quaternion $\textbf{q}$ throughout this master thesis.
 \section{Properties of Quaternion}
 \label{sec:prop_of_quat}
 
