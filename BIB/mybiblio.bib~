@@ -249,3 +249,25 @@
   journal={http:/eigen. tuxfamily. org},
   year={2010}
 }
+
+@book{hess2007essential,
+  title={The essential Blender: guide to 3D creation with the open source suite Blender},
+  author={Hess, Roland},
+  year={2007},
+  publisher={No Starch Press}
+}
+
+ @misc{wiki:rotationformula,
+   author = "Wikipedia",
+   title = "Rodrigues' rotation formula --- Wikipedia{,} The Free Encyclopedia",
+   year = "2015",
+   url = "\url{https://en.wikipedia.org/w/index.php?title=Rodrigues%27_rotation_formula&oldid=694934208}",
+   note = "[Online; accessed 6-April-2016]"
+ }
+
+@article{van2005quaternion,
+  title={From quaternion to matrix and back},
+  author={Van Waveren, JMP},
+  journal={Id Software Inc},
+  year={2005}
+}

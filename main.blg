@@ -16,45 +16,45 @@ A level-1 auxiliary file: BIB/biblio.aux
 The style file: plain.bst
 Database file #1: BIB/mybiblio.bib
 Warning--to sort, need author or key in Figure1-1_IMU_Sensor
-You've used 27 entries,
+You've used 30 entries,
             2118 wiz_defined-function locations,
-            663 strings with 9059 characters,
-and the built_in function-call counts, 10224 in all, are:
-= -- 1070
-> -- 377
+            675 strings with 9435 characters,
+and the built_in function-call counts, 10922 in all, are:
+= -- 1137
+> -- 404
 < -- 16
-+ -- 152
-- -- 122
-* -- 628
-:= -- 1547
-add.period$ -- 92
-call.type$ -- 27
-change.case$ -- 140
++ -- 163
+- -- 130
+* -- 661
+:= -- 1671
+add.period$ -- 101
+call.type$ -- 30
+change.case$ -- 153
 chr.to.int$ -- 0
-cite$ -- 28
-duplicate$ -- 437
-empty$ -- 863
-format.name$ -- 122
-if$ -- 2285
+cite$ -- 31
+duplicate$ -- 465
+empty$ -- 925
+format.name$ -- 130
+if$ -- 2430
 int.to.chr$ -- 0
-int.to.str$ -- 27
-missing$ -- 24
-newline$ -- 137
-num.names$ -- 52
-pop$ -- 191
+int.to.str$ -- 30
+missing$ -- 26
+newline$ -- 152
+num.names$ -- 58
+pop$ -- 207
 preamble$ -- 1
-purify$ -- 114
+purify$ -- 124
 quote$ -- 0
-skip$ -- 341
+skip$ -- 363
 stack$ -- 0
-substring$ -- 713
-swap$ -- 159
+substring$ -- 740
+swap$ -- 162
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 106
+type$ -- 118
 warning$ -- 1
-while$ -- 103
-width$ -- 29
-write$ -- 304
+while$ -- 110
+width$ -- 32
+write$ -- 335
 (There was 1 warning)

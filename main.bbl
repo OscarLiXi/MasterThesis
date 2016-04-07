@@ -150,6 +150,23 @@ Hauke Strasdat, JMM Montiel, and Andrew~J Davison.
 \newblock In {\em Robotics and Automation (ICRA), 2010 IEEE International
   Conference on}, pages 2657--2664. IEEE, 2010.
 
+\bibitem{trawny2005indirect}
+Nikolas Trawny and Stergios~I Roumeliotis.
+\newblock Indirect kalman filter for 3d attitude estimation.
+\newblock {\em University of Minnesota, Dept. of Comp. Sci. \& Eng., Tech.
+  Rep}, 2:2005, 2005.
+
+\bibitem{van2005quaternion}
+JMP Van~Waveren.
+\newblock From quaternion to matrix and back.
+\newblock {\em Id Software Inc}, 2005.
+
+\bibitem{wiki:rotationformula}
+Wikipedia.
+\newblock Rodrigues' rotation formula --- wikipedia{,} the free encyclopedia,
+  2015.
+\newblock [Online; accessed 6-April-2016].
+
 \bibitem{wiki:GPS}
 Wikipedia.
 \newblock Global positioning system --- wikipedia{,} the free encyclopedia,
