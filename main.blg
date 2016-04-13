@@ -10,51 +10,52 @@ A level-1 auxiliary file: CONTENT/background.aux
 A level-1 auxiliary file: CONTENT/SensorFusing.aux
 A level-1 auxiliary file: CONTENT/experiment.aux
 A level-1 auxiliary file: CONTENT/summary.aux
+A level-1 auxiliary file: APPENDIX/error-state-derivation.aux
 A level-1 auxiliary file: APPENDIX/integration.aux
 A level-1 auxiliary file: APPENDIX/approximation.aux
 A level-1 auxiliary file: BIB/biblio.aux
 The style file: plain.bst
 Database file #1: BIB/mybiblio.bib
 Warning--to sort, need author or key in Figure1-1_IMU_Sensor
-You've used 30 entries,
+You've used 32 entries,
             2118 wiz_defined-function locations,
-            675 strings with 9435 characters,
-and the built_in function-call counts, 10922 in all, are:
-= -- 1137
-> -- 404
+            685 strings with 9666 characters,
+and the built_in function-call counts, 11325 in all, are:
+= -- 1177
+> -- 418
 < -- 16
-+ -- 163
-- -- 130
-* -- 661
-:= -- 1671
-add.period$ -- 101
-call.type$ -- 30
-change.case$ -- 153
++ -- 169
+- -- 134
+* -- 676
+:= -- 1745
+add.period$ -- 107
+call.type$ -- 32
+change.case$ -- 160
 chr.to.int$ -- 0
-cite$ -- 31
-duplicate$ -- 465
-empty$ -- 925
-format.name$ -- 130
-if$ -- 2430
+cite$ -- 33
+duplicate$ -- 481
+empty$ -- 961
+format.name$ -- 134
+if$ -- 2513
 int.to.chr$ -- 0
-int.to.str$ -- 30
+int.to.str$ -- 32
 missing$ -- 26
-newline$ -- 152
-num.names$ -- 58
-pop$ -- 207
+newline$ -- 162
+num.names$ -- 62
+pop$ -- 219
 preamble$ -- 1
-purify$ -- 124
+purify$ -- 130
 quote$ -- 0
-skip$ -- 363
+skip$ -- 376
 stack$ -- 0
-substring$ -- 740
-swap$ -- 162
+substring$ -- 750
+swap$ -- 164
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 118
+type$ -- 126
 warning$ -- 1
-while$ -- 110
-width$ -- 32
-write$ -- 335
+while$ -- 114
+width$ -- 34
+write$ -- 356
 (There was 1 warning)

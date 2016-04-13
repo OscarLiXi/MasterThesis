@@ -52,7 +52,7 @@ The product of two quaternions can be expressed as two equivalent matrix product
 \end{equation}
 with
 \begin{equation}\label{q5}
-	Q_1^+ = q_w\mathbb{I} + \begin{bmatrix}
+	Q_\ones^+ = q_w\mathbb{I} + \begin{bmatrix}
 							  	0 &
 							  	-\vec{q_v}^T\\
 							  	\vec{q_v} &
@@ -247,15 +247,15 @@ To integrate quaternion over time, we explore the relationship between $\vec{q}(
 \end{equation}
 
 Assume that the second order derivative of rotational rate is zero, which is $\ddot{\vec{\omega}} = 0$, we have
-\begin{equation} \label{q36} 
-	\dot{\vec{q}}(t_{n+1}) = \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega()}(t_{n})
-\end{equation}
-\begin{equation} \label{q37} 
-	\ddot{\vec{q}}(t_{n+1}) = \frac{1}{2^2}\vec{q}(t_{n}) \otimes \vec{\omega}^2(t_{n})+\frac{1}{2}\vec{q}(t_{n}) \otimes \dot{\vec{\omega}}
-\end{equation}
-\begin{equation} \label{q38} 
-	\dddot{\vec{q}}(t_{n+1}) = \frac{1}{2^3}\vec{q}(t_{n}) \otimes \vec{\omega}^3(t_{n}) + \frac{1}{4}\vec{q}(t_{n}) \otimes \dot{\vec{\omega}}\vec{\omega}(t_{n}) + \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega}(t_{n})\dot{\vec{\omega}}
-\end{equation}
+\begin{align} 
+	\label{q36} 
+	\dot{\vec{q}}(t_{n+1}) &= \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega()}(t_{n}) \\
+	\label{q37} 
+	\ddot{\vec{q}}(t_{n+1}) &= \frac{1}{2^2}\vec{q}(t_{n}) \otimes \vec{\omega}^2(t_{n})+\frac{1}{2}\vec{q}(t_{n}) \otimes \dot{\vec{\omega}} \\
+	\label{q38} 
+	\dddot{\vec{q}}(t_{n+1}) &= \frac{1}{2^3}\vec{q}(t_{n}) \otimes \vec{\omega}^3(t_{n}) + \frac{1}{4}\vec{q}(t_{n}) \otimes \dot{\vec{\omega}}\vec{\omega}(t_{n}) + \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega}(t_{n})\dot{\vec{\omega}} \\
+	 \vdots & \nonumber 
+\end{align}
 and so forth and so on. We then get the result of time integration by taking Equation (\ref{q36}, \ref{q37}, \ref{q38}) back into Equation (\ref{q35}).
 
 We hereby gives a stronger assumption that angular rate $\vec{\omega}(t_{n})$ remains constant during a small time period $\Delta{t}$, which is $\dot{\vec{\omega}} = 0$. However, considering the sampling rate of IMU sensor is usually high (> 100 Hz), this assumption actually is general and also gives us a cleaner expression of time integration. 
@@ -264,7 +264,7 @@ Given $\dot{\vec{\omega}} = 0$, we can get
 \begin{equation} \label{q39} 
 	\vec{q}_{n+1} = \vec{q}_n \otimes (1+\frac{1}{2}\vec{\omega}_n\Delta{t}+\frac{1}{2!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^2+\frac{1}{3!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^3+\frac{1}{4!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^4+\dots)
 \end{equation}
-here we regard the $\vec{q}$ and $\vec{\omega}$ as series, which is exactly
+here we regard $\vec{q}$ and $\vec{\omega}$ as series, which is exactly
 \begin{equation} \label{q40} 
 	\vec{q}_{n+1} = \vec{q}_n \otimes \mathrm{e}^{\vec{\omega}\Delta{t}/2}
 \end{equation}
@@ -279,8 +279,12 @@ We can obtain \textbf{\textit{Zeroth order backward integration}} by assuming th
 	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \vec{\omega}_{n+1}\Delta{t} \}
 \end{equation}
 and \textbf{\textit{Zeroth order midward integration}}  by assuming the angular rate holds $\bar{\vec{\omega}}_{n+1} =(\vec{\omega}_{n}+ \vec{\omega}_{n+1})/2$ within $\Delta{t}$,
-\begin{equation} \label{q42} 
+\begin{equation} \label{q43} 
 	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \bar{\vec{\omega}}_{n}\Delta{t} \}
 \end{equation}
 
-Though not used in this master thesis, we notice that 
+Though not used in this master thesis, we notice that \cite{trawny2005indirect} gives \textbf{\textit{First order integration}} by assuming angular rate is linear with time, \ie, $\dot{\vec{\omega}} = \frac{\vec{\omega}_{n+1} - \vec{\omega}_{n}}{\Delta{t}}$, which is
+\begin{equation} \label{q44} 
+	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \bar{\vec{\omega}}_{n}\Delta{t} \} + \frac{\Delta{t}^2}{48}\vec{q}_n\otimes(\vec{\omega}_n \otimes \vec{\omega}_{n+1} - \vec{\omega}_{n+1} \otimes \vec{\omega}_{n}) + \dots
+\end{equation}
+in our quaternion convention.

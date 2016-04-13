@@ -7,26 +7,193 @@
 \chapter{Modular Sensor Fusing}
 \label{chap:sensor_fusing}
 
+In previous chapter, we learned how to represent each frame and analysis the difference between filter method and keyframe BA method for our odometry system. We also learned quaternion algebra and basic approaches for quaternion integration or derivative overtime under some general assumptions. In this chapter, we will explore the details of our sensor fusing approach, which roughly uses so called \textit{IMU loose integration framework}~\cite{weiss2012vision}. In such a framework, system propagates states via Kalman filter (KF) based on IMU measurements, extrasensory (\eg, camera, GPS \etc) data are used in correction step. Computational cost for KF-styled approach is usually linear, hence \textit{IMU loose integration framework} provides a good trade-off between computational complexity and accuracy in a real-time robotic navigation system.
+
 \section{Error-state Kalman Filter for IMU Integration}
 \label{sec:ESKF_IMU}
 
-\subsection{Motivation}
-\label{subsec:ESKF_IMU_sub1}
+The error-state Kalman Filter (ESKF) followed the paradigm of Kalman filter, it also has prediction and correction step. However, ESKF separates system into three different states: true state nominal state and error state. Nominal state processes large signal, which is integrable in non-linear fashion, whereas error state
+keeps track of error and noise term, which can be integrated in linear way. The composition of nominal state and error state, we call it true state, which is the final guess of system.
+
+The ESKF has some nice properties when building a visual-inertial odometry:                                                                                                                                                                                                                                                                                                              
+\begin{enumerate}
+	\item The computation of Jacobian may be very fast, because the error state is small and all second order products are negligible. This is very important since we want the system run in real-time.
+	\item Integration of vision data with IMU data is straightforward in KF correction step. One can utilize the result of tracking to correct the IMU integration state.
+	\item Large signal has been integrated in nominal state, so that we can apply the correction step in a lower rate than prediction step.
+\end{enumerate}
+
+The procedure of ESKF in this system can be explained as follows. IMU data first is integrated into nominal state via numerical integration methods, note that nominal state does not take noise term or error term into account, hence nominal state will accumulate errors. The error state then predict the error and noise using normal extended KF paradigm, meaning it will predict the mean and covariance of system's error. In parallel a correction step is performed at a lower rate, the results of visual tracking are used to correct error state, the error state then is injected into nominal state, which nominal state become the final guess of system at that time point. The system goes on until the criterion condition has been met.
+
+We explain the ESKF for IMU integration in this section, and visual sensor as correction data in Section \ref{sec:camera_comple_data}.
+
+%\subsection{Motivation}
+%\label{subsec:ESKF_IMU_sub1}
 
 \subsection{System Kinematics}
 \label{subsec:ESKF_IMU_sub2}
 
-\subsection{State Propagations}
+We denote our true state $\vec{x}_t$ as,
+\begin{equation}\label{f1}
+	\vec{x}_t = \vec{x}_n \oplus \vec{x}_e
+\end{equation}
+where $\vec{x}_n$ is the nominal state for large signals, and $\vec{x}_e$ is error state for small error/noise signal, we use $\oplus$ to denote a general composition step. 
+
+We then introduce position $\vec{p}$, velocity $\vec{v}$, quaternion $\vec{q}$, accelerometer bias $\vec{a}_b$, gyroscope bias $\vec{\omega}_b$ and gravity vector $\vec{g}$ into true state, nominal state and error state respectively. The general composition step can be shown as,
+\begin{align}
+	\vec{p}_t =& \vec{p}_n + \vec{p}_e \\
+	\vec{v}_t =& \vec{v}_n + \vec{v}_e \\
+	\vec{q}_t \approx& \vec{q}_n \otimes \begin{bmatrix} 1 \\ \vec{\theta}_e / 2 \end{bmatrix} \label{f2}\\
+	\vec{a}_{bt} =& \vec{a}_{bn} + \vec{a}_{be} \\
+	\vec{\omega}_{bt} =& \vec{\omega}_{bn} + \vec{\omega}_{be} \\ 
+	\vec{g}_t =& \vec{g}_n + \vec{g}_e 
+\end{align}
+note that we derive Equation (\ref{f2}) by small angle approximation (Equation (\ref{q30})), we apply angular error $\vec{\theta}_e$ instead of quaternion error in error state following classical approaches.
+
+We then construct kinematic equations for true state, which are
+\begin{align}
+	\label{f18}
+	\dot{\vec{p}_t} =& \vec{v}_t \\
+	\dot{\vec{v}_t} =& \mR_t(\vec{a}_m - \vec{a}_{bt} - \vec{a}_n) + \vec{g}_t\\
+	\dot{\vec{q}_t} =& \frac{1}{2}\vec{q}_t \otimes (\vec{\omega}_m - \vec{\omega}_{bt} - \vec{\omega}_n) \\
+	\dot{\vec{a}_{bt}} =& \vec{a}_w \\
+	\dot{\vec{\omega}_{bt}} =& \vec{\omega}_{w} \\ 
+	\label{f19}
+	\dot{\vec{g}_t} =& 0 
+\end{align}
+where $\vec{a}_m$, $\vec{\omega}_m$ are the measurements from accelerometer and gyroscope respectively within \textbf{local frame}, $\vec{a}_n$, $\vec{\omega}_n$ are noises with those measurements, $\vec{a}_w$, $\vec{\omega}_w$ are white Gaussian noise together with accelerometer and gyroscope bias, and $\mR_t$ is the rotation matrix corresponding to true state quaternion, \ie, $\mR_t \triangleq \mR_t\{ \vec{q} \}$ regarding to Equation (\ref{q25}). We use similar notations in nominal state and error state. 
+
+We obtain kinematic equations for nominal state by cutting off all small signals, which leads to
+\begin{align}
+	\label{f12}
+	\dot{\vec{p}_n} =& \vec{v}_n \\
+	\label{f11}
+	\dot{\vec{v}_n} =& \mR_n(\vec{a}_m - \vec{a}_{bt}) + \vec{g}_n\\
+	\dot{\vec{q}_n} =& \frac{1}{2}\vec{q}_n \otimes (\vec{\omega}_m - \vec{\omega}_{bn})\\
+	\dot{\vec{a}_{bn}} =& 0 \\
+	\dot{\vec{\omega}_{bn}} =& 0 \\ 
+	\label{f13}
+	\dot{\vec{g}_n} =& 0 
+\end{align}
+and error state with small signals,
+\begin{align}
+	\label{f3}
+	\dot{\vec{p}_e} =& \vec{v}_e \\
+	\label{f4}
+	\dot{\vec{v}_e} =& \mR_n \left[ \vec{a}_m - \vec{a}_{bn} \right]_{\times} -  \mR_n\vec{a}_{be} + \vec{g}_e - \mR_n\vec{a}_n\\
+	\label{f5}
+	\dot{\vec{\theta}_e} =& \left[ \vec{\omega}_m - \vec{\omega}_{bn} \right]_{\times} - \vec{\omega}_{be} - \vec{\omega}_{n}\\
+	\label{f6}
+	\dot{\vec{a}_{be}} =& \vec{a}_w \\
+	\label{f7}
+	\dot{\vec{\omega}_{be}} =& \vec{\omega}_{w} \\ 
+	\label{f8}
+	\dot{\vec{g}_e} =& 0 
+\end{align}
+it is trivial to derive Equation (\ref{f3}, \ref{f6}, \ref{f7}, \ref{f8}), see Appendix \ref{chap:appendix1} for derivation of Equation (\ref{f4} and \ref{f5}).
+
+\subsection{State Time-integration and Error-state Jacobian}
 \label{subsec:ESKF_IMU_sub3}
 
-\subsection{State Reset}
+We then gives time-integration equations between any two time stamp $t_n$ and $t_{n+1}$ where we measure the time difference $\Delta{t}$ as $\Delta{t} = t_{n+1} - t_{n}$. In order to simplify our notations, we denote last state parameters as $\vec{x}$, and denote current state parameters as $\vec{x}^{\prime}$, where current state is measured at time stamp $t_{n}$, and last state is measured at $t_{n-1}$. Same notations for error state. Therefore, time-integration equations for nominal state for one updating are
+\begin{align}
+	\vec{p}_n^{\prime} =& \vec{p}_n + \vec{v}_n\Delta{t} + \frac{1}{2}(\mR_n(\vec{a}_m - \vec{a}_{bt}) + \vec{g}_n)\Delta{t}^2 \\
+	\vec{v}_n^{\prime} =& \vec{v}_n + (\mR_n(\vec{a}_m - \vec{a}_{bt}) + \vec{g}_n)\Delta{t}\\
+	\label{f9}
+	\vec{q}_n^{\prime} =& \vec{q}_n \otimes \vec{q}\{(\vec{\omega}_m - \vec{\omega}_{bn})\Delta{t}\}\\
+	\vec{a}_{bn}^{\prime} =& \vec{a}_{bn} \\
+	\vec{\omega}_{bn}^{\prime} =& \vec{\omega}_{bn} \\ 
+	\vec{g}_n^{\prime} =& \vec{g}_n
+\end{align}
+we use \textbf{\textit{Zeroth order forward integration}} explained in Section \ref{sec:timei_on_quat} to integrate our state over time, this is also called Euler method in Runge-Kutta numerical integration methods (see Appendix \ref{sec:runge_kutta}).
+
+We integrate our error state in same manner, except truncating second-order signal out. Hence we obtain the integration equations for error state
+\begin{align}
+	\vec{p}_e^{\prime} =& \vec{p}_e + \vec{v}_e \Delta{t}\\
+	\vec{v}_e^{\prime} =& \vec{v}_e + (\mR_n \left[ \vec{a}_m - \vec{a}_{bn} \right]_{\times} -  \mR_n\vec{a}_{be} + \vec{g}_e)\Delta{t} + \vec{v}_i\\
+	\label{f10}
+	\vec{\theta}_e^{\prime} =& (\mR_n^T \{ \vec{\omega}_m - \vec{\omega}_{bn} \} \vec{\theta}_e - \vec{\omega}_{be})\Delta{t} + \vec{\theta}_{i}\\
+	\vec{a}_{be}^{\prime} =& \vec{a}_{be} + \vec{a}_i\\
+	\vec{\omega}_{be}^{\prime} =& \vec{\omega}_{be} + \vec{\omega}_i\\ 
+	\vec{g}_e^{\prime} =& \vec{g}_e
+\end{align}
+where $\vec{v}_i$, $\vec{\theta}_{i}$, $\vec{a}_i$ and $\vec{\omega}_i$ are random impulses for velocity, angular error, accelerometer bias and gyroscope. Those impulses can be modelled by Gaussian process. We derive Equation (\ref{f10}) by close-formed integration methods described in Appendix \ref{sec:close_integration}.
+
+We then give the Jacobian of error state $\mJ_{x_e}$ for ESKF prediction step usage,
+\begin{equation}\label{f14}
+	\mJ_{e^\prime e} = \frac{\partial{\vec{x}_e^{\prime}}}{\partial{\vec{x}_e }} = \begin{bmatrix}
+	\ones & \ones\Delta{t} & 0 & 0 & 0 & 0 \\
+	0 & \ones & \mR_n \left[ \vec{a}_m - \vec{a}_{bn} \right]_{\times}\Delta{t} & \mR_n\Delta{t} & 0 & \ones\Delta{t} \\
+	0 & 0 & \mR_n^T \{ \vec{\omega}_m - \vec{\omega}_{bn} \}\Delta{t} & 0 & -\ones\Delta{t} & 0 \\
+	0 & 0 & 0 & \ones & 0 & 0 \\
+	0 & 0 & 0 & 0 & \ones & 0 \\
+	0 & 0 & 0 & 0 & 0 & \ones \\
+	\end{bmatrix}
+\end{equation}
+
+Noted that partial derivative between true state $\vec{x}_t$ and $\vec{x}_e$ is not identity because we use different parameters to represent orientations, \eg quaternion in true state, angular error in error state. We then give the Jacobian of true state with respect to error state by
+\begin{equation}\label{f15}
+	\mJ_{t e} = \frac{\partial{\vec{x}_t}}{\partial{\vec{x}_e }} = \begin{bmatrix}
+	\ones & 0 & 0 & 0 & 0 & 0 \\
+	0 & \ones &0 & 0 & 0 & 0 \\
+	0 & 0 & \frac{\partial{\vec{q}_t}}{\partial{\vec{\theta}_e }} & 0 & 0 & 0 \\
+	0 & 0 & 0 & \ones & 0 & 0 \\
+	0 & 0 & 0 & 0 & \ones & 0 \\
+	0 & 0 & 0 & 0 & 0 & \ones \\
+	\end{bmatrix}
+\end{equation}
+and by Equation (\ref{q5}), we have
+\begin{equation}\label{f16}
+	\frac{\partial{\vec{q}_t}}{\partial{\vec{\theta}_e }} = \frac{1}{2}Q^+(\vec{q})\begin{bmatrix}
+	0 & 0 & 0 \\
+	1 & 0 & 0 \\
+	0 & 1 & 0 \\
+	0 & 0 & 1 \\
+	\end{bmatrix}
+\end{equation}
+
+\subsection{State Propagation}
 \label{subsec:ESKF_IMU_sub4}
+
+Initially, nominal state $\vec{x}_n$ has been set to a initial guess based on some prior knowledge, and there is no error at start, \ie, error state is set to zero. We assume error state $\vec{x}_e$ as a normal distribution, \ie, $\vec{x}_e = \mathcal{N}(\hat{\vec{x}_e}, \mSigma)$, where $\mSigma$ denotes the covariance matrix for error state, which helps us to track the uncertainty of error state. Note that $\mSigma$ is initialized to a very small diagonal matrix.
+
+At certain round, we first obtain the measurements from accelerator and gyroscope, and compute a new nominal state estimation $\hat{\vec{x}_n^\prime}$ by Equation (\ref{f12}) to (\ref{f13}). We then compute error state Jacobian $\mJ_{e^\prime e}^\prime$ by Equation(\ref{f14}), then update the error state and covariance matrix of current error state by,
+\begin{align}
+\hat{\vec{x}_e^\prime} &= \mJ_{e^\prime e}^\prime\hat{\vec{x}_e} \\
+\mSigma^\prime &= \mJ_{e^\prime e}^\prime \mSigma (\mJ_{e^\prime e}^\prime)^T
+\end{align}
+which is called \textit{prediction step} in ESKF. We omit prime symbol in next step, \ie current state $\vec{x}$ is replaced by $\vec{x}^\prime$.
+
+We then assume correction measurement $\vec{y}$ from extrasensory data is a non-linear function with additional white Gaussian noise $w = \mathcal{N}(0, \mW)$ of our true state, \ie,
+\begin{equation}\label{f17}
+	\vec{y} = h(\vec{x}_t) + w
+\end{equation}
+and the \textit{correction step} of ESKF are as follows,
+\begin{align}
+	\mK &= \mSigma\mH^T(\mH\mSigma\mH^T+\mW)^{-1} \\
+	\hat{\vec{x}_e^\prime} &= \mK (\vec{y} - h(\hat{\vec{x}_t})) \\
+	\mSigma^\prime &= (\ones - \mK\mH)\mSigma
+\end{align}
+where $\mH$ is the Jacobian matrix of measurement function $h()$ with respect to error state $\vec{x}_e$ (see Section \ref{subsec:camera_comple_data_sub2}). Noted the estimation of true state here is the nominal state since we have not observed the mean of error state. The true state is estimated by Equation (\ref{f1}) and Equation (\ref{f18}) to (\ref{f19}). As always, we omit prime symbol as state has been refreshed.
+
+Before system enters into next round, we reset error state to initial state, \ie, $\vec{x}_e = 0$ in our case. We update covariance matrix $\mSigma$ by
+\begin{equation}\label{f20}
+	\mSigma^\prime = \mJ_{ge} \mSigma (\mJ_{ge})^T
+\end{equation}
+where $\mJ_{ge}$ is Jacobian matrix of updated error state with respect to old error state, and it is given by
+\begin{equation}\label{f21}
+	\mJ_{ge} = \begin{bmatrix}
+	\ones_6 & 0 & 0 \\
+	0 & \ones - \left[ \frac{1}{2} \hat{\vec{\theta}_e} \right]_\times & 0 \\
+	0 & 0 & \ones_9 \\
+	\end{bmatrix}
+\end{equation}
+we derive it as similar way with the one shows in Appendix \ref{chap:appendix1}.
 
 \section{Camera as Complementary Sensory Data}
 \label{sec:camera_comple_data}
 
-\subsection{Motivation}
-\label{subsec:camera_comple_data_sub1}
+%\subsection{Motivation}
+%\label{subsec:camera_comple_data_sub1}
 
 \subsection{Self-adapt Map Scale}
 \label{subsec:camera_comple_data_sub2}

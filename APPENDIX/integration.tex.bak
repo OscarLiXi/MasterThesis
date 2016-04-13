@@ -1,12 +1,34 @@
 \chapter{Integration Methods}
-\label{chap:appendix}
+\label{chap:appendix2}
 
 \section{Runge-Kutta Numerical Integration Methods}
 \label{sec:runge_kutta}
 
+Runge-Kutta methods aims to give a approximate solutions of ordinary differential equations, \eg, our time-derivative state $\dot{\vec{x}}$, which is 
+\begin{equation}
+	\dot{\vec{x}} = f(t, \vec{x})
+\end{equation}
+The solution give in Equation (\ref{f12}) - (\ref{f13}) by simplest version of Runge-Kutta methods, \eg, assuming $\dot{\vec{x}}$ over each time period $\Delta{t}$, which gives us
+\begin{equation}
+	\vec{x}_{n+1} = \vec{x}_{n} + f(t_n, \vec{x}_n)\Delta{t}
+\end{equation}
+More complicated Runge-Kutta methods please refers to \cite{wiki:RK4}.
+
 \section{Closed-form Integration Methods}
 \label{sec:close_integration}
-
-
+We first gives a clean version of Equation (\ref{f5}), which is
+\begin{equation}
+	\dot{\vec{\theta}_e} = -\left[ \vec{\omega} \right]_\times\vec{\theta}_e
+\end{equation}
+we update $\vec{\theta}_e$ by
+\begin{align}
+	\vec{\theta}_e^{\prime} &= \vec{\theta}_e + \dot{\vec{\theta}_e}\Delta{t} \\
+							\label{b1}
+							&= \vec{\theta}_e -\left[ \vec{\omega} \right]_\times\vec{\theta}_e\Delta{t} \\
+							\label{b2}
+							&= \mR\{ -\vec{\omega}\Delta{t} \} \\
+							&= \mR\{ \vec{\omega}\Delta{t} \}^T
+\end{align}
+which we apply Equation (\ref{q25}) and Equation (\ref{q30}) from Equation (\ref{b1}) to (\ref{b2}). This integration is a closed-form integration.
 \clearpage
 \newpage

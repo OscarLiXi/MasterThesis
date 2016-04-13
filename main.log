@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.11.13)  7 APR 2016 20:56
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.11.13)  13 APR 2016 14:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -590,26 +590,27 @@ Package: l3candidates 2014/01/06 v4643 L3 Experimental additions to l3kernel
 (./main.aux (./COVER/cover.aux) (./signature.aux)
 (./CONTENT/tableofcontents.aux) (./CONTENT/intro.aux) (./CONTENT/review.aux)
 (./CONTENT/background.aux) (./CONTENT/SensorFusing.aux)
-(./CONTENT/experiment.aux) (./CONTENT/summary.aux) (./APPENDIX/integration.aux)
+(./CONTENT/experiment.aux) (./CONTENT/summary.aux)
+(./APPENDIX/error-state-derivation.aux) (./APPENDIX/integration.aux)
 (./APPENDIX/approximation.aux) (./BIB/biblio.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 78.
-LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
 \AtBeginShipoutBox=\box57
-Package hyperref Info: Link coloring ON on input line 78.
+Package hyperref Info: Link coloring ON on input line 85.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -619,9 +620,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count156
 )
-LaTeX Info: Redefining \ref on input line 78.
-LaTeX Info: Redefining \pageref on input line 78.
-LaTeX Info: Redefining \nameref on input line 78.
+LaTeX Info: Redefining \ref on input line 85.
+LaTeX Info: Redefining \pageref on input line 85.
+LaTeX Info: Redefining \nameref on input line 85.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
@@ -647,7 +648,7 @@ Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
 \openout2 = `COVER/cover.aux'.
 
- (./COVER/cover.tex <logo_saarland.png, id=129, 521.95pt x 210.7875pt>
+ (./COVER/cover.tex <logo_saarland.png, id=125, 521.95pt x 210.7875pt>
 File: logo_saarland.png Graphic file (type png)
 
 <use logo_saarland.png>
@@ -669,7 +670,7 @@ LaTeX Font Info:    Try loading font information for U+lasy on input line 51.
 (/usr/share/texlive/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-<mpg.png, id=135, 301.125pt x 244.915pt>
+<mpg.png, id=131, 301.125pt x 244.915pt>
 File: mpg.png Graphic file (type png)
  <use mpg.png>
 Package pdftex.def Info: mpg.png used on input line 53.
@@ -713,7 +714,7 @@ Chapter 1.
 
 
 
-] <CONTENT/Figure/Figure1-1_IMU_Sensor.jpg, id=241, 351.3125pt x 349.305pt>
+] <CONTENT/Figure/Figure1-1_IMU_Sensor.jpg, id=236, 351.3125pt x 349.305pt>
 File: CONTENT/Figure/Figure1-1_IMU_Sensor.jpg Graphic file (type jpg)
 
 <use CONTENT/Figure/Figure1-1_IMU_Sensor.jpg>
@@ -737,7 +738,7 @@ File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 
 (./CONTENT/review.tex
 Chapter 2.
-<CONTENT/Figure/Figure2-1_World.png, id=295, 1593.955pt x 1327.96124pt>
+<CONTENT/Figure/Figure2-1_World.png, id=290, 1593.955pt x 1327.96124pt>
 File: CONTENT/Figure/Figure2-1_World.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure2-1_World.png>
@@ -752,18 +753,23 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-] <CONTENT/Figure/Figure2-2-a.png, id=309, 583.781pt x 114.22675pt>
+]
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 33.
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 33.
+ <CONTENT/Figure/Figure2-2-a.png, id=304, 583.781pt x 114.22675pt>
 File: CONTENT/Figure/Figure2-2-a.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure2-2-a.png>
-Package pdftex.def Info: CONTENT/Figure/Figure2-2-a.png used on input line 43.
+Package pdftex.def Info: CONTENT/Figure/Figure2-2-a.png used on input line 44.
 (pdftex.def)             Requested size: 346.89731pt x 67.87947pt.
 
-<CONTENT/Figure/Figure2-2-b.png, id=310, 557.88425pt x 76.08424pt>
+<CONTENT/Figure/Figure2-2-b.png, id=305, 557.88425pt x 76.08424pt>
 File: CONTENT/Figure/Figure2-2-b.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure2-2-b.png>
-Package pdftex.def Info: CONTENT/Figure/Figure2-2-b.png used on input line 50.
+Package pdftex.def Info: CONTENT/Figure/Figure2-2-b.png used on input line 51.
 (pdftex.def)             Requested size: 346.89731pt x 47.30988pt.
  [13 <./CONTENT/Figure/Figure2-1_World.png>] [14 <./CONTENT/Figure/Figure2-2-a.
 png> <./CONTENT/Figure/Figure2-2-b.png>])
@@ -781,16 +787,16 @@ Chapter 3.
 
  (./CONTENT/SensorFusing.tex
 Chapter 4.
-) [23
+[23
 
 
 
-]
+] [24] [25] [26] [27]) [28]
 \openout2 = `CONTENT/experiment.aux'.
 
  (./CONTENT/experiment.tex
 Chapter 5.
-) [24
+) [29
 
 
 
@@ -799,16 +805,25 @@ Chapter 5.
 
  (./CONTENT/summary.tex
 Chapter 6.
-) [25
+) [30
 
 
 
 ]
+\openout2 = `APPENDIX/error-state-derivation.aux'.
+
+ (./APPENDIX/error-state-derivation.tex
+Appendix A.
+[31
+
+
+
+]) [32]
 \openout2 = `APPENDIX/integration.aux'.
 
  (./APPENDIX/integration.tex
-Appendix A.
-[26
+Appendix B.
+[33
 
 
 
@@ -816,8 +831,8 @@ Appendix A.
 \openout2 = `APPENDIX/approximation.aux'.
 
  (./APPENDIX/approximation.tex
-Appendix B.
-[27
+Appendix C.
+[34
 
 
 
@@ -831,33 +846,34 @@ Underfull \hbox (badness 1874) in paragraph at lines 4--8
 ive . co . uk / index . php / en / products /
  []
 
-[28
+[35
 
 
 
 
-] [29])) [30]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 101.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 101.
+] [36])) [37]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 109.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 109.
  (./main.aux (./COVER/cover.aux) (./signature.aux)
 (./CONTENT/tableofcontents.aux) (./CONTENT/intro.aux) (./CONTENT/review.aux)
 (./CONTENT/background.aux) (./CONTENT/SensorFusing.aux)
-(./CONTENT/experiment.aux) (./CONTENT/summary.aux) (./APPENDIX/integration.aux)
+(./CONTENT/experiment.aux) (./CONTENT/summary.aux)
+(./APPENDIX/error-state-derivation.aux) (./APPENDIX/integration.aux)
 (./APPENDIX/approximation.aux) (./BIB/biblio.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 101.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 101.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 109.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 109.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 428FBE1C04CC63B322B3B6BBA291FD6E;2201.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 101.
+(rerunfilecheck)             Checksum: 39A39530F52ABBB7768974437A84ED04;2194.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 109.
  ) 
 Here is how much of TeX's memory you used:
- 15199 strings out of 494985
- 251412 string characters out of 6180355
- 351433 words of memory out of 5000000
- 17910 multiletter control sequences out of 15000+600000
- 22696 words of font info for 56 fonts, out of 8000000 for 9000
+ 15346 strings out of 494985
+ 253214 string characters out of 6180355
+ 360779 words of memory out of 5000000
+ 17958 multiletter control sequences out of 15000+600000
+ 24643 words of font info for 63 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 36i,24n,49p,10345b,468s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,28n,49p,10345b,468s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/oscar/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbi1200.600pk> </home/o
 scar/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home/oscar/.texmf
 -var/fonts/pk/ljfour/jknappen/ec/ectt1200.600pk> </home/oscar/.texmf-var/fonts/
@@ -868,23 +884,26 @@ ecrm1200.600pk> </home/oscar/.texmf-var/fonts/pk/ljfour/jknappen/ec/eccc1440.60
 /oscar/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/oscar/.tex
 mf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> </home/oscar/.texmf-var/font
 s/pk/ljfour/jknappen/ec/ecbx1200.600pk></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
-i6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (30 pages, 747653 bytes).
+e1/public/amsfonts/cmextra/cmbsy8.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/symbols/msbm10.pfb>
+Output written on main.pdf (37 pages, 797941 bytes).
 PDF statistics:
- 1086 PDF objects out of 1200 (max. 8388607)
- 543 compressed objects within 6 object streams
- 152 named destinations out of 1000 (max. 500000)
- 299 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1272 PDF objects out of 1440 (max. 8388607)
+ 708 compressed objects within 8 object streams
+ 231 named destinations out of 1000 (max. 500000)
+ 291 words of extra memory for PDF output out of 10000 (max. 10000000)
 

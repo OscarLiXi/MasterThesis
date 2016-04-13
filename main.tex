@@ -70,9 +70,16 @@
 \def\mB{\mathbf{B}}
 \def\mC{\mathbf{C}}
 \def\mR{\mathbf{R}}
+\def\mSigma{\mathbf{\Sigma}}
+\def\mJ{\mathbf{J}}
+\def\mW{\mathbf{W}}
+\def\mK{\mathbf{K}}
+\def\mH{\mathbf{H}}
 
-\renewcommand{\vec}[1]{\mathbf{#1}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
 \newcommand{\norm}[1]{\left\|#1\right\|}
+
+\def\ones{\mathbf{1}}
 %%My definitions end
 
 \begin{document}
@@ -94,6 +101,7 @@
 % \include{CONTENT/discuss}
 \include{CONTENT/summary}
 \appendix
+\include{APPENDIX/error-state-derivation}
 \include{APPENDIX/integration}
 \include{APPENDIX/approximation}
 \include{BIB/biblio}

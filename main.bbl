@@ -161,6 +161,11 @@ JMP Van~Waveren.
 \newblock From quaternion to matrix and back.
 \newblock {\em Id Software Inc}, 2005.
 
+\bibitem{weiss2012vision}
+Stephan~M Weiss.
+\newblock {\em Vision based navigation for micro helicopters}.
+\newblock PhD thesis, Citeseer, 2012.
+
 \bibitem{wiki:rotationformula}
 Wikipedia.
 \newblock Rodrigues' rotation formula --- wikipedia{,} the free encyclopedia,
@@ -177,5 +182,10 @@ Wikipedia.
 Wikipedia.
 \newblock Robotics --- wikipedia{,} the free encyclopedia, 2016.
 \newblock [Online; accessed 22-March-2016].
+
+\bibitem{wiki:RK4}
+Wikipedia.
+\newblock Runge–kutta methods --- wikipedia{,} the free encyclopedia, 2016.
+\newblock [Online; accessed 11-April-2016].
 
 \end{thebibliography}

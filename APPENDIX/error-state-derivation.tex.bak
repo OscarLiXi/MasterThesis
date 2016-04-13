@@ -1,0 +1,51 @@
+\chapter{The Derivation of Error-state Kinematic Equations}
+\label{chap:appendix1}
+
+We here derive Equation (\ref{f4}) and Equation (\ref{f5}) in Chapter \ref{chap:sensor_fusing}.
+
+In order to simplify our notation, we define
+\begin{align}
+	\label{a1}
+	\vec{a}_n &\triangleq \vec{a}_m - \vec{a}_{bn} \\
+	\label{a2}
+	\vec{\omega}_n &\triangleq \vec{\omega}_m - \vec{\omega}_{bn} \\
+	\label{a3}
+	\vec{a}_e &\triangleq -\vec{a}_{be} - \vec{a}_n \\
+	\label{a4}
+	\vec{\omega}_e &\triangleq -\vec{\omega}_{be} - \vec{\omega}_n 
+\end{align}
+
+We derive Equation (\ref{f4}) by
+\begin{align}
+	\dot{\vec{v}}_e &= \dot{\vec{v}}_t - \dot{\vec{v}}_n \\
+			  &= (\mR_t\vec{a}_t +\vec{g}_t) - (\mR_n\vec{a}_n +\vec{g}_n)
+\end{align}
+we then uses small signal approximation for $R_t$ by Equation (\ref{q25}) and Equation (\ref{q30}), which leads to 
+\begin{equation}
+	\mR_t = \mR_n(\ones + \left[ \vec{\theta}_n \right]_\times) + O(\norm{\Delta{\vec{\theta}_e}}^2)
+\end{equation}
+we omit the second order of angular term and followed by Equation (\ref{f11}), we obtain
+\begin{align}
+	\dot{\vec{v}}_e &= (\mR_n(\ones + \left[ \vec{\theta}_n \right]_\times)\vec{a}_t +\vec{g}_t) - (\mR_n\vec{a}_n +\vec{g}_n) \\
+					&= \mR_n(\ones + \left[ \vec{\theta}_n \right]_\times)(\vec{a}_n+\vec{a}_e)+\vec{g}_e
+\end{align}
+By applying the property of skew-symmetric matrix $\left[ \vec{a} \right]_\times \vec{b} = \left[ \vec{b} \right]_\times \vec{a}$, and recalling (\ref{a1}), (\ref{a2}). We have
+\begin{align}
+	\dot{\vec{v}}_e &= \mR_n \left[ \vec{a}_m - \vec{a}_{bn} \right]_{\times} -  \mR_n\vec{a}_{be} + \vec{g}_e - \mR_n\vec{a}_n
+\end{align}
+which is exactly Equation (\ref{f4}).
+
+We then derive Equation (\ref{f5}) by 
+\begin{align}
+	\dot{\vec{q}}_e &= \frac{1}{2}(\vec{q}_e \otimes \vec{\omega}_t - \vec{\omega}_n \otimes \vec{q}_e)
+\end{align}
+and we have pure quaternion $\dot{\vec{\theta}}_e = 2\dot{\vec{q}}_e$. By expanding all terms in above equations, we have
+\begin{align}
+	\dot{\vec{\theta}_e} &= -\left[ \vec{\omega}_n \right]_\times\vec{\theta}_e + \vec{\omega}_e + O(\norm{\Delta{\vec{\theta}_e}}^2)
+\end{align}
+
+By omitting all second-oder terms and recalling (\ref{a3}), (\ref{a4}), we obtain
+\begin{align}
+	\dot{\vec{\theta}_e} =& \left[ \vec{\omega}_m - \vec{\omega}_{bn} \right]_{\times} - \vec{\omega}_{be} - \vec{\omega}_{n}
+\end{align}
+which is Equation (\ref{f5}).

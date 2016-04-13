@@ -30,6 +30,7 @@ In this master thesis, we use following notations,
 be denoted particularly. For example, the translation $\textbf{p}$ in camera frame will be denoted as $\textbf{p}_{\C}$, and the translation $\textbf{p}$ in world frame will be denoted as $\textbf{p}$. }
 \item {A general translation $\textbf{t}$ should express a translation from point $A$ to point $B$ in frame $\C$, which is denoted as $\textbf{t}^{AB}_{\C}$. We simplify a point $\textbf{p}$ in frame $\A$ as $\textbf{p}_{\A}$, when this point is the translation $\textbf{t}^{OP}_{\A}$, $O$ is origin of frame $\A$, and $\textbf{p} = P$, this holds same for vector.}
 \item {A general rotation is either expressed in quaternion $\textbf{q}$ or rotation matrix $\mR$. We use quaternion $\textbf{q}$ as example. A quaternion is a  orientation operation from frame $\B$ to frame $\A$, and it is denoted as $\textbf{q}_{\A\B}$  in this thesis. Noted that if such a operation is from world frame $\W$ to some frame $\B$, we omit both frame for simplification, \ie, $\textbf{q}_{\W\B} \triangleq \textbf{q}$.}
+\item {We use hat operator $\hat{\vec{x}}$ to represent the estimation of state $\vec{x}$.}
 %TODO: Add more notations when necessary
 \end{itemize}
 
