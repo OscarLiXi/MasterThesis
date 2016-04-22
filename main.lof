@@ -1,0 +1,15 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1-1}{\ignorespaces IMU sensor with gyroscope and accelerometer measures rotational rate and acceleration of X, Y, Z axis regarding its local frame. Note that IMU sensor normally has bias and irreducible noises, it is necessary to apply a calibration like cameras. The frequency of IMU output is normally larger than 100 Hz. Source: \cite {Figure1-1_IMU_Sensor}}}{10}{figure.1.1}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2-1}{\ignorespaces This figure shows the connection among world frame $\mathcal {W}$, IMU frame $\mathcal {I}$ and camera frame $\mathcal {C}$. Green line shows the transformation between camera and IMU, which can be pre-calibrated. Red line is the pose of IMU in world frame. Camera frame observes point $\textbf {p}$ of object P in image plane, and connects a object P by blue line, and the coordinate of object P in world frame is presented as yellow line.}}{14}{figure.2.1}
+\contentsline {figure}{\numberline {2-2}{\ignorespaces (a) Filter method for SLAM. (b) Keyframe-based Bundle Adjustment (BA) for SLAM. We denote the $i^{th}$ camera position as $\textbf {x}_i$, $i^{th}$ image feature as $\textbf {y}_i$. We connect the line between camera and image feature if this feature is observed by this camera, the vanished observations is presented as dotted line, and the vanished camera is expressed as grey font. Both graph changes as time goes on from left to right. One can see from (a) that though only the latest camera pose is reserved, the edges between features are increasing exponentially. (b) stores some of former camera poses (keyframe) (\peek _meaning:NTF .{i.e\spacefactor \@m }{\peek _catcode:NTF a{i.e.\spacefactor \@m }{i.e.\spacefactor \@m }}, $\textbf {x}_1$ and $\textbf {x}_4$) by keeping graph stay sparsity. }}{15}{figure.2.2}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Filter}}}{15}{subfigure.2.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Keyframe-based BA}}}{15}{subfigure.2.2}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4-1}{\ignorespaces Pipeline of our visual-inertial odometry. Noted that measurement frequency from camera is 4 times lower than measurement frequency of IMU sensor in our experiment setting, therefore we do not have visual odometry (VO) result in some certain turn. Also whether this frame is keyframe is provided by VO.}}{33}{figure.4.1}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

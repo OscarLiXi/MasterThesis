@@ -75,11 +75,18 @@
 \def\mW{\mathbf{W}}
 \def\mK{\mathbf{K}}
 \def\mH{\mathbf{H}}
+\def\mI{\mathbf{I}}
 
 \renewcommand{\vec}[1]{\boldsymbol{#1}}
 \newcommand{\norm}[1]{\left\|#1\right\|}
 
 \def\ones{\mathbf{1}}
+
+\def\argmin{\mathop{\rm arg\,min}\limits}
+
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 %%My definitions end
 
 \begin{document}

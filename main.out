@@ -16,15 +16,16 @@
 \BOOKMARK [2][-]{subsection.4.1.2}{State Time-integration and Error-state Jacobian}{section.4.1}% 16
 \BOOKMARK [2][-]{subsection.4.1.3}{State Propagation}{section.4.1}% 17
 \BOOKMARK [1][-]{section.4.2}{Camera as Complementary Sensory Data}{chapter.4}% 18
-\BOOKMARK [2][-]{subsection.4.2.1}{Self-adapt Map Scale}{section.4.2}% 19
-\BOOKMARK [2][-]{subsection.4.2.2}{Keyframe-based Bundle Adjustment}{section.4.2}% 20
-\BOOKMARK [1][-]{section.4.3}{Visual-inertial Odometry Pipeline Overview}{chapter.4}% 21
-\BOOKMARK [0][-]{chapter.5}{Experiments}{}% 22
-\BOOKMARK [1][-]{section.5.1}{Synthetic Dataset}{chapter.5}% 23
-\BOOKMARK [1][-]{section.5.2}{Some other experiments}{chapter.5}% 24
-\BOOKMARK [0][-]{chapter.6}{Summary, Discussion and Future Works}{}% 25
-\BOOKMARK [0][-]{appendix.A}{The Derivation of Error-state Kinematic Equations}{}% 26
-\BOOKMARK [0][-]{appendix.B}{Integration Methods}{}% 27
-\BOOKMARK [1][-]{section.B.1}{Runge-Kutta Numerical Integration Methods}{appendix.B}% 28
-\BOOKMARK [1][-]{section.B.2}{Closed-form Integration Methods}{appendix.B}% 29
-\BOOKMARK [0][-]{appendix.C}{Approximation Methods}{}% 30
+\BOOKMARK [2][-]{subsection.4.2.1}{Introduction to Monocular Visual Odometry}{section.4.2}% 19
+\BOOKMARK [2][-]{subsection.4.2.2}{Self-adapt Map Scale}{section.4.2}% 20
+\BOOKMARK [2][-]{subsection.4.2.3}{Keyframe-based Bundle Adjustment}{section.4.2}% 21
+\BOOKMARK [1][-]{section.4.3}{Visual-inertial Odometry Pipeline Summary}{chapter.4}% 22
+\BOOKMARK [0][-]{chapter.5}{Experiments}{}% 23
+\BOOKMARK [1][-]{section.5.1}{Synthetic Dataset}{chapter.5}% 24
+\BOOKMARK [1][-]{section.5.2}{Some other experiments}{chapter.5}% 25
+\BOOKMARK [0][-]{chapter.6}{Summary, Discussion and Future Works}{}% 26
+\BOOKMARK [0][-]{appendix.A}{The Derivation of Error-state Kinematic Equations}{}% 27
+\BOOKMARK [0][-]{appendix.B}{Integration Methods}{}% 28
+\BOOKMARK [1][-]{section.B.1}{Runge-Kutta Numerical Integration Methods}{appendix.B}% 29
+\BOOKMARK [1][-]{section.B.2}{Closed-form Integration Methods}{appendix.B}% 30
+\BOOKMARK [0][-]{appendix.C}{Approximation Methods}{}% 31

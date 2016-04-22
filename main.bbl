@@ -41,6 +41,12 @@ Jakob Engel, Thomas Sch{\"o}ps, and Daniel Cremers.
 \newblock Lsd-slam: Large-scale direct monocular slam.
 \newblock In {\em Computer Vision--ECCV 2014}, pages 834--849. Springer, 2014.
 
+\bibitem{fischler1981random}
+Martin~A Fischler and Robert~C Bolles.
+\newblock Random sample consensus: a paradigm for model fitting with
+  applications to image analysis and automated cartography.
+\newblock {\em Communications of the ACM}, 24(6):381--395, 1981.
+
 \bibitem{forster2015imu}
 Christian Forster, Luca Carlone, Frank Dellaert, and Davide Scaramuzza.
 \newblock Imu preintegration on manifold for efficient visual-inertial
@@ -100,17 +106,35 @@ Mingyang Li and Anastasios~I Mourikis.
 \newblock Consistency of ekf-based visual-inertial odometry.
 \newblock {\em University of California Riverside, Tech. Rep}, 2011.
 
+\bibitem{lourakis2009sba}
+Manolis~IA Lourakis and Antonis~A Argyros.
+\newblock Sba: A software package for generic sparse bundle adjustment.
+\newblock {\em ACM Transactions on Mathematical Software (TOMS)}, 36(1):2,
+  2009.
+
 \bibitem{lowe1999object}
 David~G Lowe.
 \newblock Object recognition from local scale-invariant features.
 \newblock In {\em Computer vision, 1999. The proceedings of the seventh IEEE
   international conference on}, volume~2, pages 1150--1157. Ieee, 1999.
 
+\bibitem{lynen2013robust}
+Simon Lynen, Markus~W Achtelik, Steven Weiss, Maria Chli, and Roland Siegwart.
+\newblock A robust and modular multi-sensor fusion approach applied to mav
+  navigation.
+\newblock In {\em Intelligent Robots and Systems (IROS), 2013 IEEE/RSJ
+  International Conference on}, pages 3923--3929. IEEE, 2013.
+
 \bibitem{mcnaughton1991dead}
 BL~McNaughton, Lijiang Chen, and EJ~Markus.
 \newblock “dead reckoning,” landmark learning, and the sense of direction:
   a neurophysiological and computational hypothesis.
 \newblock {\em Cognitive Neuroscience, Journal of}, 3(2):190--202, 1991.
+
+\bibitem{mei2009constant}
+Christopher Mei, Gabe Sibley, Mark Cummins, Paul~M Newman, and Ian~D Reid.
+\newblock A constant-time efficient stereo slam system.
+\newblock In {\em BMVC}, pages 1--11, 2009.
 
 \bibitem{mourikis2007multi}
 Anastasios Mourikis, Stergios Roumeliotis, et~al.
@@ -123,6 +147,14 @@ Anastasios Mourikis, Stergios Roumeliotis, et~al.
 Raul Mur-Artal, JMM Montiel, and Juan~D Tardos.
 \newblock Orb-slam: a versatile and accurate monocular slam system.
 \newblock {\em Robotics, IEEE Transactions on}, 31(5):1147--1163, 2015.
+
+\bibitem{newcombe2011kinectfusion}
+Richard~A Newcombe, Shahram Izadi, Otmar Hilliges, David Molyneaux, David Kim,
+  Andrew~J Davison, Pushmeet Kohi, Jamie Shotton, Steve Hodges, and Andrew
+  Fitzgibbon.
+\newblock Kinectfusion: Real-time dense surface mapping and tracking.
+\newblock In {\em Mixed and augmented reality (ISMAR), 2011 10th IEEE
+  international symposium on}, pages 127--136. IEEE, 2011.
 
 \bibitem{nister2004visual}
 David Nist{\'e}r, Oleg Naroditsky, and James Bergen.
@@ -156,6 +188,12 @@ Nikolas Trawny and Stergios~I Roumeliotis.
 \newblock {\em University of Minnesota, Dept. of Comp. Sci. \& Eng., Tech.
   Rep}, 2:2005, 2005.
 
+\bibitem{triggs1999bundle}
+Bill Triggs, Philip~F McLauchlan, Richard~I Hartley, and Andrew~W Fitzgibbon.
+\newblock Bundle adjustment—a modern synthesis.
+\newblock In {\em Vision algorithms: theory and practice}, pages 298--372.
+  Springer, 1999.
+
 \bibitem{van2005quaternion}
 JMP Van~Waveren.
 \newblock From quaternion to matrix and back.
@@ -172,6 +210,11 @@ Wikipedia.
   2015.
 \newblock [Online; accessed 6-April-2016].
 
+\bibitem{wiki:blender}
+Wikipedia.
+\newblock Blender (software) --- wikipedia{,} the free encyclopedia, 2016.
+\newblock [Online; accessed 21-April-2016].
+
 \bibitem{wiki:GPS}
 Wikipedia.
 \newblock Global positioning system --- wikipedia{,} the free encyclopedia,
@@ -187,5 +230,18 @@ Wikipedia.
 Wikipedia.
 \newblock Runge–kutta methods --- wikipedia{,} the free encyclopedia, 2016.
 \newblock [Online; accessed 11-April-2016].
+
+\bibitem{wu2011multicore}
+Changchang Wu, Sameer Agarwal, Brian Curless, and Steven~M Seitz.
+\newblock Multicore bundle adjustment.
+\newblock In {\em Computer Vision and Pattern Recognition (CVPR), 2011 IEEE
+  Conference on}, pages 3057--3064. IEEE, 2011.
+
+\bibitem{young2011imusim}
+Alexander~D Young, Martin~J Ling, and Damal~K Arvind.
+\newblock Imusim: A simulation environment for inertial sensing algorithm
+  design and evaluation.
+\newblock In {\em Information Processing in Sensor Networks (IPSN), 2011 10th
+  International Conference on}, pages 199--210. IEEE, 2011.
 
 \end{thebibliography}

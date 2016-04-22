@@ -142,14 +142,20 @@ Noted that partial derivative between true state $\vec{x}_t$ and $\vec{x}_e$ is 
 	\end{bmatrix}
 \end{equation}
 and by Equation (\ref{q5}), we have
-\begin{equation}\label{f16}
-	\frac{\partial{\vec{q}_t}}{\partial{\vec{\theta}_e }} = \frac{1}{2}Q^+(\vec{q})\begin{bmatrix}
+\begin{align}\label{f16}
+	\frac{\partial{\vec{q}_t}}{\partial{\vec{\theta}_e }} &= \frac{1}{2}Q^+(\vec{q})\begin{bmatrix}
 	0 & 0 & 0 \\
 	1 & 0 & 0 \\
 	0 & 1 & 0 \\
 	0 & 0 & 1 \\
-	\end{bmatrix}
-\end{equation}
+	\end{bmatrix} \\
+	&= \frac{1}{2}\begin{bmatrix}
+	-q_x & -q_y & -q_z \\
+	q_w & -q_x & q_y \\
+	q_z & q_w & -q_x \\
+	-q_y & q_x & q_w \\
+	\end{bmatrix} \\
+\end{align}
 
 \subsection{State Propagation}
 \label{subsec:ESKF_IMU_sub4}
@@ -157,7 +163,7 @@ and by Equation (\ref{q5}), we have
 Initially, nominal state $\vec{x}_n$ has been set to a initial guess based on some prior knowledge, and there is no error at start, \ie, error state is set to zero. We assume error state $\vec{x}_e$ as a normal distribution, \ie, $\vec{x}_e = \mathcal{N}(\hat{\vec{x}_e}, \mSigma)$, where $\mSigma$ denotes the covariance matrix for error state, which helps us to track the uncertainty of error state. Note that $\mSigma$ is initialized to a very small diagonal matrix.
 
 At certain round, we first obtain the measurements from accelerator and gyroscope, and compute a new nominal state estimation $\hat{\vec{x}_n^\prime}$ by Equation (\ref{f12}) to (\ref{f13}). We then compute error state Jacobian $\mJ_{e^\prime e}^\prime$ by Equation(\ref{f14}), then update the error state and covariance matrix of current error state by,
-\begin{align}
+\begin{align} \label{f30}
 \hat{\vec{x}_e^\prime} &= \mJ_{e^\prime e}^\prime\hat{\vec{x}_e} \\
 \mSigma^\prime &= \mJ_{e^\prime e}^\prime \mSigma (\mJ_{e^\prime e}^\prime)^T
 \end{align}
@@ -168,12 +174,12 @@ We then assume correction measurement $\vec{y}$ from extrasensory data is a non-
 	\vec{y} = h(\vec{x}_t) + w
 \end{equation}
 and the \textit{correction step} of ESKF are as follows,
-\begin{align}
+\begin{align}\label{f22}
 	\mK &= \mSigma\mH^T(\mH\mSigma\mH^T+\mW)^{-1} \\
 	\hat{\vec{x}_e^\prime} &= \mK (\vec{y} - h(\hat{\vec{x}_t})) \\
 	\mSigma^\prime &= (\ones - \mK\mH)\mSigma
 \end{align}
-where $\mH$ is the Jacobian matrix of measurement function $h()$ with respect to error state $\vec{x}_e$ (see Section \ref{subsec:camera_comple_data_sub2}). Noted the estimation of true state here is the nominal state since we have not observed the mean of error state. The true state is estimated by Equation (\ref{f1}) and Equation (\ref{f18}) to (\ref{f19}). As always, we omit prime symbol as state has been refreshed.
+where $\mH$ is the Jacobian matrix of measurement function $h()$ with respect to error state $\vec{x}_e$ (see Section \ref{subsec:camera_comple_data_sub2}). Noted the estimation of true state here is the nominal state since we have not observed the mean of error state. The true state is estimated by Equation (\ref{f1}) and Equation (\ref{f18}) to (\ref{f19}). Depending on the output frequency of extra sensor, \textit{correction step} often happens on a lower rate than \textit{prediction step}. As always, we omit prime symbol in next few steps as state has been refreshed.  
 
 Before system enters into next round, we reset error state to initial state, \ie, $\hat{\vec{x}_e} = 0$ in our case. We update covariance matrix $\mSigma$ by
 \begin{equation}\label{f20}
@@ -192,16 +198,131 @@ we derive it as similar way with the one shows in Appendix \ref{chap:appendix1}.
 \section{Camera as Complementary Sensory Data}
 \label{sec:camera_comple_data}
 
+As we discussed in Section \ref{sec:ESKF_IMU}, we somehow need extrasensory data in ESKF \textit{correction step}, we modelled this sensor as a non-linear measurement of true state $\vec{x}_t$ plus a white Gaussian noise as showed in Equation (\ref{f17}). This sensor in our case should satisfy following conditions,
+\begin{itemize}
+\item {This sensor should carry rich information as we need to obtain accurate camera pose estimation from it.}
+\item {This sensor, unlike GPS, should work both inside and outside environment as our system is designed for mobile robots.}
+\item {This sensor should be light-weight, low-expense and better easy to handle as this is the general requirements for mobile robots.}
+\end{itemize}
+which lead to our choice --- camera. It is worthy to note that though we treat data in correction step as black box, it is also possible to choose a multiple sensory platform. However on the one hand, we choose camera not only it satisfies all above conditions, also the camera as most commonly-used sensor has been well-investigated and well-understanding, this could help us to find multiple possible approaches to solve our problem, \eg, camera pose estimation in our case; on the other hand, multiple extra sensors (\ie, camera+GPS) probably meet the some problems such as synchronizing between multiple sensory platforms. Therefore we choose camera as complementary data in this work.
 
+\subsection{Introduction to Monocular Visual Odometry}
+\label{subsec:camera_comple_data_sub1}
 
-%\subsection{Motivation}
-%\label{subsec:camera_comple_data_sub1}
+Visual odometry estimates the camera pose , and it can provide the measurements (\eg, global translation and rotation) we need in ESKF prediction step as the transformation between camera and IMU has been pre-calibrated. We here briefly introduce different types of visual odometry system. There are stereo-based odometry \cite{mei2009constant}, depth-camera odometry \cite{newcombe2011kinectfusion}, however considering we only use one camera in this work, we here mainly introduce monocular visual odometry.
+
+A monocular odometry usually works as follows. Initially, system obtain the first guess of camera's pose by Homography \cite{fischler1981random} between two images. After a new image is acquired, system then tries to find the correspondences among common \textit{landmarks}, where a landmark is defined as the most distinctive object in real world. Depending on the types of correspondences, we have
+\begin{itemize}
+\item {\textbf{Feature-based methods} which is proposed in \cite{davison2007monoslam, eade2007monocular, klein2007parallel, mur2015orb}, feature-based methods use image features to denote these correspondences, \eg, points are same if the features corresponds to it are same. System then reproject similar points from last image to current one using estimated camera pose transformation, error between points in current visual frame is called reprojection error.}
+\item {\textbf{Direct methods} which is proposed in \cite{engel2014lsd}, it uses image intensity (\eg, photometric error) to find such correspondences.}
+\item {\textbf{Semi-direct methods} which is showed in \cite{forster2014svo}, it uses half image feature and half image intensity to find correspondences.}
+\end{itemize}
+After the points connection between two images has been established, camera pose is estimated by minimizing the re-projection error or image intensity error.
+
+Building a map based on such odometry is straightforward. A point is recognized as a part of landmark if it has been frequently tracked, and then will be inserted into the map as a recognized "map point"; A map is then constructed by such map points, normally a batch processing (\eg, bundle adjustment) is used for optimizing the map during mapping process. However such a technique can also be used for improving the pose estimation quality as we introduced in Section \ref{subsec:camera_comple_data_sub3}.
 
 \subsection{Self-adapt Map Scale}
 \label{subsec:camera_comple_data_sub2}
 
+Estimation of camera pose from monocular visual odometry (VO) usually is a good compensation to ESKF IMU integration since global translation is unobservable to IMU integration. However since camera is a angle-sensor, it is impossible to obtain the scale of map \cite{forster2014svo}, \ie, global translation from monocular VO has been scaled up/down with real world scale. People used to estimate map scale factor by aligning first few frames with ground-truth data \cite{forster2014svo}, or initialize map scale by a standard object (\eg, a A4 paer) \cite{davison2007monoslam}, it is still likely to accumulate scale drift with time goes on. In our framework, since IMU measures under a real world scale, we can propagate the map scale in our ESKF framework by introducing a scale factor in our state. 
+
+We first add scale factor $\vec{\lambda}$ which 3-vector to represent the scalability with x-axis, y-axis and z-axis respectively, now our true state, nominal state and error state has been changed into,
+\begin{align}
+	\vec{x}_t &= \left[ \vec{p}_t \ \vec{v}_t \ \vec{q}_t \ \vec{a}_{bt} \ \vec{\omega}_{bt} \ \vec{g}_{t} \ \vec{\lambda}_{t} \right]^T \\
+	\vec{x}_n &= \left[ \vec{p}_n \ \vec{v}_n \ \vec{q}_n \ \vec{a}_{bn} \ \vec{\omega}_{bn} \ \vec{g}_{n} \ \vec{\lambda}_{n} \right]^T \\
+	\vec{x}_e &= \left[ \vec{p}_e \ \vec{v}_e \ \vec{\theta}_e \ \vec{a}_{be} \ \vec{\omega}_{be} \ \vec{g}_{e} \ \vec{\lambda}_{e} \right]^T 
+\end{align}
+the derivative with $\vec{\lambda}$ with respect to time is easily derived since we assume scale factor is independent with time, therefore we have
+\begin{align}
+	\dot{\vec{\lambda}_t} &= 0 \\
+	\dot{\vec{\lambda}_n} &= 0 \\
+	\dot{\vec{\lambda}_e} &= 0 
+\end{align}
+it is then trivial to make corresponding changes to system kinematic equations (\eg, Equation \ref{f12} to \ref{f18}) and error state Jacobian (\eg, Equation \ref{f15} and \ref{f16}). The measurement function $h()$ of estimated true state $\dot{\vec{x}_t}$ can then be derived as
+\begin{align}
+	\label{f23}
+	h(\vec{p}_t) &= \vec{\lambda}_t \odot (\vec{p}_t - \vec{p}_{t0}) + \vec{p}_{t0}\\
+	\label{f24}
+	h(\vec{v}_t) &= \vec{v}_t\\
+	\label{f25}
+	h(\vec{q}_t) &= \vec{q}_t\\
+	\label{f26}
+	h(\vec{a}_{bt}) &= \vec{a}_{bt} \\
+	\label{f27}
+	h(\vec{\omega}_{bt}) &= \vec{\omega}_{bt} \\ 
+	\label{f28}
+	h(\vec{g}_t) &= \vec{g}_t \\
+	\label{f29}
+	h(\vec{\lambda}_t) &= \vec{\lambda}_t 
+\end{align}
+where $\odot$ is point-wise vector multiplication and $\dot{\vec{p}_{t0}}$ is the camera/IMU position in reference frame, \ie, the position obtained from Homography of first two keyframes. Noted here, we assume the camera sensor and IMU sensor has identical position for simplification, \ie, $\dot{\vec{p}_t}$ is the estimated camera position in world frame. A more complicated case can be found in \cite{lynen2013robust}.
+
+In Section \ref{sec:ESKF_IMU}, we did not give the explicit expression of $\mH$ in Equation (\ref{f22}). $\mH$ is defined as the Jacobian matrix of extrasensory measurement function $h()$ with respect to error state at nominal state $\vec{x}_n$, as $\vec{x}_n$ is the estimation of true state $\vec{x}_t$ here. By chain rule, $\mH$ can be written as
+\begin{equation}
+	\mH \triangleq \frac{\partial{h}}{\partial{\vec{x}_e}}\Bigr|_{\vec{x}_n} = \frac{\partial{h}}{\partial{\vec{x}_t}}\Bigr|_{\vec{x}_n}\frac{\partial{\vec{x}_t}}{\partial{\vec{x}_e}}\Bigr|_{\vec{x}_n} = \mJ_H\mJ_{t e}
+\end{equation}
+we already give $\mJ_{t e}$ in Equation (\ref{f15}), we then derive $\mJ_H$, which leads to
+\begin{equation}
+	\mJ_H = \begin{bmatrix}
+	\mJ_p & 0 & 0 & 0 & 0 & 0 & 0\\
+	0 & \ones_3 &0 & 0 & 0 & 0 & 0\\
+	0 & 0 & \ones_4 & 0 & 0 & 0 & 0\\
+	0 & 0 & 0 & \ones_3 & 0 & 0 & 0\\
+	0 & 0 & 0 & 0 & \ones_3 & 0 & 0\\
+	0 & 0 & 0 & 0 & 0 & \ones_3 & 0\\
+	0 & 0 & 0 & 0 & 0 & 0 & \ones_3 \\
+	\end{bmatrix}
+\end{equation}
+where $\mJ_p$ is a $3 \times 3$ matrix where diagonal is three elements of $\vec{\lambda}_n$ respectively.
+
 \subsection{Keyframe-based Bundle Adjustment}
 \label{subsec:camera_comple_data_sub3}
 
-\section{Visual-inertial Odometry Pipeline Overview}
-\label{sec:pipeline_overview}
+At last, a keyframe-based bundle adjustment is used to further increase pose estimation accuracy.
+
+A general bundle adjustment tries to optimize bunch of camera poses and 3D points together by minimizing the reprojection error between reprojected 3D points and predicted image points. Mathematically, we obtain our optimized camera poses vector $\vec{c}$ and 3D points vector $\vec{p}$ by
+\begin{equation}
+	\{ \vec{c}, \vec{p} \} = \argmin_{\vec{c}_i, \vec{p}_j} \sum_{i=1}^n \sum_{j=1}^m Obj(CamProj(\vec{c}_i, \vec{p}_j), \mI_{ij})^2
+\end{equation}
+where $n$, $m$ is the number of camera poses and 3D points respectively, $\mI_{ij}$ is the predicted 2D point position corresponding to $j^{th}$ 3D point in $i^{th}$ image frame, function $CamProj()$ reprojects the 3D point from global frame into camera frame and $Obj()$ is a general function (\eg, Euclidean distance) that measures the error between two 2D points.
+
+As long as we assume our camera is pin-hole model, we then can give function $CamProj()$ as
+\begin{align}
+	CamProj(\vec{c}_i, \vec{p}_j) &= K (\mR \{ \vec{c}_i \} \vec{p}_j) \\
+	K(\vec{P}_\C) &= \left[ u_0 \ v_0 \right]^T + \begin{bmatrix} f_u & 0 \\
+															 0 & f_v
+											  \end{bmatrix} r \left[ \frac{P_x}{P_z} \ \frac{P_y}{P_z} \right]^T
+\end{align}
+where $\mR \{ \vec{c}_i \}$ is the rotation matrix corresponding to camera pose, function $K$ transforms a point $P$ in camera frame $\C$ into 2D point in image plane, parameters $u_0$, $v_0$ are principle point, $f_u$, $f_u$ are focal length, and $r$ is the distortion factor, which those parameters are obtained by camera calibration.
+
+At each key frame turn after correction step, we employ such bundle adjustment step by inputting the camera pose in nominal state and 3D points obtained by VO; In order to ensure the efficiency, we throw out the oldest key frame after key frame queue has been reached maximum number, we set this number to 20 in all our experiments. We observe this number is suitable and keep our visual-inertial odometry runs in real-time.
+
+Solutions to general bundle adjustment varies \cite{wu2011multicore, triggs1999bundle, lourakis2009sba}, we here roughly follow the work by \cite{wu2011multicore} since it is efficient for sparse bundle adjustment problem.
+
+\section{Visual-inertial Odometry Pipeline Summary}
+\label{sec:pipeline_summary}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{CONTENT/Figure/Figure4-1_Pipeline.png}
+    \caption{Pipeline of our visual-inertial odometry. Noted that measurement frequency from camera is 4 times lower than measurement frequency of IMU sensor in our experiment setting, therefore we do not have visual odometry (VO) result in some certain turn. Also whether this frame is keyframe is provided by VO.}
+    \label{fig:fig4-1}
+\end{figure}
+
+
+In this section we summarize our visual-inertial odometry pipeline (see Figure \ref{fig:fig4-1}). We also analysis the computational cost of our visual inertial odometry system in this section.
+
+An initialisation step is needed for both nominal state and error state. After system obtains measurements (\eg, 3-vector from accelerometer, 3-vector from gyroscope) from IMU sensor, nominal state and error state are then predicted using Equation (\ref{f12}) to (\ref{f8}), and system will update corresponding covariance matrix using Equation (\ref{f30}). 
+
+Now if camera gives estimated camera pose in this turn, system then applies a \textit{correction step} as we describe in Section \ref{subsec:ESKF_IMU_sub4}. After injecting error state from nominal state, we obtain the estimated true state which contains camera pose. System then reset the error state, and further improving the odometry estimation quality by applying a keyframe bundle adjustment (keyframe BA) if this camera frame is specified as key frame by visual odometry as we discuss in Section \ref{subsec:camera_comple_data_sub3}. Finally system output the estimated camera pose and start next round after receiving IMU measurements.
+
+In our ESKF framework, computational complexity remains constant since we only keep the current states and covariance, and the size of states and covariance matrix are fixed during estimation process. To certify, we design an experiment (see Section TODO\ref{sec:}) to show that computational time remains unchanged when running a single IMU integration process using ESKF. As we discuss in Section \ref{sec:FVK}, the computational complexity is 
+\begin{equation}
+	O(m^2 \cdot n)
+\end{equation}
+where $m$ is the number of key frame, and $n$ is the number of landmarks. We claim that our odometry can also be extended to large scale since the number of landmarks can be enlarged and this in general is the key factor of limiting the scalability of SLAM-like system. Moreover it is also more beneficial to obtain high estimation accuracy by increasing the number of landmarks than number of key frames \cite{strasdat2010real}.
+
+We do not build a environment map due to the time limitation of this master thesis. However though a few more map optimization steps are needed, the key frame BA we propose in Section \ref{subsec:camera_comple_data_sub3} gives a direct result of optimized landmarks, which are the main components of mapping. We explore this in future work chapter (Chapter \ref{chap:summary}).
+
+All together, in this chapter we suggest a error-state kalman filter (ESKF) based visual-inertial odometry. The system accurately estimates the camera-IMU platform pose by fusing the measurements from IMU and camera sensors. By using a loosely-coupled approach, system runs ESKF in a constant computational complexity and needs no special initialization step, therefore it is suitable for localization of mobile robot in real-time. This odometry can also be extended to large scaled scene, and/or an efficient SLAM system.
+
