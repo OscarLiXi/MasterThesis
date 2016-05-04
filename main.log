@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.11.13)  22 APR 2016 14:47
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.11.13)  4 MAY 2016 16:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -594,30 +594,33 @@ Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \NC@list=\toks21
 \extratabsurround=\skip77
 \backup@length=\skip78
+)
+(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen170
 ) (./main.aux
 (./COVER/cover.aux) (./signature.aux) (./CONTENT/tableofcontents.aux)
 (./CONTENT/intro.aux) (./CONTENT/review.aux) (./CONTENT/background.aux)
 (./CONTENT/SensorFusing.aux) (./CONTENT/experiment.aux) (./CONTENT/summary.aux)
 (./APPENDIX/error-state-derivation.aux) (./APPENDIX/integration.aux)
-(./APPENDIX/approximation.aux) (./BIB/biblio.aux))
+(./APPENDIX/quat-to-euler.aux) (./BIB/biblio.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 92.
-LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
 \AtBeginShipoutBox=\box57
-Package hyperref Info: Link coloring ON on input line 92.
+Package hyperref Info: Link coloring ON on input line 94.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -627,9 +630,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count156
 )
-LaTeX Info: Redefining \ref on input line 92.
-LaTeX Info: Redefining \pageref on input line 92.
-LaTeX Info: Redefining \nameref on input line 92.
+LaTeX Info: Redefining \ref on input line 94.
+LaTeX Info: Redefining \pageref on input line 94.
+LaTeX Info: Redefining \nameref on input line 94.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
@@ -639,13 +642,13 @@ LaTeX Info: Redefining \nameref on input line 92.
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count157
-\scratchdimen=\dimen170
+\scratchdimen=\dimen171
 \scratchbox=\box58
 \nofMPsegments=\count158
 \nofMParguments=\count159
 \everyMPshowfont=\toks22
 \MPscratchCnt=\count160
-\MPscratchDim=\dimen171
+\MPscratchDim=\dimen172
 \MPnumerator=\count161
 \makeMPintoPDFobject=\count162
 \everyMPtoPDFconversion=\toks23
@@ -655,7 +658,7 @@ Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
 \openout2 = `COVER/cover.aux'.
 
- (./COVER/cover.tex <logo_saarland.png, id=129, 521.95pt x 210.7875pt>
+ (./COVER/cover.tex <logo_saarland.png, id=153, 521.95pt x 210.7875pt>
 File: logo_saarland.png Graphic file (type png)
 
 <use logo_saarland.png>
@@ -677,7 +680,7 @@ LaTeX Font Info:    Try loading font information for U+lasy on input line 51.
 (/usr/share/texlive/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-<mpg.png, id=135, 301.125pt x 244.915pt>
+<mpg.png, id=159, 301.125pt x 244.915pt>
 File: mpg.png Graphic file (type png)
  <use mpg.png>
 Package pdftex.def Info: mpg.png used on input line 53.
@@ -721,7 +724,7 @@ Chapter 1.
 
 
 
-] <CONTENT/Figure/Figure1-1_IMU_Sensor.jpg, id=241, 351.3125pt x 349.305pt>
+] <CONTENT/Figure/Figure1-1_IMU_Sensor.jpg, id=271, 351.3125pt x 349.305pt>
 File: CONTENT/Figure/Figure1-1_IMU_Sensor.jpg Graphic file (type jpg)
 
 <use CONTENT/Figure/Figure1-1_IMU_Sensor.jpg>
@@ -745,7 +748,7 @@ File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 
 (./CONTENT/review.tex
 Chapter 2.
-<CONTENT/Figure/Figure2-1_World.png, id=295, 1593.955pt x 1327.96124pt>
+<CONTENT/Figure/Figure2-1_World.png, id=325, 1593.955pt x 1327.96124pt>
 File: CONTENT/Figure/Figure2-1_World.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure2-1_World.png>
@@ -765,14 +768,14 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
 (Font)              Font shape `U/lasy/m/n' tried instead on input line 33.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
 (Font)              Font shape `U/lasy/m/n' tried instead on input line 33.
- <CONTENT/Figure/Figure2-2-a.png, id=309, 583.781pt x 114.22675pt>
+ <CONTENT/Figure/Figure2-2-a.png, id=340, 583.781pt x 114.22675pt>
 File: CONTENT/Figure/Figure2-2-a.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure2-2-a.png>
 Package pdftex.def Info: CONTENT/Figure/Figure2-2-a.png used on input line 44.
 (pdftex.def)             Requested size: 346.89731pt x 67.87947pt.
 
-<CONTENT/Figure/Figure2-2-b.png, id=310, 557.88425pt x 76.08424pt>
+<CONTENT/Figure/Figure2-2-b.png, id=341, 557.88425pt x 76.08424pt>
 File: CONTENT/Figure/Figure2-2-b.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure2-2-b.png>
@@ -799,46 +802,111 @@ Chapter 4.
 
 
 ] [24] [25] [26] [27] [28] [29] [30] [31]
-<CONTENT/Figure/Figure4-1_Pipeline.png, id=630, 1629.08624pt x 2117.9125pt>
+<CONTENT/Figure/Figure4-1_Pipeline.png, id=660, 1629.08624pt x 2117.9125pt>
 File: CONTENT/Figure/Figure4-1_Pipeline.png Graphic file (type png)
 
 <use CONTENT/Figure/Figure4-1_Pipeline.png>
 Package pdftex.def Info: CONTENT/Figure/Figure4-1_Pipeline.png used on input li
 ne 307.
 (pdftex.def)             Requested size: 216.81pt x 281.86627pt.
- [32 <./CONTENT/Figure/Figure4-1_Pipeline.png>]
-
-LaTeX Warning: Reference `sec:' on page 33 undefined on input line 319.
-
-) [33]
+ [32 <./CONTENT/Figure/Figure4-1_Pipeline.png>]) [33]
 \openout2 = `CONTENT/experiment.aux'.
 
  (./CONTENT/experiment.tex
 Chapter 5.
-<CONTENT/Figure/Figure5-1a.png, id=654, 1734.48pt x 922.8879pt>
-File: CONTENT/Figure/Figure5-1a.png Graphic file (type png)
-
-<use CONTENT/Figure/Figure5-1a.png>
-Package pdftex.def Info: CONTENT/Figure/Figure5-1a.png used on input line 40.
-(pdftex.def)             Requested size: 173.44534pt x 92.2801pt.
-
-<CONTENT/Figure/Figure5-1b.png, id=655, 1734.48pt x 922.8879pt>
-File: CONTENT/Figure/Figure5-1b.png Graphic file (type png)
-
-<use CONTENT/Figure/Figure5-1b.png>
-Package pdftex.def Info: CONTENT/Figure/Figure5-1b.png used on input line 44.
-(pdftex.def)             Requested size: 173.44534pt x 92.2801pt.
- [34
+[34
 
 
 
- <./CONTENT/Figure/Figure5-1a.png> <./CONTENT/Figure/Figure5-1b.png>] [35]) [36
-]
+] [35] [36]
+<CONTENT/Figure/figure5_2_a.png, id=731, 1407.0969pt x 784.8522pt>
+File: CONTENT/Figure/figure5_2_a.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_2_a.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_2_a.png used on input line 131.
+
+(pdftex.def)             Requested size: 195.12767pt x 108.83665pt.
+
+<CONTENT/Figure/figure5_2_b.png, id=732, 1413.6012pt x 784.1295pt>
+File: CONTENT/Figure/figure5_2_b.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_2_b.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_2_b.png used on input line 135.
+
+(pdftex.def)             Requested size: 195.12767pt x 108.23392pt.
+
+<CONTENT/Figure/figure5_2_c.png, id=733, 1422.2736pt x 784.8522pt>
+File: CONTENT/Figure/figure5_2_c.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_2_c.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_2_c.png used on input line 139.
+
+(pdftex.def)             Requested size: 195.12767pt x 107.675pt.
+
+<CONTENT/Figure/figure5_2_d.png, id=734, 1412.8785pt x 784.1295pt>
+File: CONTENT/Figure/figure5_2_d.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_2_d.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_2_d.png used on input line 143.
+
+(pdftex.def)             Requested size: 195.12767pt x 108.28177pt.
+
+<CONTENT/Figure/figure5_2_e.png, id=735, 1409.9877pt x 784.8522pt>
+File: CONTENT/Figure/figure5_2_e.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_2_e.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_2_e.png used on input line 147.
+
+(pdftex.def)             Requested size: 195.12767pt x 108.60912pt.
+
+<CONTENT/Figure/figure5_2_f.png, id=736, 1408.5423pt x 784.1295pt>
+File: CONTENT/Figure/figure5_2_f.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_2_f.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_2_f.png used on input line 151.
+
+(pdftex.def)             Requested size: 195.12767pt x 108.61679pt.
+ [37] [38 <./CONTENT/Figure/figure5_2_a.png> <./CONTENT/Figure/figure5_2_b.png>
+ <./CONTENT/Figure/figure5_2_c.png> <./CONTENT/Figure/figure5_2_d.png> <./CONTE
+NT/Figure/figure5_2_e.png> <./CONTENT/Figure/figure5_2_f.png>]
+<CONTENT/Figure/figure5_3_a.png, id=769, 1402.7607pt x 784.8522pt>
+File: CONTENT/Figure/figure5_3_a.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_3_a.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_3_a.png used on input line 188.
+
+(pdftex.def)             Requested size: 195.12767pt x 109.17198pt.
+
+<CONTENT/Figure/figure5_3_b.png, id=770, 1400.5926pt x 784.1295pt>
+File: CONTENT/Figure/figure5_3_b.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_3_b.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_3_b.png used on input line 192.
+
+(pdftex.def)             Requested size: 195.12767pt x 109.23895pt.
+ [39 <./CONTENT/Figure/figure5_3_a.png> <./CONTENT/Figure/figure5_3_b.png>]
+<CONTENT/Figure/figure5_4_a.png, id=781, 1402.7607pt x 784.8522pt>
+File: CONTENT/Figure/figure5_4_a.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_4_a.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_4_a.png used on input line 214.
+
+(pdftex.def)             Requested size: 195.12767pt x 109.17198pt.
+
+<CONTENT/Figure/figure5_4_b.png, id=782, 1408.5423pt x 784.1295pt>
+File: CONTENT/Figure/figure5_4_b.png Graphic file (type png)
+
+<use CONTENT/Figure/figure5_4_b.png>
+Package pdftex.def Info: CONTENT/Figure/figure5_4_b.png used on input line 218.
+
+(pdftex.def)             Requested size: 195.12767pt x 108.61679pt.
+ [40 <./CONTENT/Figure/figure5_4_a.png> <./CONTENT/Figure/figure5_4_b.png>]) [4
+1]
 \openout2 = `CONTENT/summary.aux'.
 
  (./CONTENT/summary.tex
 Chapter 6.
-) [37
+) [42
 
 
 
@@ -847,25 +915,25 @@ Chapter 6.
 
  (./APPENDIX/error-state-derivation.tex
 Appendix A.
-[38
+[43
 
 
 
-]) [39]
+]) [44]
 \openout2 = `APPENDIX/integration.aux'.
 
  (./APPENDIX/integration.tex
 Appendix B.
-[40
+[45
 
 
 
 ])
-\openout2 = `APPENDIX/approximation.aux'.
+\openout2 = `APPENDIX/quat-to-euler.aux'.
 
- (./APPENDIX/approximation.tex
+ (./APPENDIX/quat-to-euler.tex
 Appendix C.
-[41
+[46
 
 
 
@@ -879,35 +947,31 @@ Underfull \hbox (badness 1874) in paragraph at lines 4--8
 ive . co . uk / index . php / en / products /
  []
 
-[42
+[47
 
 
 
 
-] [43] [44])) [45]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 116.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 116.
+] [48] [49])) [50]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
  (./main.aux (./COVER/cover.aux) (./signature.aux)
 (./CONTENT/tableofcontents.aux) (./CONTENT/intro.aux) (./CONTENT/review.aux)
 (./CONTENT/background.aux) (./CONTENT/SensorFusing.aux)
 (./CONTENT/experiment.aux) (./CONTENT/summary.aux)
 (./APPENDIX/error-state-derivation.aux) (./APPENDIX/integration.aux)
-(./APPENDIX/approximation.aux) (./BIB/biblio.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 116.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 116.
+(./APPENDIX/quat-to-euler.aux) (./BIB/biblio.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 68AD15BD4FCBF1CD6E0E648A9FCEA608;2288.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 116.
+(rerunfilecheck)             Checksum: 90B4BD2DA073551B81C1049E7F20D8E8;2785.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
  ) 
 Here is how much of TeX's memory you used:
- 15479 strings out of 494985
- 255213 string characters out of 6180355
- 363430 words of memory out of 5000000
- 18045 multiletter control sequences out of 15000+600000
+ 15599 strings out of 494985
+ 257738 string characters out of 6180355
+ 366717 words of memory out of 5000000
+ 18124 multiletter control sequences out of 15000+600000
  24643 words of font info for 63 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  36i,28n,49p,10345b,468s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -937,10 +1001,10 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist
 public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
 msfonts/symbols/msbm10.pfb>
-Output written on main.pdf (45 pages, 1565883 bytes).
+Output written on main.pdf (50 pages, 2263158 bytes).
 PDF statistics:
- 1410 PDF objects out of 1440 (max. 8388607)
- 822 compressed objects within 9 object streams
- 275 named destinations out of 1000 (max. 500000)
- 314 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1555 PDF objects out of 1728 (max. 8388607)
+ 934 compressed objects within 10 object streams
+ 312 named destinations out of 1000 (max. 500000)
+ 402 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -6,6 +6,11 @@ Imu sensor
   2016.
 \newblock [Online; accessed 22-March-2016].
 
+\bibitem{ceres-solver}
+Sameer Agarwal, Keir Mierle, and Others.
+\newblock Ceres solver.
+\newblock \url{http://ceres-solver.org}.
+
 \bibitem{batalin2004mobile}
 Maxim~A Batalin, Gaurav~S Sukhatme, and Myron Hattig.
 \newblock Mobile robot navigation using a sensor network.
@@ -63,6 +68,11 @@ Christian Forster, Matia Pizzoli, and Davide Scaramuzza.
 G~Guennebaud and B~Jacob.
 \newblock The eigen c++ template library for linear algebra.
 \newblock {\em http:/eigen. tuxfamily. org}, 2010.
+
+\bibitem{eigenweb}
+Ga\"{e}l Guennebaud, Beno\^{i}t Jacob, et~al.
+\newblock Eigen v3.
+\newblock http://eigen.tuxfamily.org, 2010.
 
 \bibitem{hamilton1844ii}
 William~Rowan Hamilton.
@@ -163,6 +173,13 @@ David Nist{\'e}r, Oleg Naroditsky, and James Bergen.
   Proceedings of the 2004 IEEE Computer Society Conference on}, volume~1, pages
   I--652. IEEE, 2004.
 
+\bibitem{quigley2009ros}
+Morgan Quigley, Ken Conley, Brian Gerkey, Josh Faust, Tully Foote, Jeremy
+  Leibs, Rob Wheeler, and Andrew~Y Ng.
+\newblock Ros: an open-source robot operating system.
+\newblock In {\em ICRA workshop on open source software}, volume~3, page~5,
+  2009.
+
 \bibitem{rosten2010faster}
 Edward Rosten, Reid Porter, and Tom Drummond.
 \newblock Faster and better: A machine learning approach to corner detection.
@@ -181,6 +198,12 @@ Hauke Strasdat, JMM Montiel, and Andrew~J Davison.
 \newblock Real-time monocular slam: Why filter?
 \newblock In {\em Robotics and Automation (ICRA), 2010 IEEE International
   Conference on}, pages 2657--2664. IEEE, 2010.
+
+\bibitem{sturm12iros}
+J.~Sturm, N.~Engelhard, F.~Endres, W.~Burgard, and D.~Cremers.
+\newblock A benchmark for the evaluation of rgb-d slam systems.
+\newblock In {\em Proc. of the International Conference on Intelligent Robot
+  Systems (IROS)}, Oct. 2012.
 
 \bibitem{trawny2005indirect}
 Nikolas Trawny and Stergios~I Roumeliotis.

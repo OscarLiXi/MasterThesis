@@ -87,6 +87,8 @@
 \usepackage{array}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\usepackage{multirow}
 %%My definitions end
 
 \begin{document}
@@ -102,7 +104,7 @@
 \include{CONTENT/review}
 \include{CONTENT/background}
 % \include{CONTENT/gpm}
-%\include{CONTENT/motivation}
+% \include{CONTENT/motivation}
 \include{CONTENT/SensorFusing}
 \include{CONTENT/experiment}
 % \include{CONTENT/discuss}
@@ -110,7 +112,7 @@
 \appendix
 \include{APPENDIX/error-state-derivation}
 \include{APPENDIX/integration}
-\include{APPENDIX/approximation}
+\include{APPENDIX/quat-to-euler}
 \include{BIB/biblio}
 
 \end{document}

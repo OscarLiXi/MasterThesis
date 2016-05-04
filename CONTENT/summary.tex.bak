@@ -6,3 +6,11 @@
 %% prompt when you run the file main.tex through LaTeX.
 \chapter{Summary, Discussion and Future Works}
 \label{chap:summary}
+
+In conclusion, we suggest a robust sensory fusing framework to be applied on visual-inertial odometry. This framework is lead by integrating IMU measurement from local frame to global frame, with additional extrasensory data (vision data) to complement unobservable parameters of IMU. We further explore a self-adapt map scale method and keyframe-based local bundle adjustment to increase the estimation accuracy.
+
+The advantages of this framework is that system does not keep visual landmarks and IMU measurement, therefore runs in a constant time complexity, which can be easily extended a large scaled scene. The drawback is that it is more reliable to the performance of visual odometry, meaning that if the correction data gives bad feedback, the whole system is easily collapsed. However we have provided experimental results that our framework can give more stable and accuracy estimation of camera pose than current state-of-art visual odometry on same data sequence, thus we argue that our work is meaningful and the results of our system will further be increased with the development of visual odometry.
+
+Another way to resolve this drawback is to apply feature-based visual-inertial methods (intense IMU integration), which could be a potential future work. More recent literatures show that feature-based VIO performs well and can be used commercially. \cite{forster2015imu} uses pre-integration theory and manifold optimization to optimize IMU and visual information together; \cite{hesch2014consistency}, which is considered the foundation algorithm of Google Project Tango, runs a consistency analysis and modify some terms of traditional IMU integration to obtain less variation results. Unfortunately, we could not compare those latest algorithm due the un-release of their codes, it is definitely worth to try their ideas of VIO in the future.
+
+Because of the lack of resources and time, we are not available to build a real IMU-camera platform in this master thesis

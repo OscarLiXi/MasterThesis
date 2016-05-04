@@ -1,0 +1,16 @@
+\chapter{Conversion from Quaternions to Euler Angles}
+\label{chap:appendix3}
+
+We introduce conversion from quaternions to Euler angles in this appendix. Though there are many conventions of Euler angles, we hereby specifically use so-called \textit{Tait Bryan angles} to represent Euler angle. Tait Bryan angles is composed by Roll, Pitch and Yaw, which is the rotation angle around X-axis, Y-axis and Z-axis respectively. A quaternion $\vec{q}$ might be represented as
+\begin{equation}
+	\vec{q} = \left[ q_w \ q_x \ q_y \ q_z \right]^T
+\end{equation}
+then Roll $\phi$, Pitch $\theta$ and Yaw $\psi$ can be obtained by
+\begin{align}
+	\phi &= \arctan{\frac{2(q_w q_x+q_y q_z)}{1-2(q_x^2+q_y^2)}}\\
+	\theta &= \arcsin{(2(q_wq_y-q_zq_x))}\\
+	\psi &= \arctan{\frac{2(q_w q_z+q_x q_y)}{1-2(q_y^2+q_z^2)}}\\
+\end{align}
+which is precisely the attitude expression we use in experiment parts.
+\clearpage
+\newpage

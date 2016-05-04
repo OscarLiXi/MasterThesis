@@ -293,9 +293,9 @@ As long as we assume our camera is pin-hole model, we then can give function $Ca
 															 0 & f_v
 											  \end{bmatrix} r \left[ \frac{P_x}{P_z} \ \frac{P_y}{P_z} \right]^T
 \end{align}
-where $\mR \{ \vec{c}_i \}$ is the rotation matrix corresponding to camera pose, function $K$ transforms a point $P$ in camera frame $\C$ into 2D point in image plane, parameters $u_0$, $v_0$ are principle point, $f_u$, $f_u$ are focal length, and $r$ is the distortion factor, which those parameters are obtained by camera calibration.
+where $\mR \{ \vec{c}_i \}$ is the rotation matrix corresponding to camera pose, function $K$ transforms a point $P$ in camera frame $\C$ into 2D point in image plane, parameters $u_0$, $v_0$ are principle point, $f_u$, $f_v$ are focal length, and $r$ is the distortion factor, which those parameters are obtained by camera calibration.
 
-At each key frame turn after correction step, we employ such bundle adjustment step by inputting the camera pose in nominal state and 3D points obtained by VO; In order to ensure the efficiency, we throw out the oldest key frame after key frame queue has been reached maximum number, we set this number to 20 in all our experiments. We observe this number is suitable and keep our visual-inertial odometry runs in real-time.
+At each key frame turn after correction step, we employ such bundle adjustment step by inputting the camera pose in nominal state and 3D points obtained by VO; We will do an extra correction step using the camera pose we obtain from BA to further improve the estimation quality. In order to ensure the efficiency, we throw out the oldest key frame after key frame queue has been reached maximum number, we set this number to 20 in all our experiments. We observe this number is suitable and keep our visual-inertial odometry runs in real-time, and at the same improves the estimation accuracy.
 
 Solutions to general bundle adjustment varies \cite{wu2011multicore, triggs1999bundle, lourakis2009sba}, we here roughly follow the work by \cite{wu2011multicore} since it is efficient for sparse bundle adjustment problem.
 
@@ -316,7 +316,7 @@ An initialisation step is needed for both nominal state and error state. After s
 
 Now if camera gives estimated camera pose in this turn, system then applies a \textit{correction step} as we describe in Section \ref{subsec:ESKF_IMU_sub4}. After injecting error state from nominal state, we obtain the estimated true state which contains camera pose. System then reset the error state, and further improving the odometry estimation quality by applying a keyframe bundle adjustment (keyframe BA) if this camera frame is specified as key frame by visual odometry as we discuss in Section \ref{subsec:camera_comple_data_sub3}. Finally system output the estimated camera pose and start next round after receiving IMU measurements.
 
-In our ESKF framework, computational complexity remains constant since we only keep the current states and covariance, and the size of states and covariance matrix are fixed during estimation process. To certify, we design an experiment (see Section TODO\ref{sec:}) to show that computational time remains unchanged when running a single IMU integration process using ESKF. As we discuss in Section \ref{sec:FVK}, the computational complexity is 
+In our ESKF framework, computational complexity remains constant since we only keep the current states and covariance, and the size of states and covariance matrix are fixed during estimation process. To certify, we design an experiment (see Section \ref{subsec:experiment1}) to show that computational time remains unchanged when running a single IMU integration process using ESKF. As we discuss in Section \ref{sec:FVK}, the computational complexity is 
 \begin{equation}
 	O(m^2 \cdot n)
 \end{equation}

@@ -22,10 +22,16 @@
 \BOOKMARK [1][-]{section.4.3}{Visual-inertial Odometry Pipeline Summary}{chapter.4}% 22
 \BOOKMARK [0][-]{chapter.5}{Experiments}{}% 23
 \BOOKMARK [1][-]{section.5.1}{Synthetic Dataset}{chapter.5}% 24
-\BOOKMARK [1][-]{section.5.2}{Some other experiments}{chapter.5}% 25
-\BOOKMARK [0][-]{chapter.6}{Summary, Discussion and Future Works}{}% 26
-\BOOKMARK [0][-]{appendix.A}{The Derivation of Error-state Kinematic Equations}{}% 27
-\BOOKMARK [0][-]{appendix.B}{Integration Methods}{}% 28
-\BOOKMARK [1][-]{section.B.1}{Runge-Kutta Numerical Integration Methods}{appendix.B}% 29
-\BOOKMARK [1][-]{section.B.2}{Closed-form Integration Methods}{appendix.B}% 30
-\BOOKMARK [0][-]{appendix.C}{Approximation Methods}{}% 31
+\BOOKMARK [1][-]{section.5.2}{Experimental Results}{chapter.5}% 25
+\BOOKMARK [2][-]{subsection.5.2.1}{Implementation Details}{section.5.2}% 26
+\BOOKMARK [2][-]{subsection.5.2.2}{Experiment 1: IMU Integration}{section.5.2}% 27
+\BOOKMARK [2][-]{subsection.5.2.3}{Experiment 2: VIO Versus VO}{section.5.2}% 28
+\BOOKMARK [2][-]{subsection.5.2.4}{Experiment 3: Keyframe Bundle Adjustment}{section.5.2}% 29
+\BOOKMARK [2][-]{subsection.5.2.5}{Experiment 4: Runtime Evaluation}{section.5.2}% 30
+\BOOKMARK [1][-]{section.5.3}{Conclusion}{chapter.5}% 31
+\BOOKMARK [0][-]{chapter.6}{Summary, Discussion and Future Works}{}% 32
+\BOOKMARK [0][-]{appendix.A}{The Derivation of Error-state Kinematic Equations}{}% 33
+\BOOKMARK [0][-]{appendix.B}{Integration Methods}{}% 34
+\BOOKMARK [1][-]{section.B.1}{Runge-Kutta Numerical Integration Methods}{appendix.B}% 35
+\BOOKMARK [1][-]{section.B.2}{Closed-form Integration Methods}{appendix.B}% 36
+\BOOKMARK [0][-]{appendix.C}{Conversion from Quaternions to Euler Angles}{}% 37
