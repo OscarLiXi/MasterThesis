@@ -76,6 +76,9 @@
 \def\mK{\mathbf{K}}
 \def\mH{\mathbf{H}}
 \def\mI{\mathbf{I}}
+\def\mX{\mathbf{X}}
+\def\mE{\mathbf{E}}
+
 
 \renewcommand{\vec}[1]{\boldsymbol{#1}}
 \newcommand{\norm}[1]{\left\|#1\right\|}
@@ -107,7 +110,7 @@
 % \include{CONTENT/motivation}
 \include{CONTENT/SensorFusing}
 \include{CONTENT/experiment}
-% \include{CONTENT/discuss}
+\include{CONTENT/current}
 \include{CONTENT/summary}
 \appendix
 \include{APPENDIX/error-state-derivation}

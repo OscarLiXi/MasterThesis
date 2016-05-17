@@ -163,7 +163,7 @@ and by Equation (\ref{q5}), we have
 Initially, nominal state $\vec{x}_n$ has been set to a initial guess based on some prior knowledge, and there is no error at start, \ie, error state is set to zero. We assume error state $\vec{x}_e$ as a normal distribution, \ie, $\vec{x}_e = \mathcal{N}(\hat{\vec{x}_e}, \mSigma)$, where $\mSigma$ denotes the covariance matrix for error state, which helps us to track the uncertainty of error state. Note that $\mSigma$ is initialized to a very small diagonal matrix.
 
 At certain round, we first obtain the measurements from accelerator and gyroscope, and compute a new nominal state estimation $\hat{\vec{x}_n^\prime}$ by Equation (\ref{f12}) to (\ref{f13}). We then compute error state Jacobian $\mJ_{e^\prime e}^\prime$ by Equation(\ref{f14}), then update the error state and covariance matrix of current error state by,
-\begin{align} \label{f30}
+\begin{align} \label{f22}
 \hat{\vec{x}_e^\prime} &= \mJ_{e^\prime e}^\prime\hat{\vec{x}_e} \\
 \mSigma^\prime &= \mJ_{e^\prime e}^\prime \mSigma (\mJ_{e^\prime e}^\prime)^T
 \end{align}
@@ -174,12 +174,12 @@ We then assume correction measurement $\vec{y}$ from extrasensory data is a non-
 	\vec{y} = h(\vec{x}_t) + w
 \end{equation}
 and the \textit{correction step} of ESKF are as follows,
-\begin{align}\label{f22}
+\begin{align}\label{f30}
 	\mK &= \mSigma\mH^T(\mH\mSigma\mH^T+\mW)^{-1} \\
 	\hat{\vec{x}_e^\prime} &= \mK (\vec{y} - h(\hat{\vec{x}_t})) \\
 	\mSigma^\prime &= (\ones - \mK\mH)\mSigma
 \end{align}
-where $\mH$ is the Jacobian matrix of measurement function $h()$ with respect to error state $\vec{x}_e$ (see Section \ref{subsec:camera_comple_data_sub2}). Noted the estimation of true state here is the nominal state since we have not observed the mean of error state. The true state is estimated by Equation (\ref{f1}) and Equation (\ref{f18}) to (\ref{f19}). Depending on the output frequency of extra sensor, \textit{correction step} often happens on a lower rate than \textit{prediction step}. As always, we omit prime symbol in next few steps as state has been refreshed.  
+where $\mH$ is the Jacobian matrix of measurement function $h(\cdot)$ with respect to error state $\vec{x}_e$ (see Section \ref{subsec:camera_comple_data_sub2}). Noted the estimation of true state here is the nominal state since we have not observed the mean of error state. The true state is estimated by Equation (\ref{f1}) and Equation (\ref{f18}) to (\ref{f19}). Depending on the output frequency of extra sensor, \textit{correction step} often happens on a lower rate than \textit{prediction step}. As always, we omit prime symbol in next few steps as state has been refreshed.  
 
 Before system enters into next round, we reset error state to initial state, \ie, $\hat{\vec{x}_e} = 0$ in our case. We update covariance matrix $\mSigma$ by
 \begin{equation}\label{f20}
@@ -187,14 +187,32 @@ Before system enters into next round, we reset error state to initial state, \ie
 \end{equation}
 where $\mJ_{ge}$ is Jacobian matrix of updated error state with respect to old error state, and it is given by
 \begin{equation}\label{f21}
-	\mJ_{ge} = \begin{bmatrix}
+	\mJ_{ge} \triangleq \dfrac{\partial{\vec{x}_e^\prime}}{\partial{\vec{x}_e}} = \begin{bmatrix}
 	\ones_6 & 0 & 0 \\
 	0 & \ones - \left[ \frac{1}{2} \hat{\vec{\theta}_e} \right]_\times & 0 \\
 	0 & 0 & \ones_9 \\
 	\end{bmatrix}
 \end{equation}
-we derive it as similar way with the one shows in Appendix \ref{chap:appendix1}.
-
+where we use $\vec{x}^\prime$ to denote the new state after resetting error state. The Jacobian is identical on all diagonal blocks except angular error term because of the assumption we have made in Equation (\ref{q30}). We derive the $\mJ_{ge}$ by two observations, first the true state will not be able to change during the reset of error state; second, the new nominal state is obtained by injecting old error state mean from old nominal state, which the above observation can be transformed into following equations,
+\begin{align}
+	\label{f31}
+	\vec{x}_n^\prime \oplus \vec{x}_e^\prime =& \vec{x}_n \oplus \vec{x}_e \\
+	\label{f32}
+	\vec{x}_n^\prime =& \vec{x}_n \oplus \hat{\vec{x}_e}
+\end{align}
+Putting Equation (\ref{f32}) into Equation (\ref{f31}), we have
+\begin{equation}
+	\vec{q}_e^\prime = (\vec{q}_n \otimes \hat{\vec{q}_e})^* \otimes \vec{q}_n \otimes \vec{q}_e = Q^+(\hat{\vec{q}_e})^*\vec{q}_e
+\end{equation}
+By using small angle approximation (Equation (\ref{q5})) and throw away second order term, we can obtain 
+\begin{equation}
+	\vec{\theta}_e^\prime = -\hat{(\vec{\theta}_e} + (\ones - \left[ \frac{1}{2} \hat{\vec{\theta}_e} \right]_\times)\vec{\theta}_e
+\end{equation}
+after derivation of old angular term from both sides, we get 
+\begin{equation}
+	\dfrac{\partial{\vec{\theta}_e^\prime}}{\partial{\vec{\theta}_e}} = \ones - \left[ \frac{1}{2} \hat{\vec{\theta}_e} \right]_\times
+\end{equation}
+which is precisely the term in Equation (\ref{f21})
 \section{Camera as Complementary Sensory Data}
 \label{sec:camera_comple_data}
 
@@ -238,7 +256,7 @@ the derivative with $\vec{\lambda}$ with respect to time is easily derived since
 	\dot{\vec{\lambda}_n} &= 0 \\
 	\dot{\vec{\lambda}_e} &= 0 
 \end{align}
-it is then trivial to make corresponding changes to system kinematic equations (\eg, Equation \ref{f12} to \ref{f18}) and error state Jacobian (\eg, Equation \ref{f15} and \ref{f16}). The measurement function $h()$ of estimated true state $\dot{\vec{x}_t}$ can then be derived as
+it is then trivial to make corresponding changes to system kinematic equations (\eg, Equation \ref{f12} to \ref{f18}) and error state Jacobian (\eg, Equation \ref{f15} and \ref{f16}). The measurement function $h(\cdot)$ of estimated true state $\dot{\vec{x}_t}$ can then be derived as
 \begin{align}
 	\label{f23}
 	h(\vec{p}_t) &= \vec{\lambda}_t \odot (\vec{p}_t - \vec{p}_{t0}) + \vec{p}_{t0}\\
@@ -257,7 +275,7 @@ it is then trivial to make corresponding changes to system kinematic equations (
 \end{align}
 where $\odot$ is point-wise vector multiplication and $\dot{\vec{p}_{t0}}$ is the camera/IMU position in reference frame, \ie, the position obtained from Homography of first two keyframes. Noted here, we assume the camera sensor and IMU sensor has identical position for simplification, \ie, $\dot{\vec{p}_t}$ is the estimated camera position in world frame. A more complicated case can be found in \cite{lynen2013robust}.
 
-In Section \ref{sec:ESKF_IMU}, we did not give the explicit expression of $\mH$ in Equation (\ref{f22}). $\mH$ is defined as the Jacobian matrix of extrasensory measurement function $h()$ with respect to error state at nominal state $\vec{x}_n$, as $\vec{x}_n$ is the estimation of true state $\vec{x}_t$ here. By chain rule, $\mH$ can be written as
+In Section \ref{sec:ESKF_IMU}, we did not give the explicit expression of $\mH$ in Equation (\ref{f22}). $\mH$ is defined as the Jacobian matrix of extrasensory measurement function $h(\cdot)$ with respect to error state at nominal state $\vec{x}_n$, as $\vec{x}_n$ is the estimation of true state $\vec{x}_t$ here. By chain rule, $\mH$ can be written as
 \begin{equation}
 	\mH \triangleq \frac{\partial{h}}{\partial{\vec{x}_e}}\Bigr|_{\vec{x}_n} = \frac{\partial{h}}{\partial{\vec{x}_t}}\Bigr|_{\vec{x}_n}\frac{\partial{\vec{x}_t}}{\partial{\vec{x}_e}}\Bigr|_{\vec{x}_n} = \mJ_H\mJ_{t e}
 \end{equation}
@@ -281,13 +299,14 @@ where $\mJ_p$ is a $3 \times 3$ matrix where diagonal is three elements of $\vec
 At last, a keyframe-based bundle adjustment is used to further increase pose estimation accuracy.
 
 A general bundle adjustment tries to optimize bunch of camera poses and 3D points together by minimizing the reprojection error between reprojected 3D points and predicted image points. Mathematically, we obtain our optimized camera poses vector $\vec{c}$ and 3D points vector $\vec{p}$ by
-\begin{equation}
+\begin{equation}\label{c1}
 	\{ \vec{c}, \vec{p} \} = \argmin_{\vec{c}_i, \vec{p}_j} \sum_{i=1}^n \sum_{j=1}^m Obj(CamProj(\vec{c}_i, \vec{p}_j), \mI_{ij})^2
 \end{equation}
-where $n$, $m$ is the number of camera poses and 3D points respectively, $\mI_{ij}$ is the predicted 2D point position corresponding to $j^{th}$ 3D point in $i^{th}$ image frame, function $CamProj()$ reprojects the 3D point from global frame into camera frame and $Obj()$ is a general function (\eg, Euclidean distance) that measures the error between two 2D points.
+where $n$, $m$ is the number of camera poses and visible 3D points respectively, $\mI_{ij}$ is the predicted 2D point position corresponding to $j^{th}$ visible 3D point in $i^{th}$ image frame, function $CamProj(\cdot)$ reprojects the visible 3D point from global frame into camera frame and $Obj(\cdot)$ is a general function (\eg, Euclidean distance) that measures the error between two 2D points.
 
-As long as we assume our camera is pin-hole model, we then can give function $CamProj()$ as
+As long as we assume our camera is pin-hole model, we then can give function $CamProj(\cdot)$ as
 \begin{align}
+	\label{c2}
 	CamProj(\vec{c}_i, \vec{p}_j) &= K (\mR \{ \vec{c}_i \} \vec{p}_j) \\
 	K(\vec{P}_\C) &= \left[ u_0 \ v_0 \right]^T + \begin{bmatrix} f_u & 0 \\
 															 0 & f_v
@@ -302,7 +321,7 @@ Solutions to general bundle adjustment varies \cite{wu2011multicore, triggs1999b
 \section{Visual-inertial Odometry Pipeline Summary}
 \label{sec:pipeline_summary}
 
-\begin{figure}
+\begin{figure}[b]
     \centering
     \includegraphics[width=0.5\textwidth]{CONTENT/Figure/Figure4-1_Pipeline.png}
     \caption{Pipeline of our visual-inertial odometry. Noted that measurement frequency from camera is 4 times lower than measurement frequency of IMU sensor in our experiment setting, therefore we do not have visual odometry (VO) result in some certain turn. Also whether this frame is keyframe is provided by VO.}

@@ -52,7 +52,7 @@ The product of two quaternions can be expressed as two equivalent matrix product
 \end{equation}
 with
 \begin{equation}\label{q5}
-	Q_\ones^+ = q_w\mathbb{I} + \begin{bmatrix}
+	Q_1^+ = q_w\ones + \begin{bmatrix}
 							  	0 &
 							  	-\vec{q_v}^T\\
 							  	\vec{q_v} &
@@ -147,7 +147,7 @@ one can show that result in Equation (\ref{q18}) is equivalent with the result i
 Constructing a unit quaternion $\vec{q}$ by Equation (\ref{q14}) with a rotation vector $\vec{v} = \phi\vec{u}$, 
 \begin{equation}\label{q19}
 	\vec{q} = \mathrm{e}^{\vec{v}/2} = \begin{bmatrix}
-											\cos{\phi / 2}  \\ \vec{v}\sin{\phi / 2} 
+											\cos{\phi / 2}  \\ \vec{u}\sin{\phi / 2} 
 									  \end{bmatrix}
 \end{equation}
 we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ by,

@@ -6,6 +6,11 @@ Imu sensor
   2016.
 \newblock [Online; accessed 22-March-2016].
 
+\bibitem{absil2007trust}
+P-A Absil, Christopher~G Baker, and Kyle~A Gallivan.
+\newblock Trust-region methods on riemannian manifolds.
+\newblock {\em Foundations of Computational Mathematics}, 7(3):303--330, 2007.
+
 \bibitem{ceres-solver}
 Sameer Agarwal, Keir Mierle, and Others.
 \newblock Ceres solver.
@@ -104,6 +109,14 @@ Taehee Lee, Joongyou Shin, and Dongil Cho.
   active beacon.
 \newblock In {\em Industrial Electronics, 2009. ISIE 2009. IEEE International
   Symposium on}, pages 1956--1961. IEEE, 2009.
+
+\bibitem{leutenegger2015keyframe}
+Stefan Leutenegger, Simon Lynen, Michael Bosse, Roland Siegwart, and Paul
+  Furgale.
+\newblock Keyframe-based visual--inertial odometry using nonlinear
+  optimization.
+\newblock {\em The International Journal of Robotics Research}, 34(3):314--334,
+  2015.
 
 \bibitem{levi1996dead}
 Robert~W Levi and Thomas Judd.
@@ -251,7 +264,7 @@ Wikipedia.
 
 \bibitem{wiki:RK4}
 Wikipedia.
-\newblock Runge–kutta methods --- wikipedia{,} the free encyclopedia, 2016.
+\newblock Runge kutta methods --- wikipedia{,} the free encyclopedia, 2016.
 \newblock [Online; accessed 11-April-2016].
 
 \bibitem{wu2011multicore}

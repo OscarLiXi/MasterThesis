@@ -29,9 +29,13 @@
 \BOOKMARK [2][-]{subsection.5.2.4}{Experiment 3: Keyframe Bundle Adjustment}{section.5.2}% 29
 \BOOKMARK [2][-]{subsection.5.2.5}{Experiment 4: Runtime Evaluation}{section.5.2}% 30
 \BOOKMARK [1][-]{section.5.3}{Conclusion}{chapter.5}% 31
-\BOOKMARK [0][-]{chapter.6}{Summary, Discussion and Future Works}{}% 32
-\BOOKMARK [0][-]{appendix.A}{The Derivation of Error-state Kinematic Equations}{}% 33
-\BOOKMARK [0][-]{appendix.B}{Integration Methods}{}% 34
-\BOOKMARK [1][-]{section.B.1}{Runge-Kutta Numerical Integration Methods}{appendix.B}% 35
-\BOOKMARK [1][-]{section.B.2}{Closed-form Integration Methods}{appendix.B}% 36
-\BOOKMARK [0][-]{appendix.C}{Conversion from Quaternions to Euler Angles}{}% 37
+\BOOKMARK [0][-]{chapter.6}{Current Orientation: Nonlinear Optimization-based Visual-Inertial Odometry }{}% 32
+\BOOKMARK [1][-]{section.6.1}{Cost Function of Visual-Inertial Odometry}{chapter.6}% 33
+\BOOKMARK [1][-]{section.6.2}{Manifold Nonlinear Optimization}{chapter.6}% 34
+\BOOKMARK [1][-]{section.6.3}{Disscussion and Conclusion}{chapter.6}% 35
+\BOOKMARK [0][-]{chapter.7}{Summary, Discussion and Future Works}{}% 36
+\BOOKMARK [0][-]{appendix.A}{The Derivation of Error-state Kinematic Equations}{}% 37
+\BOOKMARK [0][-]{appendix.B}{Integration Methods}{}% 38
+\BOOKMARK [1][-]{section.B.1}{Runge-Kutta Numerical Integration Methods}{appendix.B}% 39
+\BOOKMARK [1][-]{section.B.2}{Closed-form Integration Methods}{appendix.B}% 40
+\BOOKMARK [0][-]{appendix.C}{Conversion from Quaternions to Euler Angles}{}% 41
