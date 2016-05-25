@@ -7,7 +7,7 @@
 \chapter{Background on Quaternion Algebra}
 \label{chap:background}
 
-One important task for this master thesis is to integrate IMU data over time to estimate camera pose (\eg, position and orientation). By assuming movement model, it is straightforward to integrate position in Cartesian space, however integrating orientation in manifold space is often not a easy task. In this chapter, we introduce the quaternion algebra, and explore the way to operate quaternion over time.
+One important task for this master thesis is to integrate IMU data over the time to estimate camera pose (\eg, position and orientation). Assuming a fixed movement model, it is straightforward to integrate position in Cartesian space, however since rotational parameter (\eg, Euler angle, rotation matrix, quaternion) is often represented in manifold, and integrating orientation in manifold space is often not a trivial task. In this chapter, we introduce the quaternion and the quaternion algebra, and then explore the way to operate quaternion over the time. General approach to integrating quaternion over the time is given at last.
 
 \section{Definition of Quaternion}
 \label{sec:def_of_quat}
@@ -16,27 +16,27 @@ A quaternion $Q$ is defined as,
 \begin{equation}\label{q1}
 	Q = q_w + q_xi + q_yj + q_zk
 \end{equation}
-where $\{q_w,q_x,q_y,q_z\} \in \mathbb{R}$, and $\{i,j,k\}$ are three imaginary unit length, \eg, $i^2=j^2=k^2=ijk=-1$.
+where $\{q_w,q_x,q_y,q_z\} \in \mathbb{R}$, and $\{i,j,k\}$ are three imaginary unit lengths, \ie, $i^2=j^2=k^2=ijk=-1$.
 
-In most cases, we represent quaternion $Q$ as a four-element vector $\textbf{q}$ composed by above four real number $\{q_w,q_x,q_y,q_z\}$, \ie,
+In most cases, we represent quaternion $Q$ as a four-element vector $\textbf{q}$ with respect to above four real numbers $\{q_w,q_x,q_y,q_z\}$, \ie,
 \begin{equation}\label{q2}
 	\mathbf{q} \triangleq \left[q_w \ \mathbf{q}_v\right]^T = \left[q_w \ q_x \ q_y \ q_z \right]^T
 \end{equation}
 where $q_w$ is the real part of $\textbf{q}$, and $q_v$ is a 3-vector to represent imaginary part of $\textbf{q}$. 
 
-It is worth to be noted that there are two different conventions of quaternion $\textbf{q}$, \textit{Hamilton way}~\cite{hamilton1844ii} and \textit{JPL way}~\cite{breckenridge1999quaternions}. In Hamilton convention, the real part $q_w$ is the first component of $\textbf{q}$, \ie, $\left[q_w \ \mathbf{q_v}\right]$, whereas in JPL way, the real part is the fourth component, \ie, $\left[\mathbf{q_v} \ q_w\right]$. To avoid confusions, and considering Hamilton way is more common to use, especially for implementation~\cite{guennebaud2010eigen, hess2007essential}, we hereby claim that we use \textbf{\textit{Hamilton way}} to represent quaternion $\textbf{q}$ throughout this master thesis. 
+Note that there are two different conventions of quaternion $\textbf{q}$, \textit{Hamilton way}~\cite{hamilton1844ii} and \textit{JPL way}~\cite{breckenridge1999quaternions}. In Hamilton convention, the real part $q_w$ is the first component of $\textbf{q}$, \ie, $\left[q_w \ \mathbf{q_v}\right]$, whereas in \textit{JPL way}, the real part is the fourth component, \ie, $\left[\mathbf{q_v} \ q_w\right]$. To avoid confusions, and considering Hamilton way is more common to use, especially for implementation~\cite{guennebaud2010eigen, hess2007essential}, we use \textbf{Hamilton way} to represent quaternion $\textbf{q}$ throughout this whole master thesis. 
 
 \section{Properties of Quaternion}
 \label{sec:prop_of_quat}
 
-In this section, we will introduce properties of quaternion. 
+In this section, we introduce the properties of quaternion. 
 
 \textbf{\textit{Summation}} We start with summation of two quaternions \textbf{q} and \textbf{p},
 \begin{equation}\label{q7}
 \vec{q} + \vec{p} = \left[q_w+p_w \ \mathbf{q}_v+\mathbf{p}_v\right]^T = \left[q_w+p_w \ q_x+p_x \ q_y+p_y \ q_z+p_z \ \right]^T
 \end{equation}
 
-\textbf{\textit{Product}} We use $\otimes$ to denote the product operation on quaternions, which gives,
+\textbf{\textit{Product}} We use operator $\otimes$ to denote the product operation on quaternions, which gives,
 \begin{equation}\label{q3}
 	\vec{q} \otimes \vec{p} = \begin{bmatrix}
 							  	p_wq_w-p_xq_x-p_yq_y-p_zq_z \\
@@ -59,7 +59,7 @@ with
 							  	[\vec{q_v}]_\times
 							  \end{bmatrix}
 \end{equation}
-where $[\vec{q}_v]_\times$ represents the cross-product matrix of $\vec{q}_v$, which the cross-product matrix of a vector $\vec{v}$ is defined by
+where $[\vec{q}_v]_\times$ represents the cross-product matrix of $\vec{q}_v$, and the cross-product matrix of a vector $\vec{v}$ is defined by
 \begin{equation} \label{q17}
 	[\vec{v}]_\times =  \begin{bmatrix}
 							0 & -v_z & v_y \\
@@ -87,7 +87,7 @@ however it is associative, and distributive over sum, \ie,
 	\vec{q}^* \triangleq q_w - \vec{q_v} = \left[ q_w \ - \vec{q_v} \right]^T
 \end{equation}
 
-\textbf{\textit{Identity}} We call a quaternion \textbf{q} identical if, for any given quaternion \textbf{p}, $\vec{q} \otimes \vec{p} = \vec{p} \otimes \vec{q} = \vec{p}$. An identical quaternion \textbf{q} satisfies that,
+\textbf{\textit{Identity}} We call a quaternion \textbf{q} identical if, for any given quaternion \textbf{p}, $\vec{q} \otimes \vec{p} = \vec{p} \otimes \vec{q} = \vec{p}$. An identical quaternion \textbf{q} satisfies that
 \begin{equation}\label{q8}
 	\vec{q} = \left[1 \ 0 \ 0 \ 0 \right]^T
 \end{equation}
@@ -121,7 +121,7 @@ Let pure quaternion $\vec{q} = \theta\vec{u}$, where $\theta = \norm{\vec{q}}$, 
 \begin{equation}\label{q14}
 	\mathrm{e}^{\vec{q}} = \mathrm{e}^{\theta\vec{u}} = \cos{\theta} + \vec{u}\sin{\theta} = \left[\cos{\theta} \ \vec{u}\sin{\theta} \right]^T
 \end{equation}
-which is still a quaternion, and moreover $\mathrm{e}^{\vec{q}}$ is a unit quaternion because its norm $\norm{\mathrm{e}^{\vec{q}}}^2 = \cos{\theta}^2 + \sin{\theta}^2 = 1$.
+which is still a quaternion, and moreover $\mathrm{e}^{\vec{q}}$ is a unit quaternion because its norm satisfies $\norm{\mathrm{e}^{\vec{q}}}^2 = \cos{\theta}^2 + \sin{\theta}^2 = 1$.
 
 \section{Quaternions and Rotation operations}
 \label{sec:quat_and_rot}
@@ -132,9 +132,9 @@ Given a rotation vector $\vec{v} = \phi\vec{u}$, where $\phi$ is the norm of $\v
 \begin{equation}\label{q15}
 	\vec{x^{\prime}} = \vec{x}_{||} + \vec{x}_{\bot}\cos{\phi} + (\vec{u} \times \vec{x})\sin{\phi}
 \end{equation}
-where $\vec{x}_{||} = (\vec{x} \cdot \vec{u})\vec{u}$ is the component parallel to $\vec{x}$, and $\vec{x}_{\bot} = -\vec{u} \times (\vec{u} \times \vec{x})$ is the component perpendicilar to $\vec{x}$, therefore $\vec{x} = \vec{x}_{||} + \vec{x}_{\bot}$. This formula is known as \textit{vector rotation formular} or \textit{Rodrigues formula}.
+where $\vec{x}_{||} = (\vec{x} \cdot \vec{u})\vec{u}$ is the component parallel to $\vec{x}$, and $\vec{x}_{\bot} = -\vec{u} \times (\vec{u} \times \vec{x})$ is the component perpendicular to $\vec{x}$, therefore $\vec{x} = \vec{x}_{||} + \vec{x}_{\bot}$. This formula is known as \textit{vector rotation formular} or \textit{Rodrigues formula}.
 
-We then can define a rotation matrix $\mR$ by rotation vector $\vec{v} = \phi\vec{u}$ by the help of Equation (\ref{q17}) as,
+Then we can define a rotation matrix $\mR$ by rotation vector $\vec{v} = \phi\vec{u}$ with the help of Equation (\ref{q17}) as,
 \begin{equation}\label{q16}
 	\mR = \mathrm{e}^{[\vec{v}]_\times}
 \end{equation}
@@ -142,7 +142,7 @@ we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ us
 \begin{equation}\label{q18}
 	\vec{x^{\prime}} = \mR\vec{x}
 \end{equation}
-one can show that result in Equation (\ref{q18}) is equivalent with the result in Equation (\ref{q15}) \cite{wiki:rotationformula}. 
+furthermore one can show that result in Equation (\ref{q18}) is equivalent with the result in Equation (\ref{q15}) \cite{wiki:rotationformula}. 
 
 Constructing a unit quaternion $\vec{q}$ by Equation (\ref{q14}) with a rotation vector $\vec{v} = \phi\vec{u}$, 
 \begin{equation}\label{q19}
@@ -150,17 +150,16 @@ Constructing a unit quaternion $\vec{q}$ by Equation (\ref{q14}) with a rotation
 											\cos{\phi / 2}  \\ \vec{u}\sin{\phi / 2} 
 									  \end{bmatrix}
 \end{equation}
-we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ by,
+we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$
 \begin{equation}\label{q20}
-	\vec{x^{\prime}} = \vec{q} \otimes \vec{x} \otimes \vec{q}^{*}
+	\vec{x^{\prime}} = \vec{q} \otimes \vec{x} \otimes \vec{q}^{*},
 \end{equation}
-we then show $\vec{x^{\prime}}$ in Equation (\ref{q20}) is equivalent with $\vec{x^{\prime}}$ in Equation (\ref{q15}).
 
-We transferred the vector $\vec{x}$ into pure quaternion form as,
+We then show $\vec{x^{\prime}}$ in Equation (\ref{q20}) is equivalent with $\vec{x^{\prime}}$ in Equation (\ref{q15}). First we transferred the vector $\vec{x}$ into pure quaternion form as,
 \begin{equation}\label{q21}
 	\vec{x}_q = \left[0 \ \vec{x} \right]^T
 \end{equation}
-then we rewrite formula (\ref{q20}) as,
+then we rewrite formula (\ref{q20}) as
 \begin{equation}\label{q22}
 \begin{bmatrix}
 0  \\ \vec{x^{\prime}} 
@@ -176,7 +175,7 @@ then we rewrite formula (\ref{q20}) as,
 \otimes
 \begin{bmatrix}
 \cos{\phi / 2}  \\ -\vec{v}\sin{\phi / 2}  
-\end{bmatrix}
+\end{bmatrix},
 \end{equation}
 expanding it by Equation (\ref{q3}), it is easily to show that,
 \begin{equation}\label{q23}
@@ -184,13 +183,13 @@ expanding it by Equation (\ref{q3}), it is easily to show that,
 \end{equation}
 which is exactly Equation (\ref{q15}).
 
-To summarize here, we can construct a quaternion $\vec{q}$ or a rotation matrix $\mR$ by any rotation vector $\vec{v} = \phi\vec{u}$, we denote such a quaternion as $\vec{q} \{ \vec{v} \}$ and rotation matrix as $\mR \{ \vec{v} \}$ respectively. And a rotation operation of a vector $\vec{x}$ related to $\vec{v}$ can either be expressed as quaternion $\vec{q} \{ \vec{v} \} \otimes \vec{x} \otimes \vec{q} \{ \vec{v} \}^{*}$, or a rotation matrix $\mR \{ \vec{v} \}\vec{x}$. Note that we sometimes simplify $\mR \{ \vec{v} \}$ to $\mR$, and/or $\vec{q} \{ \vec{v} \}$ to $\vec{q}$ in this master thesis.
+To summarize here, we can construct a quaternion $\vec{q}$ or a rotation matrix $\mR$ by any rotation vector $\vec{v} = \phi\vec{u}$, we denote such a quaternion as $\vec{q} \{ \vec{v} \}$ and rotation matrix as $\mR \{ \vec{v} \}$ respectively. A rotation operation of a vector $\vec{x}$ related to $\vec{v}$ can either be expressed as a quaternion $\vec{q} \{ \vec{v} \} \otimes \vec{x} \otimes \vec{q} \{ \vec{v} \}^{*}$, or as a rotation matrix $\mR \{ \vec{v} \}\vec{x}$. Note that we simplify $\mR \{ \vec{v} \}$ to $\mR$, and/or $\vec{q} \{ \vec{v} \}$ to $\vec{q}$ in the rest of this master thesis.
 
-We also give conversion from rotation matrix $\mR$ to quaternion $\vec{q}$. Knowing that,
+It is also easy to show the conversion from a rotation matrix $\mR$ to a quaternion $\vec{q}$, which we use in this t. Knowing that
 \begin{equation}\label{q24}
 	\vec{q} \otimes \vec{x} \otimes \vec{q}^{*} = \mR\vec{x}
 \end{equation}
-we can construct $\mR = \mR \{ \vec{q} \}$ by,
+, we can construct $\mR = \mR \{ \vec{q} \}$ by,
 \begin{equation}\label{q25}
 \mR = \begin{bmatrix}
 		q_w^2+q_x^2-q_y^2-q_z^2 & 2(q_xq_y-q_wq_z) & 2(q_xq_z+q_wq_y) \\
@@ -198,7 +197,6 @@ we can construct $\mR = \mR \{ \vec{q} \}$ by,
 		2(q_xq_z-q_wq_y) & 2(q_yq_z+q_wq_x) & q_w^2-q_x^2-q_y^2+q_z^2 \\
 	  \end{bmatrix}
 \end{equation} 
-
 and a conversion from quaternion to rotation matrix can be found in \cite{van2005quaternion}.
 
 \section{Time-derivatives on Quaternion}
