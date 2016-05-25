@@ -28,6 +28,13 @@ WG~Breckenridge.
 \newblock {\em Jet Propulsion Laboratory, Pasadena, CA, Interoffice Memorandum
   IOM}, pages 343--79, 1999.
 
+\bibitem{carlone2014eliminating}
+Luca Carlone, Zsolt Kira, Chris Beall, Vadim Indelman, and Frank Dellaert.
+\newblock Eliminating conditionally independent sets in factor graphs: A
+  unifying perspective based on smart factors.
+\newblock In {\em Robotics and Automation (ICRA), 2014 IEEE International
+  Conference on}, pages 4290--4297. IEEE, 2014.
+
 \bibitem{davison2003real}
 Andrew~J Davison.
 \newblock Real-time simultaneous localisation and mapping with a single camera.

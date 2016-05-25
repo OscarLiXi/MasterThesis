@@ -92,6 +92,8 @@
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
 \usepackage{multirow}
+
+\setlist[itemize]{topsep=2pt}
 %%My definitions end
 
 \begin{document}

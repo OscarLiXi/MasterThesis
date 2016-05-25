@@ -420,3 +420,14 @@
   year={2015},
   publisher={SAGE Publications}
 }
+
+@article{absil2007trust,
+  title={Trust-region methods on Riemannian manifolds},
+  author={Absil, P-A and Baker, Christopher G and Gallivan, Kyle A},
+  journal={Foundations of Computational Mathematics},
+  volume={7},
+  number={3},
+  pages={303--330},
+  year={2007},
+  publisher={Springer}
+}
