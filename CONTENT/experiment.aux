@@ -8,30 +8,28 @@
 \@writefile{toc}{\contentsline {section}{\numberline {5.1}Synthetic Dataset}{36}{section.5.1}}
 \newlabel{sec:sync_data}{{5.1}{36}{Synthetic Dataset}{section.5.1}{}}
 \citation{young2011imusim}
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Trajectories we create for experiments, the datasets are named after the corresponding trajectories. Note that \textbf  {001} and \textbf  {002} are ideal trajectories in order to evaluate the correctness and performance of ESKF IMU integration. The trajectory \textbf  {003} and \textbf  {004} try to simulate different types of real micro helicopter trajectories.}}{37}{table.5.1}}
+\newlabel{table:tb1}{{5.1}{37}{Trajectories we create for experiments, the datasets are named after the corresponding trajectories. Note that \textbf {001} and \textbf {002} are ideal trajectories in order to evaluate the correctness and performance of ESKF IMU integration. The trajectory \textbf {003} and \textbf {004} try to simulate different types of real micro helicopter trajectories}{table.5.1}{}}
 \citation{wiki:blender}
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Trajectories we create for experiments, the datasets are named after the corresponding trajectories. Noted that \textbf  {001} and \textbf  {002} are ideal trajectories to test the correctness and performance of ESKF IMU integration. The trajectory \textbf  {003} and \textbf  {004} try to simulate the trajectories of micro helicopter by setting the similar velocity and pose.}}{37}{table.5.1}}
-\newlabel{table:tb1}{{5.1}{37}{Trajectories we create for experiments, the datasets are named after the corresponding trajectories. Noted that \textbf {001} and \textbf {002} are ideal trajectories to test the correctness and performance of ESKF IMU integration. The trajectory \textbf {003} and \textbf {004} try to simulate the trajectories of micro helicopter by setting the similar velocity and pose}{table.5.1}{}}
 \citation{sturm12iros}
 \citation{quigley2009ros}
 \citation{sturm12iros}
 \citation{quigley2009ros}
 \citation{forster2014svo}
 \citation{forster2014svo}
-\citation{eigenweb}
-\citation{ceres-solver}
-\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces We use the similar annotation for intrinsic matrix as in \cite  {sturm12iros}, such a parameter setting is similar to default ROS \cite  {quigley2009ros} camera.}}{38}{table.5.2}}
-\newlabel{table:tb2}{{5.2}{38}{We use the similar annotation for intrinsic matrix as in \cite {sturm12iros}, such a parameter setting is similar to default ROS \cite {quigley2009ros} camera}{table.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Intrinsic matrix is only set for trajectory \textbf  {003} and \textbf  {004} since visual data is not required for trajectory \textbf  {001} and \textbf  {002}. We use the similar annotation for intrinsic matrix as in \cite  {sturm12iros}. The parameter settings are similar with default ROS camera \cite  {quigley2009ros}.}}{38}{table.5.2}}
+\newlabel{table:tb2}{{5.2}{38}{Intrinsic matrix is only set for trajectory \textbf {003} and \textbf {004} since visual data is not required for trajectory \textbf {001} and \textbf {002}. We use the similar annotation for intrinsic matrix as in \cite {sturm12iros}. The parameter settings are similar with default ROS camera \cite {quigley2009ros}}{table.5.2}{}}
 \newlabel{e1}{{5.1}{38}{Synthetic Dataset}{equation.5.1.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.2}Experimental Results}{38}{section.5.2}}
 \newlabel{sec:experiment}{{5.2}{38}{Experimental Results}{section.5.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Implementation Details}{38}{subsection.5.2.1}}
 \newlabel{subsec:imple_detail}{{5.2.1}{38}{Implementation Details}{subsection.5.2.1}{}}
+\citation{eigenweb}
+\citation{ceres-solver}
 \citation{davison2003real}
 \citation{engel2014lsd}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Experiment 1: IMU Integration}{39}{subsection.5.2.2}}
 \newlabel{subsec:experiment1}{{5.2.2}{39}{Experiment 1: IMU Integration}{subsection.5.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}Experiment 2: VIO Versus VO}{39}{subsection.5.2.3}}
-\newlabel{subsec:experiment2}{{5.2.3}{39}{Experiment 2: VIO Versus VO}{subsection.5.2.3}{}}
 \newlabel{fig:fig5-2-a}{{5-1a}{40}{Subfigure 5 5-1a}{subfigure.5-1.1}{}}
 \newlabel{sub@fig:fig5-2-a}{{(a)}{a}{Subfigure 5 5-1a\relax }{subfigure.5-1.1}{}}
 \newlabel{fig:fig5-2-b}{{5-1b}{40}{Subfigure 5 5-1b}{subfigure.5-1.2}{}}
@@ -44,47 +42,49 @@
 \newlabel{sub@fig:fig5-2-e}{{(e)}{e}{Subfigure 5 5-1e\relax }{subfigure.5-1.5}{}}
 \newlabel{fig:fig5-2-f}{{5-1f}{40}{Subfigure 5 5-1f}{subfigure.5-1.6}{}}
 \newlabel{sub@fig:fig5-2-f}{{(f)}{f}{Subfigure 5 5-1f\relax }{subfigure.5-1.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5-1}{\ignorespaces Experiment 1: (a)(b) Position and attitude drift of Dataset \textbf  {001} (c)(d) Position and attitude drift of Dataset \textbf  {002} (e)(f) Position and attitude drift of Dataset \textbf  {004}. Position error is measured using Euclidean distance, and attitude drift is measured by transforming quaternion into Euler angle (see Appendix \ref  {chap:appendix3}). Ground truth data is provided by synthetic IMU data generator.}}{40}{figure.5.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5-1}{\ignorespaces Experiment 1: (a)(b) Position and attitude drift of Dataset \textbf  {001} (c)(d) Position and attitude drift of Dataset \textbf  {002} (e)(f) Position and attitude drift of Dataset \textbf  {004}. Position error is measured using Euclidean distance, and attitude drift is measured by transforming quaternion back into Euler angle (see Appendix \ref  {chap:appendix3}) since it is more straightforward to evaluation. Ground truth data is provided by synthetic IMU data generator.}}{40}{figure.5.1}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{40}{subfigure.1.1}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{40}{subfigure.1.2}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {}}}{40}{subfigure.1.3}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {}}}{40}{subfigure.1.4}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(e)}{\ignorespaces {}}}{40}{subfigure.1.5}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(f)}{\ignorespaces {}}}{40}{subfigure.1.6}}
-\newlabel{fig:fig5-2}{{5-1}{40}{Experiment 1: (a)(b) Position and attitude drift of Dataset \textbf {001} (c)(d) Position and attitude drift of Dataset \textbf {002} (e)(f) Position and attitude drift of Dataset \textbf {004}. Position error is measured using Euclidean distance, and attitude drift is measured by transforming quaternion into Euler angle (see Appendix \ref {chap:appendix3}). Ground truth data is provided by synthetic IMU data generator}{figure.5.1}{}}
+\newlabel{fig:fig5-2}{{5-1}{40}{Experiment 1: (a)(b) Position and attitude drift of Dataset \textbf {001} (c)(d) Position and attitude drift of Dataset \textbf {002} (e)(f) Position and attitude drift of Dataset \textbf {004}. Position error is measured using Euclidean distance, and attitude drift is measured by transforming quaternion back into Euler angle (see Appendix \ref {chap:appendix3}) since it is more straightforward to evaluation. Ground truth data is provided by synthetic IMU data generator}{figure.5.1}{}}
 \citation{mourikis2007multi}
 \citation{forster2015imu}
 \@writefile{lot}{\contentsline {table}{\numberline {5.3}{\ignorespaces Experiment 1: APD (Average Position Drift) and AAD (Average Attitude Drift) is measured by averaging overall position and attitude drift. For TPD (Time-elapsed Per Data), we run the experiment 100 times to measure a overall elapsed time, then divide by number of experiments and number of IMU measurements to obtain the single data processing time.}}{41}{table.5.3}}
 \newlabel{table:tb3}{{5.3}{41}{Experiment 1: APD (Average Position Drift) and AAD (Average Attitude Drift) is measured by averaging overall position and attitude drift. For TPD (Time-elapsed Per Data), we run the experiment 100 times to measure a overall elapsed time, then divide by number of experiments and number of IMU measurements to obtain the single data processing time}{table.5.3}{}}
-\newlabel{fig:fig5-3-a}{{5-2a}{41}{Subfigure 5 5-2a}{subfigure.5-2.1}{}}
-\newlabel{sub@fig:fig5-3-a}{{(a)}{a}{Subfigure 5 5-2a\relax }{subfigure.5-2.1}{}}
-\newlabel{fig:fig5-3-b}{{5-2b}{41}{Subfigure 5 5-2b}{subfigure.5-2.2}{}}
-\newlabel{sub@fig:fig5-3-b}{{(b)}{b}{Subfigure 5 5-2b\relax }{subfigure.5-2.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5-2}{\ignorespaces Experiment 2: (a) Position drift of VIO and VO. (b) Attitude drift of VIO and VO. Both VIO and VO report an average position drift less than 1\% of overall travelled distance, however VIO performs better than VO in attitude drift as VIO has 0.027 [rad] and VO has 0.787 [rad] average attitde drift.}}{41}{figure.5.2}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{41}{subfigure.2.1}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{41}{subfigure.2.2}}
-\newlabel{fig:fig5-3}{{5-2}{41}{Experiment 2: (a) Position drift of VIO and VO. (b) Attitude drift of VIO and VO. Both VIO and VO report an average position drift less than 1\% of overall travelled distance, however VIO performs better than VO in attitude drift as VIO has 0.027 [rad] and VO has 0.787 [rad] average attitde drift}{figure.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}Experiment 2: VIO Versus VO}{41}{subsection.5.2.3}}
+\newlabel{subsec:experiment2}{{5.2.3}{41}{Experiment 2: VIO Versus VO}{subsection.5.2.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2.4}Experiment 3: Keyframe Bundle Adjustment}{41}{subsection.5.2.4}}
 \newlabel{subsec:experiment3}{{5.2.4}{41}{Experiment 3: Keyframe Bundle Adjustment}{subsection.5.2.4}{}}
+\newlabel{fig:fig5-3-a}{{5-2a}{42}{Subfigure 5 5-2a}{subfigure.5-2.1}{}}
+\newlabel{sub@fig:fig5-3-a}{{(a)}{a}{Subfigure 5 5-2a\relax }{subfigure.5-2.1}{}}
+\newlabel{fig:fig5-3-b}{{5-2b}{42}{Subfigure 5 5-2b}{subfigure.5-2.2}{}}
+\newlabel{sub@fig:fig5-3-b}{{(b)}{b}{Subfigure 5 5-2b\relax }{subfigure.5-2.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5-2}{\ignorespaces Experiment 2: (a) Position drifts of VIO and VO. (b) Attitude drifts of VIO and VO. Both VIO and VO report an average position drifts less than 1\% of overall travelled distance, however VIO performs regarding to the attitude drift, where VIO has 0.027 [rad] and VO has 0.787 [rad] average attitude drift.}}{42}{figure.5.2}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{42}{subfigure.2.1}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{42}{subfigure.2.2}}
+\newlabel{fig:fig5-3}{{5-2}{42}{Experiment 2: (a) Position drifts of VIO and VO. (b) Attitude drifts of VIO and VO. Both VIO and VO report an average position drifts less than 1\% of overall travelled distance, however VIO performs regarding to the attitude drift, where VIO has 0.027 [rad] and VO has 0.787 [rad] average attitude drift}{figure.5.2}{}}
 \newlabel{fig:fig5-4-a}{{5-3a}{42}{Subfigure 5 5-3a}{subfigure.5-3.1}{}}
 \newlabel{sub@fig:fig5-4-a}{{(a)}{a}{Subfigure 5 5-3a\relax }{subfigure.5-3.1}{}}
 \newlabel{fig:fig5-4-b}{{5-3b}{42}{Subfigure 5 5-3b}{subfigure.5-3.2}{}}
 \newlabel{sub@fig:fig5-4-b}{{(b)}{b}{Subfigure 5 5-3b\relax }{subfigure.5-3.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5-3}{\ignorespaces Experiment 3: (a) Position drift of VIO with and without BA. (b) Attitude drift of VIO with and without BA. The curve shows the error between estimation and ground truth, more close to zero is better.}}{42}{figure.5.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5-3}{\ignorespaces Experiment 3: (a) Position drifts of VIO with and without BA. (b) Attitude drifts of VIO with and without BA. The red and blue curves show the errors for VIO with and without keyframe BA respectively.}}{42}{figure.5.3}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{42}{subfigure.3.1}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{42}{subfigure.3.2}}
-\newlabel{fig:fig5-4}{{5-3}{42}{Experiment 3: (a) Position drift of VIO with and without BA. (b) Attitude drift of VIO with and without BA. The curve shows the error between estimation and ground truth, more close to zero is better}{figure.5.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5.4}{\ignorespaces Experiment 4: Break-up timing results.}}{42}{table.5.4}}
-\newlabel{table:tb5}{{5.4}{42}{Experiment 4: Break-up timing results}{table.5.4}{}}
+\newlabel{fig:fig5-4}{{5-3}{42}{Experiment 3: (a) Position drifts of VIO with and without BA. (b) Attitude drifts of VIO with and without BA. The red and blue curves show the errors for VIO with and without keyframe BA respectively}{figure.5.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2.5}Experiment 4: Runtime Evaluation}{42}{subsection.5.2.5}}
 \newlabel{subsec:experiment4}{{5.2.5}{42}{Experiment 4: Runtime Evaluation}{subsection.5.2.5}{}}
 \citation{forster2014svo}
-\@writefile{lot}{\contentsline {table}{\numberline {5.5}{\ignorespaces Experiment 4: parameter settings in experiment 4, which follows settings as we explained in experiment 1, experiment 2 and experiment 3.}}{43}{table.5.5}}
-\newlabel{table:tb4}{{5.5}{43}{Experiment 4: parameter settings in experiment 4, which follows settings as we explained in experiment 1, experiment 2 and experiment 3}{table.5.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.4}{\ignorespaces Experiment 4: Break-up timing results.}}{43}{table.5.4}}
+\newlabel{table:tb5}{{5.4}{43}{Experiment 4: Break-up timing results}{table.5.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.5}{\ignorespaces Experiment 4: parameter settings in experiment 4. We hereby utilize the similar settings as we explained in experiment 1, 2, and 3.}}{43}{table.5.5}}
+\newlabel{table:tb4}{{5.5}{43}{Experiment 4: parameter settings in experiment 4. We hereby utilize the similar settings as we explained in experiment 1, 2, and 3}{table.5.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.3}Conclusion}{43}{section.5.3}}
 \newlabel{sec:exp_conclusion}{{5.3}{43}{Conclusion}{section.5.3}{}}
 \@setckpt{CONTENT/experiment}{
-\setcounter{page}{44}
+\setcounter{page}{45}
 \setcounter{equation}{3}
 \setcounter{enumi}{3}
 \setcounter{enumii}{0}
