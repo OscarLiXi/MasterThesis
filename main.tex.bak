@@ -93,7 +93,7 @@
 
 \usepackage{multirow}
 
-\setlist[itemize]{topsep=2pt}
+\setlist[itemize]{nosep, topsep=5pt}
 %%My definitions end
 
 \begin{document}

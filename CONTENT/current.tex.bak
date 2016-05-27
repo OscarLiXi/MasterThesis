@@ -1,58 +1,57 @@
 \chapter{Current Orientation: Nonlinear Optimization-based Visual-Inertial Odometry }
 \label{chap:current}
 
-In above chapters, we introduce our loosely-coupled visual-inertial odometry using ESKF, and show our results are better than single visual odometry. However, for most of time, a ESKF update can be regarded as one single iteration during optimization. Though we apply the bundle adjustment to further improve the estimation quality, the correlations among different sensors have been ignored. Therefore, we explore a more general method, \eg, a nonlinear optimization way, to solve visual-inertial odometry problem. Our presentation in this chapter is based on \cite{leutenegger2015keyframe} and \cite{forster2015imu}. Noted that we do not perform any experiments due to the time limitation of this master thesis. The experimental results might be concluded in future publications.
+In the previous chapters, we introduce our loosely-coupled visual-inertial odometry using ESKF, and show our results are slightly better than single visual odometry. It is known that an ESKF update can be regarded as one single iteration during optimization. Though we apply the bundle adjustment to further improve the estimation quality, the correlations among different sensors have been ignored. Therefore, we hereby explore a more general method, \eg, a nonlinear optimization way, to solve visual-inertial odometry problem in this chapter. Our presentations in this chapter are based on \cite{leutenegger2015keyframe} and \cite{forster2015imu}. We do not perform any experiments due to the time limitation of this master thesis. The experimental results might be concluded in future publications.
 
 \section{Cost Function of Visual-Inertial Odometry}
 \label{sec:map}
 
-Intuitively, we want to form a cost function to minimize the visual error and IMU error, which is precisely the reprojection error and IMU error state we introduce in Chapter \ref{chap:sensor_fusing}.
+Intuitively, in order to formulate our problem in non-linear optimization way, we need to form a cost function to minimize the visual error and IMU temporal error, which is precisely the reprojection error and IMU error state we introduce in Chapter \ref{chap:sensor_fusing}.
 
-We first define the set of true states until the frame $n$ is,
+We first define the set of true states up to the keyframe $n$ is
 \begin{equation}
-	\mX_n \triangleq \{ \vec{x}_t^i \}_{i \in \mK_n}
+	\mX_n \triangleq \{ \vec{x}_t^i \}_{i \in \mK_n},
 \end{equation}
-where $\{ \vec{x}_t^i \}$ denotes the $i^{th}$ frame of true states, and $\mK$ represents the set of keyframes until frame $n$.
-Therefore our optimal set of true state $\mX_n^\star$ is
+where $\{ \vec{x}_t^i \}$ denotes the $i^{th}$ frame of true states, and $\mK$ represents the set of keyframes until keyframe $n$. Therefore our optimal set of true state $\mX_n^\star$ is
 \begin{equation}
-	\mX_n^\star \triangleq \argmin_{\mX_n} \norm{e_v}^2 + \norm{e_{imu}}^2
+	\mX_n^\star \triangleq \argmin_{\mX_n} \norm{e_v}^2 + \norm{e_{imu}}^2,
 \end{equation}
 where $e_v$, $e_{imu}$ are reprojection error, IMU temporal error until the frame $n$ respectively.
 
-Reprojection error can written $e_v$ by Equation (\ref{c1}) and Equation ({\ref{c2}}) as,
+Reprojection error can written $e_v$ by Equation (\ref{c1}) and Equation ({\ref{c2}}) as
 \begin{equation}
-	\norm{e_v}^2 = \sum_{i=1}^n \sum_{j=1}^m \norm{CamProj(\vec{c}_i, \vec{p}_j) - \mI_{ij}}^2 
+	\norm{e_v}^2 = \sum_{i=1}^n \sum_{j=1}^m \norm{CamProj(\vec{c}_i, \vec{p}_j) - \mI_{ij}}^2, 
 \end{equation}
-where $n$, $m$ is the number of camera poses and visible 3D points respectively, $\mI_{ij}$ is the predicted 2D point position corresponding to $j^{th}$ visible 3D point in $i^{th}$ image keyframe.
+where $n$, $m$ is the number of camera poses and visible 3D points respectively, and $\mI_{ij}$ is the predicted 2D point position corresponding to $j^{th}$ visible 3D point in $i^{th}$ image keyframe.
 
 For IMU temporal error, $\norm{e_{imu}}^2$ can then be denoted as
 \begin{equation}
-	\norm{e_{imu}}^2 = \sum_{i=1}^n \norm{\vec{x}_e^i}^2
+	\norm{e_{imu}}^2 = \sum_{i=1}^n \norm{\vec{x}_e^i}^2,
 \end{equation}
-where $\{ \vec{x}_e^i \}$ denotes the $i^{th}$ keyframe of error state. Under the assumption of zero-mean Gaussian noise, the cost function can further be written as,
+where $\{ \vec{x}_e^i \}$ denotes the $i^{th}$ keyframe of error state. Under the assumption of zero-mean Gaussian noise, the cost function can further be written as
 \begin{equation}
-	\mX_n^\star \triangleq \argmin_{\mX_n} = \sum_{i=1}^n \sum_{j=1}^m \norm{CamProj(\vec{c}_i, \vec{p}_j) - \mI_{ij}}^2_{\mSigma_v} + \sum_{i=1}^n \norm{\vec{x}_e^i}^2_{\mSigma_i}
+	\mX_n^\star \triangleq \argmin_{\mX_n} = \sum_{i=1}^n \sum_{j=1}^m \norm{CamProj(\vec{c}_i, \vec{p}_j) - \mI_{ij}}^2_{\mSigma_v} + \sum_{i=1}^n \norm{\vec{x}_e^i}^2_{\mSigma_i},
 \end{equation}
 where ${\mSigma_v}$ and ${\mSigma_i}$ are covariance matrices for reprojection error and IMU error.
 
 \section{Manifold Nonlinear Optimization}
 \label{sec:exponential}
 
-Given the cost function, it is even harder to solve it using general nonlinear optimization method (\eg, Gauss-Newton method) since rotational part of $\mX_n$ belongs to a manifold. In this section, we introduce the a standard approach for manifold optimization based on \cite{absil2007trust}. 
+Given the cost function, it is non-trivial to solve it using general nonlinear optimization method (\eg, Gauss-Newton method) since rotational part of $\mX_n$ belongs to a manifold. In this section, we introduce a standard approach for manifold optimization based on \cite{absil2007trust}. 
 
-By doing that, we first introduce the \textit{exponential map}. A exponential map $exp(\cdot)$ (we have introduced it in Equation (\ref{q19})) of error state quaternion $\vec{q}_e$ is defined as,
+We first introduce the \textit{exponential map}. A exponential map $exp(\cdot)$ of error state quaternion $\vec{q}_e$, which is very similar to Equation (\ref{q19}), is defined as
 \begin{equation}
 	\vec{q}_e \triangleq exp(\vec{v}) = \mathrm{e}^{\vec{v}/2} = \begin{bmatrix}
 											\cos{\phi / 2}  \\ \vec{u}\sin{\phi / 2} 
-									  \end{bmatrix}
+									  \end{bmatrix},
 \end{equation}
-where $\vec{v}$ is the corresponding minimal axis-angle perturbation $\vec{v} = \phi\vec{u}$. And a exponential map to transform between axis-angle perturbation and rotation matrix can be found in Equation (\ref{q16}). A exponential map maps minimal coordinates (\eg, angular error) into tangent space, which behaves as an Euclidean space locally. Due to this property, we can use the angular error in our error state to form a minimal axis-angle perturbation during optimization process, and transform it back to quaternion using exponential map.
+where $\vec{v}$ is the corresponding minimal axis-angle perturbation $\vec{v} = \phi\vec{u}$. Ar exponential map to transform between axis-angle perturbation and rotation matrix can be found in Equation (\ref{q16}). A exponential map maps minimal coordinates (\eg, angular error) into tangent space, which behaves as an Euclidean space locally. Due to this property, we can use the angular error in our error state to form a minimal axis-angle perturbation during the optimization process, and transform it back to quaternion afterwards using exponential map.
 
-In summary, in each optimization iteration, we first perform general optimization approach on such minimal axis-angle perturbation since it behaves as Euclidean space locally. Then the current rotational guess quaternion is obtained via exponential map. By using some properties of exponential map, one can decrease the optimization time significantly \cite{forster2015imu}.
+In summary, in each optimization iteration, we first perform general optimization approach on such minimal axis-angle perturbation since it behaves as Euclidean space locally. Then the current rotational guess is obtained via exponential map. By using some properties of exponential map, one can decrease the optimization time significantly \cite{forster2015imu}.
 
 \section{Disscussion and Conclusion}
 \label{sec:conclusion}
 
-One problem of optimization approach is that the computational complexity is high. Old information has to be kept in order to apply a global optimization, new keyframes, landmarks and error states will be inserted to cost function continuously. Therefore solving this usually spends more time than our suggested ESKF framework. Though in this master thesis, some literatures \cite{mourikis2007multi}, we only keep some latest keyframes, but this is sub-optimal. However, in tightly-coupled visual-inertial SLAM, recent researches has partially addressed complexity problem by proposing \textit{structureless approach} \cite{mourikis2007multi, forster2015imu} to efficiently eliminate all landmarks (3D points) in cost function, and IMU pre-integration technique \cite{forster2015imu} to avoid recomputing relative pose transformation between successive keyframes via IMU information. 
+One problem of the optimization approach is that the optimized result is not easily calculated within a short time. Historical information has to be kept in order to apply a global optimization; new keyframes, landmarks and error states will be inserted to cost function continuously. Therefore solving this usually spends more time than our suggested ESKF framework. Though in \cite{mourikis2007multi}, they solve it by only keep some of previous keyframes, but this is sub-optimal. However, in tightly-coupled visual-inertial SLAM, recent researches has partially addressed complexity problem by proposing \textit{structureless approach} \cite{mourikis2007multi, forster2015imu} to efficiently eliminate all the landmarks (3D points) in optimization step, besides an IMU pre-integration technique \cite{forster2015imu} to avoid recomputing relative pose transformation between successive keyframes via IMU information. These methods have decreased the optimization time significantly, thus non-linear optimization becomes feasible in the real-time VIO system.
 
-In this chapter, we introduce the way to form a optimization cost function using notations and knowledge we introduce in this master thesis. To conclude, though our suggested ESKF VIO runs in a constant time complexity, and obtain a good estimation results, we could further improve our approach by paying more attention to internal connection between visual sensor and IMU sensor. Theoretically, if we can address the high computational complexity well, a more general approach, such as nonlinear optimization, might obtain more accurate results than kalman filter method while the whole system runs in realtime.  
+In this chapter, we introduce the way to form a optimization cost function with similar notations and knowledge in this master thesis. To conclude, though our suggested ESKF VIO runs in a constant time complexity, and obtain a good estimation results, we could further improve our approach by focusing on internal connection between visual sensors and IMU sensors. Theoretically, if we can address the high computational complexity well, a more general approach, such as nonlinear optimization, might obtain more accurate results with similar time consuming.  
