@@ -431,3 +431,30 @@
   year={2007},
   publisher={Springer}
 }
+
+@inproceedings{carlone2014eliminating,
+  title={Eliminating conditionally independent sets in factor graphs: A unifying perspective based on smart factors},
+  author={Carlone, Luca and Kira, Zsolt and Beall, Chris and Indelman, Vadim and Dellaert, Frank},
+  booktitle={Robotics and Automation (ICRA), 2014 IEEE International Conference on},
+  pages={4290--4297},
+  year={2014},
+  organization={IEEE}
+}
+
+ @misc{wiki:Homography,
+   author = "Wikipedia",
+   title = "Homography --- Wikipedia{,} The Free Encyclopedia",
+   year = "2016",
+   url = "https://en.wikipedia.org/w/index.php?title=Homography&oldid=721414383",
+   note = "[Online; accessed 29-May-2016]"
+ }
+
+@article{Burri25012016,
+author = {Burri, Michael and Nikolic, Janosch and Gohl, Pascal and Schneider, Thomas and Rehder, Joern and Omari, Sammy and Achtelik, Markus W and Siegwart, Roland}, 
+title = {The EuRoC micro aerial vehicle datasets},
+year = {2016}, 
+doi = {10.1177/0278364915620033}, 
+URL = {http://ijr.sagepub.com/content/early/2016/01/21/0278364915620033.abstract}, 
+eprint = {http://ijr.sagepub.com/content/early/2016/01/21/0278364915620033.full.pdf+html}, 
+journal = {The International Journal of Robotics Research} 
+}

@@ -19,45 +19,45 @@ The style file: plain.bst
 Database file #1: BIB/mybiblio.bib
 Warning--to sort, need author or key in Figure1-1_IMU_Sensor
 Warning--can't use both volume and number fields in quigley2009ros
-You've used 48 entries,
+You've used 50 entries,
             2118 wiz_defined-function locations,
-            767 strings with 12838 characters,
-and the built_in function-call counts, 18321 in all, are:
-= -- 1861
-> -- 805
+            775 strings with 13182 characters,
+and the built_in function-call counts, 18839 in all, are:
+= -- 1902
+> -- 849
 < -- 25
-+ -- 324
-- -- 270
-* -- 1172
-:= -- 2840
-add.period$ -- 161
-call.type$ -- 48
-change.case$ -- 275
++ -- 343
+- -- 286
+* -- 1195
+:= -- 2937
+add.period$ -- 168
+call.type$ -- 50
+change.case$ -- 289
 chr.to.int$ -- 0
-cite$ -- 50
-duplicate$ -- 741
-empty$ -- 1478
-format.name$ -- 270
-if$ -- 4022
+cite$ -- 52
+duplicate$ -- 754
+empty$ -- 1512
+format.name$ -- 286
+if$ -- 4125
 int.to.chr$ -- 0
-int.to.str$ -- 48
+int.to.str$ -- 50
 missing$ -- 39
-newline$ -- 242
-num.names$ -- 94
-pop$ -- 366
+newline$ -- 253
+num.names$ -- 98
+pop$ -- 391
 preamble$ -- 1
-purify$ -- 229
+purify$ -- 241
 quote$ -- 0
-skip$ -- 578
+skip$ -- 590
 stack$ -- 0
-substring$ -- 1148
-swap$ -- 258
+substring$ -- 1134
+swap$ -- 260
 text.length$ -- 25
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 190
+type$ -- 198
 warning$ -- 2
-while$ -- 175
-width$ -- 50
-write$ -- 534
+while$ -- 177
+width$ -- 52
+write$ -- 555
 (There were 2 warnings)

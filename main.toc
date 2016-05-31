@@ -1,41 +1,41 @@
-\contentsline {chapter}{\numberline {1}Introduction}{9}{chapter.1}
-\contentsline {section}{\numberline {1.1}Motivation and Contribution}{10}{section.1.1}
-\contentsline {section}{\numberline {1.2}Outline of the Thesis}{11}{section.1.2}
-\contentsline {chapter}{\numberline {2}Overview of Visual-inertial Odometry}{13}{chapter.2}
-\contentsline {section}{\numberline {2.1}World Representations and Notations}{13}{section.2.1}
-\contentsline {section}{\numberline {2.2}Filter Versus Keyframe}{15}{section.2.2}
-\contentsline {chapter}{\numberline {3}Background on Quaternion Algebra}{17}{chapter.3}
-\contentsline {section}{\numberline {3.1}Definition of Quaternion}{17}{section.3.1}
-\contentsline {section}{\numberline {3.2}Properties of Quaternion}{18}{section.3.2}
-\contentsline {section}{\numberline {3.3}Quaternions and Rotation operations}{19}{section.3.3}
-\contentsline {section}{\numberline {3.4}Time-derivatives on Quaternion}{21}{section.3.4}
-\contentsline {section}{\numberline {3.5}Time-integration on Quaternion}{22}{section.3.5}
-\contentsline {chapter}{\numberline {4}Modular Sensor Fusing}{24}{chapter.4}
-\contentsline {section}{\numberline {4.1}Error-state Kalman Filter for IMU Integration}{24}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}System Kinematics}{25}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}State Time-integration and Error-state Jacobian}{26}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}State Propagation}{28}{subsection.4.1.3}
-\contentsline {section}{\numberline {4.2}Camera as Complementary Sensory Data}{30}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Introduction to Monocular Visual Odometry}{30}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Self-adapt Map Scale}{31}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}Keyframe-based Bundle Adjustment}{32}{subsection.4.2.3}
-\contentsline {section}{\numberline {4.3}Visual-inertial Odometry Pipeline Summary}{33}{section.4.3}
-\contentsline {chapter}{\numberline {5}Experiments}{36}{chapter.5}
-\contentsline {section}{\numberline {5.1}Synthetic Dataset}{36}{section.5.1}
-\contentsline {section}{\numberline {5.2}Experimental Results}{38}{section.5.2}
-\contentsline {subsection}{\numberline {5.2.1}Implementation Details}{38}{subsection.5.2.1}
-\contentsline {subsection}{\numberline {5.2.2}Experiment 1: IMU Integration}{39}{subsection.5.2.2}
-\contentsline {subsection}{\numberline {5.2.3}Experiment 2: VIO Versus VO}{39}{subsection.5.2.3}
-\contentsline {subsection}{\numberline {5.2.4}Experiment 3: Keyframe Bundle Adjustment}{42}{subsection.5.2.4}
-\contentsline {subsection}{\numberline {5.2.5}Experiment 4: Runtime Evaluation}{42}{subsection.5.2.5}
-\contentsline {section}{\numberline {5.3}Conclusion}{43}{section.5.3}
-\contentsline {chapter}{\numberline {6}Current Orientation: Nonlinear Optimization-based Visual-Inertial Odometry }{45}{chapter.6}
-\contentsline {section}{\numberline {6.1}Cost Function of Visual-Inertial Odometry}{45}{section.6.1}
-\contentsline {section}{\numberline {6.2}Manifold Nonlinear Optimization}{46}{section.6.2}
-\contentsline {section}{\numberline {6.3}Disscussion and Conclusion}{47}{section.6.3}
-\contentsline {chapter}{\numberline {7}Summary, Discussion and Future Works}{48}{chapter.7}
-\contentsline {chapter}{\numberline {A}The Derivation of Error-state Kinematic Equations}{50}{appendix.A}
-\contentsline {chapter}{\numberline {B}Integration Methods}{52}{appendix.B}
-\contentsline {section}{\numberline {B.1}Runge-Kutta Numerical Integration Methods}{52}{section.B.1}
-\contentsline {section}{\numberline {B.2}Closed-form Integration Methods}{52}{section.B.2}
-\contentsline {chapter}{\numberline {C}Conversion from Quaternions to Euler Angles}{53}{appendix.C}
+\contentsline {chapter}{\numberline {1}Introduction}{13}{chapter.1}
+\contentsline {section}{\numberline {1.1}Motivation and Contribution}{14}{section.1.1}
+\contentsline {section}{\numberline {1.2}Outline of the Thesis}{15}{section.1.2}
+\contentsline {chapter}{\numberline {2}Overview of Visual-inertial Odometry}{17}{chapter.2}
+\contentsline {section}{\numberline {2.1}World Representations and Notations}{17}{section.2.1}
+\contentsline {section}{\numberline {2.2}Filter Versus Keyframe}{19}{section.2.2}
+\contentsline {chapter}{\numberline {3}Background on Quaternion Algebra}{21}{chapter.3}
+\contentsline {section}{\numberline {3.1}Definition of Quaternion}{21}{section.3.1}
+\contentsline {section}{\numberline {3.2}Properties of Quaternion}{22}{section.3.2}
+\contentsline {section}{\numberline {3.3}Quaternions and Rotation operations}{23}{section.3.3}
+\contentsline {section}{\numberline {3.4}Quaternion Differentiation}{25}{section.3.4}
+\contentsline {section}{\numberline {3.5}Time-integration on Quaternion}{26}{section.3.5}
+\contentsline {chapter}{\numberline {4}Modular Sensor Fusing}{29}{chapter.4}
+\contentsline {section}{\numberline {4.1}Error-state Kalman Filter for IMU Integration}{29}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}System Kinematics}{30}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}State Time-integration and Error-state Jacobian}{31}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}State Propagation}{33}{subsection.4.1.3}
+\contentsline {section}{\numberline {4.2}Camera as Complementary Sensory Data}{35}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Introduction to Monocular Visual Odometry}{35}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Self-adapt Map Scale}{36}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Keyframe-based Bundle Adjustment}{38}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}Visual-inertial Odometry Pipeline Summary}{38}{section.4.3}
+\contentsline {chapter}{\numberline {5}Experiments}{41}{chapter.5}
+\contentsline {section}{\numberline {5.1}Synthetic Dataset}{41}{section.5.1}
+\contentsline {section}{\numberline {5.2}Experimental Results}{43}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Implementation Details}{43}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Experiment 1: IMU Integration}{44}{subsection.5.2.2}
+\contentsline {subsection}{\numberline {5.2.3}Experiment 2: VIO Versus VO}{44}{subsection.5.2.3}
+\contentsline {subsection}{\numberline {5.2.4}Experiment 3: Keyframe Bundle Adjustment}{46}{subsection.5.2.4}
+\contentsline {subsection}{\numberline {5.2.5}Experiment 4: Runtime Evaluation}{48}{subsection.5.2.5}
+\contentsline {section}{\numberline {5.3}Conclusion}{50}{section.5.3}
+\contentsline {chapter}{\numberline {6}A Brief Introduction to Nonlinear Optimization-based Visual-Inertial Odometry }{51}{chapter.6}
+\contentsline {section}{\numberline {6.1}Cost Function of Visual-Inertial Odometry}{51}{section.6.1}
+\contentsline {section}{\numberline {6.2}Manifold Nonlinear Optimization}{52}{section.6.2}
+\contentsline {section}{\numberline {6.3}Disscussion and Conclusion}{53}{section.6.3}
+\contentsline {chapter}{\numberline {7}Summary, Discussion and Future Works}{55}{chapter.7}
+\contentsline {chapter}{\numberline {A}The Derivation of Error-state Kinematic Equations}{57}{appendix.A}
+\contentsline {chapter}{\numberline {B}Integration Methods}{59}{appendix.B}
+\contentsline {section}{\numberline {B.1}Runge-Kutta Numerical Integration Methods}{59}{section.B.1}
+\contentsline {section}{\numberline {B.2}Closed-form Integration Methods}{59}{section.B.2}
+\contentsline {chapter}{\numberline {C}Conversion from Quaternions to Euler Angles}{61}{appendix.C}

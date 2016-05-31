@@ -79,13 +79,13 @@ Also to best of our knowledge, there is no open sourced IMU-camera synthetic dat
 \begin{align}
 	\label{e1}
 	\Delta{t} &= \frac{t_p - t}{t_1 - t} \\
-	\vec{p} &= \vec{p}_t + (\vec{p}_{t+1} - \vec{p}_{t})\Delta{t}
+	\vec{p} &= \vec{p}_t + (\vec{p}_{t+1} - \vec{p}_{t})\Delta{t},
 \end{align}
-, where $t_p$, $t_1$ and $t$ is time when $\vec{p}$, $\vec{p}_t$ and $\vec{p}_{t+1}$ have been measured. We use \textit{Slerp} to interpolate between two quaternions $\vec{q}_t$ and $\vec{q}_{t+1}$ using Equation (\ref{e1}), we obtain the result $\vec{q}$ as
+where $t_p$, $t_1$ and $t$ is time when $\vec{p}$, $\vec{p}_t$ and $\vec{p}_{t+1}$ have been measured. We use \textit{Slerp} to interpolate between two quaternions $\vec{q}_t$ and $\vec{q}_{t+1}$ using Equation (\ref{e1}), we obtain the result $\vec{q}$ as
 \begin{align}
-	\vec{q} &= \frac{\vec{q}_{t}\sin{((1-\Delta{t})\theta)}+\vec{q}_{t+1}\sin{(\Delta{t}\theta})}{\sin{\theta}}
+	\vec{q} &= \frac{\vec{q}_{t}\sin{((1-\Delta{t})\theta)}+\vec{q}_{t+1}\sin{(\Delta{t}\theta})}{\sin{\theta}},
 \end{align}
-, where $\theta$ is the half angle between $\vec{q}_t$ and $\vec{q}_{t+1}$. 
+where $\theta$ is the half angle between $\vec{q}_t$ and $\vec{q}_{t+1}$. 
 
 The resolution of image is $752 \times 480$, and intrinsic matrix of our virtual pin-hole camera is pre-defined, which is showed in Table \ref{table:tb2}. The output frequency is set to 25 [Hz], three times less than output frequency of the IMU sensor.
 
@@ -186,11 +186,11 @@ We conclude that the VO has a huge positive impacts on 3-vector global translati
 \begin{figure}
 \centering
 	\begin{subfloat}[]{
-		\includegraphics[width=0.45\textwidth]{CONTENT/Figure/figure5_3_a.png}
+		\includegraphics[width=1.0\textwidth]{CONTENT/Figure/figure5_3_a.png}
 		\label{fig:fig5-3-a}}
 	\end{subfloat}\qquad
 	\begin{subfloat}[]{
-		\includegraphics[width=0.45\textwidth]{CONTENT/Figure/figure5_3_b.png}
+		\includegraphics[width=1.0\textwidth]{CONTENT/Figure/figure5_3_b.png}
 		\label{fig:fig5-3-b}}
 	\end{subfloat}
 	
@@ -212,11 +212,11 @@ We conclude that keyframe BA as a motion optimization step improves the estimati
 \begin{figure}
 \centering
 	\begin{subfloat}[]{
-		\includegraphics[width=0.45\textwidth]{CONTENT/Figure/figure5_4_a.png}
+		\includegraphics[width=1.0\textwidth]{CONTENT/Figure/figure5_4_a.png}
 		\label{fig:fig5-4-a}}
 	\end{subfloat}\qquad
 	\begin{subfloat}[]{
-		\includegraphics[width=0.45\textwidth]{CONTENT/Figure/figure5_4_b.png}
+		\includegraphics[width=1.0\textwidth]{CONTENT/Figure/figure5_4_b.png}
 		\label{fig:fig5-4-b}}
 	\end{subfloat}
 	
@@ -278,6 +278,6 @@ We conclude that the VIO we suggest in this master thesis have the ability to ac
 \section{Conclusion}
 \label{sec:exp_conclusion}
 
-We first explain the reasons and ways we generate synthetic datasets in this chapter. Then we demonstrate four experiments on our synthetic dataset. In experiment 1, we use the ground truth data in correction step, showing that if the extrasensory data gives us an accurate camera pose estimation, our visual-inertial odometry would have rather small position drift (less than 0.55\% of overall distance travelled) and attitude drift (average 0.0134 [rad]). In experiment 2, we compare our visual-inertial odometry with state-of-art visual odometry \textit{SVO}, the final results show that our method have less variation in position drift and large improvements (0.027 [rad] vs. 0.787 [rad]) in average attitude drift than SVO. In the third experiment, we further show that the keyframe BA we propose decreases the average position drifts and attitude drifts. We examine the break-up time consumptions in experiment 4, that our odometry runs in real-time with our virtual IMU (\~ 100 [Hz]) and camera (\~ 25 [Hz]).
+We first explain the reasons and ways we generate synthetic datasets in this chapter. Then we demonstrate four experiments on our synthetic dataset. In experiment 1, we use the ground truth data in correction step, showing that if the extrasensory data gives us an accurate camera pose estimation, our visual-inertial odometry would have rather small position drift (less than 0.55\% of overall distance travelled) and attitude drift (average 0.0134 [rad]). In experiment 2, we compare our visual-inertial odometry with state-of-art visual odometry \textit{SVO}, the final results show that our method have less variation in position drift and large improvements (0.027 [rad] vs. 0.787 [rad]) in average attitude drift than SVO. In the third experiment, we further show that the keyframe BA we propose decreases the average position drifts and attitude drifts. We examine the break-up time consumptions in experiment 4, that our odometry runs in real-time with our virtual IMU ($\sim$ 100 [Hz]) and camera ($\sim$ 25 [Hz]).
 
 Due to the time limits of this thesis, we are not available to perform more evaluations, \eg, using different visual odometries or applying our system on more realistic datasets. However the results we obtain in above experiments have shown that the keyframe-based visual-inertial odometry we suggest is robust and efficient . 

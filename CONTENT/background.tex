@@ -7,46 +7,46 @@
 \chapter{Background on Quaternion Algebra}
 \label{chap:background}
 
-One important task for this master thesis is to integrate IMU data over the time to estimate camera pose (\eg, position and orientation). Assuming a fixed movement model, it is straightforward to integrate position in Cartesian space, however since rotational parameter (\eg, Euler angle, rotation matrix, quaternion) is often represented in manifold, and integrating orientation in manifold space is often not a trivial task. In this chapter, we introduce the quaternion and the quaternion algebra, and then explore the way to operate quaternion over the time. General approach to integrating quaternion over the time is given at last.
+One important task for this master thesis is to integrate IMU data over the time in order to estimate camera poses (\eg, translations and orientations). By assuming a fixed movement model, it is straightforward to integrate translations in Cartesian space, however since rotational parameter (\eg, Euler angle, rotation matrix, or quaternion) is often represented in manifold, it is often non-trivial to integrate orientations in manifold space. In this chapter, we introduce the quaternion and the quaternion algebra, and then explore the way to operate quaternion over time. General approaches to integrating quaternion over time is given at last.
 
 \section{Definition of Quaternion}
 \label{sec:def_of_quat}
 
-A quaternion $Q$ is defined as,
+A quaternion $Q$ is defined as
 \begin{equation}\label{q1}
-	Q = q_w + q_xi + q_yj + q_zk
+	Q = q_w + q_xi + q_yj + q_zk,
 \end{equation}
 where $\{q_w,q_x,q_y,q_z\} \in \mathbb{R}$, and $\{i,j,k\}$ are three imaginary unit lengths, \ie, $i^2=j^2=k^2=ijk=-1$.
 
-In most cases, we represent quaternion $Q$ as a four-element vector $\textbf{q}$ with respect to above four real numbers $\{q_w,q_x,q_y,q_z\}$, \ie,
+In most cases, we represent a quaternion $Q$ as a four-element vector $\textbf{q}$ with respect to above four real numbers $\{q_w,q_x,q_y,q_z\}$, \ie,
 \begin{equation}\label{q2}
-	\mathbf{q} \triangleq \left[q_w \ \mathbf{q}_v\right]^T = \left[q_w \ q_x \ q_y \ q_z \right]^T
+	\mathbf{q} \triangleq \left[q_w \ \mathbf{q}_v\right]^T = \left[q_w \ q_x \ q_y \ q_z \right]^T,
 \end{equation}
-where $q_w$ is the real part of $\textbf{q}$, and $q_v$ is a 3-vector to represent imaginary part of $\textbf{q}$. 
+where $q_w$ is the real part of $\textbf{q}$, and $vec{q}_v$ is a 3-vector to represent imaginary part of $\textbf{q}$. 
 
-Note that there are two different conventions of quaternion $\textbf{q}$, \textit{Hamilton way}~\cite{hamilton1844ii} and \textit{JPL way}~\cite{breckenridge1999quaternions}. In Hamilton convention, the real part $q_w$ is the first component of $\textbf{q}$, \ie, $\left[q_w \ \mathbf{q_v}\right]$, whereas in \textit{JPL way}, the real part is the fourth component, \ie, $\left[\mathbf{q_v} \ q_w\right]$. To avoid confusions, and considering Hamilton way is more common to use, especially for implementation~\cite{guennebaud2010eigen, hess2007essential}, we use \textbf{Hamilton way} to represent quaternion $\textbf{q}$ throughout this whole master thesis. 
+Note that there are two different conventions of quaternion $\textbf{q}$, \textit{Hamilton} way ~\cite{hamilton1844ii} and \textit{JPL} way~\cite{breckenridge1999quaternions}. In Hamilton convention, the real part $q_w$ is the first component of $\textbf{q}$, \ie, $\left[q_w \ \mathbf{q_v}\right]$, whereas in \textit{JPL way}, the real part is the fourth component, \ie, $\left[\mathbf{q_v} \ q_w\right]$. To avoid confusions, and considering Hamilton way is more common to use, especially for implementation~\cite{guennebaud2010eigen, hess2007essential}, we use \textbf{Hamilton way} to represent quaternions throughout the rest of this thesis. 
 
 \section{Properties of Quaternion}
 \label{sec:prop_of_quat}
 
 In this section, we introduce the properties of quaternion. 
 
-\textbf{\textit{Summation}} We start with summation of two quaternions \textbf{q} and \textbf{p},
+\textbf{\textit{Summation}} We start with the summation of two quaternions \textbf{q} and \textbf{p}
 \begin{equation}\label{q7}
-\vec{q} + \vec{p} = \left[q_w+p_w \ \mathbf{q}_v+\mathbf{p}_v\right]^T = \left[q_w+p_w \ q_x+p_x \ q_y+p_y \ q_z+p_z \ \right]^T
+\vec{q} + \vec{p} = \left[q_w+p_w \ \mathbf{q}_v+\mathbf{p}_v\right]^T = \left[q_w+p_w \ q_x+p_x \ q_y+p_y \ q_z+p_z \ \right]^T.
 \end{equation}
 
-\textbf{\textit{Product}} We use operator $\otimes$ to denote the product operation on quaternions, which gives,
+\textbf{\textit{Product}} We use operator $\otimes$ to denote the product operation on quaternions, which gives
 \begin{equation}\label{q3}
 	\vec{q} \otimes \vec{p} = \begin{bmatrix}
 							  	p_wq_w-p_xq_x-p_yq_y-p_zq_z \\
 							  	p_wq_x+p_xq_w+p_yq_z-p_zq_y \\
 							  	p_wq_y-p_xq_q+p_yq_w+p_zq_x \\
 							  	p_wq_z-p_xq_y-p_yq_z+p_zq_w 
-							  \end{bmatrix}
+							  \end{bmatrix}.
 \end{equation}
 
-The product of two quaternions can be expressed as two equivalent matrix products,
+The product of two quaternions can be expressed as two equivalent matrix products
 \begin{equation}\label{q4}
 	\vec{q_1} \otimes \vec{q_2} = Q_1^+\vec{q_2}
 \end{equation}
@@ -57,21 +57,21 @@ with
 							  	-\vec{q_v}^T\\
 							  	\vec{q_v} &
 							  	[\vec{q_v}]_\times
-							  \end{bmatrix}
+							  \end{bmatrix},
 \end{equation}
-where $[\vec{q}_v]_\times$ represents the cross-product matrix of $\vec{q}_v$, and the cross-product matrix of a vector $\vec{v}$ is defined by
+where $[\vec{q}_v]_\times$ represents the cross-product matrix of $\vec{q}_v$. The cross-product matrix of a 3-vector $\vec{v}$ is defined by
 \begin{equation} \label{q17}
 	[\vec{v}]_\times =  \begin{bmatrix}
 							0 & -v_z & v_y \\
 							v_z & 0 & -v_x \\
 							-v_y & v_x & 0 
-						\end{bmatrix}
+						\end{bmatrix}.
 \end{equation}
-note that the quaternion product is not commutative, \ie, 
+Note that the quaternion product is not commutative, \ie, 
 \begin{equation}
-	\vec{p} \otimes \vec{q} \neq \vec{q} \otimes \vec{p}
+	\vec{p} \otimes \vec{q} \neq \vec{q} \otimes \vec{p}.
 \end{equation}
-however it is associative, and distributive over sum, \ie,
+However it is associative, and distributive over sum, \ie,
 \begin{equation} \label{q26}
 	\vec{p} \otimes (\vec{q} \otimes \vec{k}) = (\vec{p} \otimes \vec{q}) \otimes \vec{k}
 \end{equation}
@@ -79,47 +79,47 @@ however it is associative, and distributive over sum, \ie,
 	\vec{p} \otimes (\vec{q} + \vec{k}) = \vec{p} \otimes \vec{q} + \vec{p} \otimes \vec{k}
 \end{equation}
 \begin{equation} \label{q28}
-	(\vec{q} + \vec{k}) \otimes \vec{p} = \vec{q} \otimes \vec{p} + \vec{k} \otimes \vec{p}
+	(\vec{q} + \vec{k}) \otimes \vec{p} = \vec{q} \otimes \vec{p} + \vec{k} \otimes \vec{p}.
 \end{equation}
 
-\textbf{\textit{Conjugate}} The conjugate $\vec{q}^*$of a quaternion is defined by
+\textbf{\textit{Conjugate}} The conjugate of a quaternion $\vec{q}^*$ is defined by
 \begin{equation}\label{q6}
-	\vec{q}^* \triangleq q_w - \vec{q_v} = \left[ q_w \ - \vec{q_v} \right]^T
+	\vec{q}^* \triangleq q_w - \vec{q_v} = \left[ q_w \ - \vec{q_v} \right]^T.
 \end{equation}
 
-\textbf{\textit{Identity}} We call a quaternion \textbf{q} identical if, for any given quaternion \textbf{p}, $\vec{q} \otimes \vec{p} = \vec{p} \otimes \vec{q} = \vec{p}$. An identical quaternion \textbf{q} satisfies that
+\textbf{\textit{Identity}} An identity quaternion \textbf{q} is defined as, for any given quaternion \textbf{p}, $\vec{q} \otimes \vec{p} = \vec{p} \otimes \vec{q} = \vec{p}$. An identical quaternion \textbf{q} satisfies that
 \begin{equation}\label{q8}
-	\vec{q} = \left[1 \ 0 \ 0 \ 0 \right]^T
+	\vec{q} = \left[1 \ 0 \ 0 \ 0 \right]^T.
 \end{equation}
-In this master thesis, we denote identical quaternion as $\vec{q}_{\mathbb{I}}$.
+In this master thesis, we denote identity quaternion as $\vec{q}_{\ones}$.
 
-\textbf{\textit{Norm}} The norm of a quaternion $\norm{\vec{q}}$ is defined similar to the norm of a vector, which is,
+\textbf{\textit{Norm}} The norm of a quaternion $\norm{\vec{q}}$ is defined similar to the norm of a vector, which is
 \begin{equation}\label{q9}
-	\norm{\vec{q}} = \sqrt{q_w^2+q_x^2+q_y^2+q_z^2}
+	\norm{\vec{q}} = \sqrt{q_w^2+q_x^2+q_y^2+q_z^2}.
 \end{equation}
 
-\textbf{\textit{Inverse}} The inverse of a quaternion $\vec{q}^{-1}$ is defined as,
+\textbf{\textit{Inverse}} The inverse of a quaternion $\vec{q}^{-1}$ is defined as
 \begin{equation}\label{q10}
-	\vec{q}^{-1} = \vec{q}^* / \norm{\vec{q}}
+	\vec{q}^{-1} = \vec{q}^* / \norm{\vec{q}},
 \end{equation}
-which leads to,
+which leads to
 \begin{equation}\label{q11}
-	\vec{q}^* \otimes \vec{q}^{-1} = \vec{q}^{-1} \otimes \vec{q}^*  = \vec{q}_{\mathbb{I}}
+	\vec{q}^* \otimes \vec{q}^{-1} = \vec{q}^{-1} \otimes \vec{q}^*  = \vec{q}_{\mathbb{I}}.
 \end{equation}
 
-\textbf{\textit{Unit quaternion}} The norm of a unit quaternion $\norm{\vec{q}}$ is $1$, and the inverse of such a unit quaternion is equal to the conjugate of this quaternion,
+\textbf{\textit{Unit quaternion}} The norm of a unit quaternion $\norm{\vec{q}}$ is $1$, and the inverse of such a unit quaternion is equal to the conjugate of this quaternion
 \begin{equation}\label{q12}
-	\vec{q}^{-1} = \vec{q}^*
+	\vec{q}^{-1} = \vec{q}^*.
 \end{equation}
 
-\textbf{\textit{Pure quaternion}} A pure quaternion $\vec{q}$ is defined as,
+\textbf{\textit{Pure quaternion}} A pure quaternion $\vec{q}$ is defined as
 \begin{equation}\label{q13}
-	\vec{q} = \left[0 \ \vec{q}_v \right]^T = \left[0 \ q_x \ q_y \ q_z \right]^T
+	\vec{q} = \left[0 \ \vec{q}_v \right]^T = \left[0 \ q_x \ q_y \ q_z \right]^T.
 \end{equation}
 
-Let pure quaternion $\vec{q} = \theta\vec{u}$, where $\theta = \norm{\vec{q}}$, we can compute the exponential of $\vec{q}$ with the help of Euler formula,
+Let pure quaternion $\vec{q} = \theta\vec{u}$, where $\theta = \norm{\vec{q}}$, we can compute the exponential of $\vec{q}$ with the help of Euler formula
 \begin{equation}\label{q14}
-	\mathrm{e}^{\vec{q}} = \mathrm{e}^{\theta\vec{u}} = \cos{\theta} + \vec{u}\sin{\theta} = \left[\cos{\theta} \ \vec{u}\sin{\theta} \right]^T
+	\mathrm{e}^{\vec{q}} = \mathrm{e}^{\theta\vec{u}} = \cos{\theta} + \vec{u}\sin{\theta} = \left[\cos{\theta} \ \vec{u}\sin{\theta} \right]^T,
 \end{equation}
 which is still a quaternion, and moreover $\mathrm{e}^{\vec{q}}$ is a unit quaternion because its norm satisfies $\norm{\mathrm{e}^{\vec{q}}}^2 = \cos{\theta}^2 + \sin{\theta}^2 = 1$.
 
@@ -128,36 +128,36 @@ which is still a quaternion, and moreover $\mathrm{e}^{\vec{q}}$ is a unit quate
 
 We discuss the relationship between quaternions and rotation operations by first introducing rotation vector $\vec{v}$. 
 
-Given a rotation vector $\vec{v} = \phi\vec{u}$, where $\phi$ is the norm of $\vec{v}$ and $\vec{u}$ is a unit vector, we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ following right-handed rule, and obtain a new vector $\vec{x^{\prime}}$,
+Given a rotation vector $\vec{v} = \phi\vec{u}$, where $\phi$ is the norm of $\vec{v}$ and $\vec{u}$ is a unit vector, we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ following right-handed rule, and obtain a new vector $\vec{x^{\prime}}$
 \begin{equation}\label{q15}
-	\vec{x^{\prime}} = \vec{x}_{||} + \vec{x}_{\bot}\cos{\phi} + (\vec{u} \times \vec{x})\sin{\phi}
+	\vec{x^{\prime}} = \vec{x}_{||} + \vec{x}_{\bot}\cos{\phi} + (\vec{u} \times \vec{x})\sin{\phi},
 \end{equation}
 where $\vec{x}_{||} = (\vec{x} \cdot \vec{u})\vec{u}$ is the component parallel to $\vec{x}$, and $\vec{x}_{\bot} = -\vec{u} \times (\vec{u} \times \vec{x})$ is the component perpendicular to $\vec{x}$, therefore $\vec{x} = \vec{x}_{||} + \vec{x}_{\bot}$. This formula is known as \textit{vector rotation formular} or \textit{Rodrigues formula}.
 
-Then we can define a rotation matrix $\mR$ by rotation vector $\vec{v} = \phi\vec{u}$ with the help of Equation (\ref{q17}) as,
+Then we can define a rotation matrix $\mR$ by rotation vector $\vec{v} = \phi\vec{u}$ with the help of Equation (\ref{q17}) as
 \begin{equation}\label{q16}
-	\mR = \mathrm{e}^{[\vec{v}]_\times}
+	\mR = \mathrm{e}^{[\vec{v}]_\times}.
 \end{equation}
-we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ using $\mR$ in a clean way,
+We can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$ using $\mR$ in a clean way
 \begin{equation}\label{q18}
-	\vec{x^{\prime}} = \mR\vec{x}
+	\vec{x^{\prime}} = \mR\vec{x},
 \end{equation}
 furthermore one can show that result in Equation (\ref{q18}) is equivalent with the result in Equation (\ref{q15}) \cite{wiki:rotationformula}. 
 
-Constructing a unit quaternion $\vec{q}$ by Equation (\ref{q14}) with a rotation vector $\vec{v} = \phi\vec{u}$, 
+Constructing a unit quaternion $\vec{q}$ by Equation (\ref{q14}) with a rotation vector $\vec{v} = \phi\vec{u}$ as
 \begin{equation}\label{q19}
 	\vec{q} = \mathrm{e}^{\vec{v}/2} = \begin{bmatrix}
 											\cos{\phi / 2}  \\ \vec{u}\sin{\phi / 2} 
-									  \end{bmatrix}
+									  \end{bmatrix},
 \end{equation}
 we can rotate a vector $\vec{x}$ by an angle $\phi$ around the axis $\vec{u}$
 \begin{equation}\label{q20}
-	\vec{x^{\prime}} = \vec{q} \otimes \vec{x} \otimes \vec{q}^{*},
+	\vec{x^{\prime}} = \vec{q} \otimes \vec{x} \otimes \vec{q}^{*}.
 \end{equation}
 
-We then show $\vec{x^{\prime}}$ in Equation (\ref{q20}) is equivalent with $\vec{x^{\prime}}$ in Equation (\ref{q15}). First we transferred the vector $\vec{x}$ into pure quaternion form as,
+We then show $\vec{x^{\prime}}$ in Equation (\ref{q20}) is equivalent with $\vec{x^{\prime}}$ in Equation (\ref{q15}). First we transferred the vector $\vec{x}$ into pure quaternion form as
 \begin{equation}\label{q21}
-	\vec{x}_q = \left[0 \ \vec{x} \right]^T
+	\vec{x}_q = \left[0 \ \vec{x} \right]^T,
 \end{equation}
 then we rewrite formula (\ref{q20}) as
 \begin{equation}\label{q22}
@@ -175,11 +175,11 @@ then we rewrite formula (\ref{q20}) as
 \otimes
 \begin{bmatrix}
 \cos{\phi / 2}  \\ -\vec{v}\sin{\phi / 2}  
-\end{bmatrix},
+\end{bmatrix}.
 \end{equation}
-expanding it by Equation (\ref{q3}), it is easily to show that,
+Expanding it by Equation (\ref{q3}), it is easily to show that
 \begin{equation}\label{q23}
-	\vec{x^{\prime}} = \vec{x}_{||} + \vec{x}_{\bot}\cos{\phi} + (\vec{u} \times \vec{x})\sin{\phi}
+	\vec{x^{\prime}} = \vec{x}_{||} + \vec{x}_{\bot}\cos{\phi} + (\vec{u} \times \vec{x})\sin{\phi},
 \end{equation}
 which is exactly Equation (\ref{q15}).
 
@@ -187,51 +187,52 @@ To summarize here, we can construct a quaternion $\vec{q}$ or a rotation matrix 
 
 It is also easy to show the conversion from a rotation matrix $\mR$ to a quaternion $\vec{q}$, which we use in this thesis. Knowing that
 \begin{equation}\label{q24}
-	\vec{q} \otimes \vec{x} \otimes \vec{q}^{*} = \mR\vec{x}
+	\vec{q} \otimes \vec{x} \otimes \vec{q}^{*} = \mR\vec{x},
 \end{equation}
-, we can construct $\mR = \mR \{ \vec{q} \}$ by,
+we can construct $\mR = \mR \{ \vec{q} \}$ by
 \begin{equation}\label{q25}
 \mR = \begin{bmatrix}
 		q_w^2+q_x^2-q_y^2-q_z^2 & 2(q_xq_y-q_wq_z) & 2(q_xq_z+q_wq_y) \\
 		2(q_xq_y+q_wq_z) & q_w^2-q_x^2+q_y^2-q_z^2 & 2(q_yq_z-q_wq_x)\\
 		2(q_xq_z-q_wq_y) & 2(q_yq_z+q_wq_x) & q_w^2-q_x^2-q_y^2+q_z^2 \\
-	  \end{bmatrix}
+	  \end{bmatrix}.
 \end{equation} 
-and the conversion from quaternions to rotation matrices can be found in \cite{van2005quaternion}.
 
-\section{Time-derivatives on Quaternion}
+The conversion from rotation matrix to quaternion, which is beyond the content of this thesis, can be found in \cite{van2005quaternion}.
+
+\section{Quaternion Differentiation}
 \label{sec:timed_on_quat}
 
-We introduce the time-derivative on quaternion by first define,
+We introduce the differentiation on quaternion by first define
 \begin{equation}\label{q29}
-	\vec{q}(t+\Delta t) \triangleq \vec{q}(t) \otimes \Delta\vec{q}
+	\vec{q}(t+\Delta t) \triangleq \vec{q}(t) \otimes \Delta\vec{q},
 \end{equation}
 where $\vec{q}(t)$ is the quaternion at time $t$ and $\Delta\vec{q}$ is quaternion transformation within a small period time $\Delta t$. 
 
-One can expand $\Delta\vec{q}$ by Taylor expansions with Equation (\ref{q19}) to,
+One can expand $\Delta\vec{q}$ by Taylor expansions with Equation (\ref{q19}) to
 \begin{equation}\label{q30}
-	\Delta\vec{q} = \begin{bmatrix} 1 \\ \dfrac{1}{2}\Delta{\vec{\theta}} \end{bmatrix} + O(\norm{\Delta{\vec{\theta}}}^2)
+	\Delta\vec{q} = \begin{bmatrix} 1 \\ \dfrac{1}{2}\Delta{\vec{\theta}} \end{bmatrix} + O(\norm{\Delta{\vec{\theta}}}^2),
 \end{equation}
-where $\Delta{\vec{\theta}}$ is a angular vector corresponding to $\Delta\vec{q}$. In fact, the angular rate $\vec{\omega}$ at time $t$ is defined as,
+where $\Delta{\vec{\theta}}$ is a angular vector corresponding to $\Delta\vec{q}$. In fact, the angular rate $\vec{\omega}$ at time $t$ is defined as
 \begin{equation}\label{q31}
-	\vec{\omega} (t) \triangleq \lim_{\Delta{t} \rightarrow 0}\dfrac{\Delta{\vec{\theta}}}{\Delta{t}}
+	\vec{\omega} (t) \triangleq \lim_{\Delta{t} \rightarrow 0}\dfrac{\Delta{\vec{\theta}}}{\Delta{t}},
 \end{equation}
 which is one of measurements we can obtain from IMU sensor.
 
-By definition of the derivative, we can obtain the time-derivative $\dot{\vec{q}}$ of quaternion $\vec{q}$ as,
+By definition of the derivative, we can obtain the time-derivative $\dot{\vec{q}}$ of quaternion $\vec{q}$ as
 \begin{equation} \label{q32} 
-	\dot{\vec{q}} = \dfrac{d\vec{q}(t)}{dt} \triangleq \lim_{\Delta{t} \rightarrow 0} \dfrac{\vec{q}(t+\Delta t) - \vec{q}(t)}{\Delta{t}}
+	\dot{\vec{q}} = \dfrac{d\vec{q}(t)}{dt} \triangleq \lim_{\Delta{t} \rightarrow 0} \dfrac{\vec{q}(t+\Delta t) - \vec{q}(t)}{\Delta{t}},
 \end{equation}
-which follows,
+which follows
 \begin{equation} \label{q33} 
 \begin{split}
 	\dot{\vec{q}} \triangleq & \lim_{\Delta{t} \rightarrow 0} \dfrac{\vec{q}(t+\Delta t) - \vec{q}(t)}{\Delta{t}} \\
 	=& \lim_{\Delta{t} \rightarrow 0} \dfrac{\vec{q} \otimes \Delta\vec{q} - \vec{q}}{\Delta{t}} \\
 	=& \lim_{\Delta{t} \rightarrow 0} \dfrac{\vec{q} \otimes (\begin{bmatrix} 1 \\ \dfrac{1}{2}\Delta{\vec{\theta}} \end{bmatrix} - \begin{bmatrix} 1 \\ 0 \end{bmatrix})}{\Delta{t}} \\
 	=& \frac{1}{2}\vec{q} \otimes \begin{bmatrix} 0 \\ \vec{\omega} \end{bmatrix} 
-\end{split}
+\end{split}.
 \end{equation}
-here we simplify $\vec{q}(t)$ to $\vec{q}$. Then we can obtain the time-derivative on quaternion by writing angular rate into pure quaternion form (\ref{q13}), which is
+Here we simplify $\vec{q}(t)$ to $\vec{q}$. Then we can obtain the time-derivative on quaternion by writing angular rate into pure quaternion form (\ref{q13}), which is
 \begin{equation} \label{q34} 
 	\dot{\vec{q}} = \frac{1}{2}\vec{q} \otimes \vec{\omega}.
 \end{equation}				  
@@ -241,34 +242,34 @@ here we simplify $\vec{q}(t)$ to $\vec{q}$. Then we can obtain the time-derivati
 
 To integrate quaternion over time, we explore the relationship between $\vec{q}(t_n)$ and $\vec{q}(t_{n+1})$ where $t_n = n\Delta{t}$. Expanding $\vec{q}(t_{n+1})$ using Taylor series, we have
 \begin{equation} \label{q35} 
-	\vec{q}(t_{n+1}) = \vec{q}(t_n) + \dot{\vec{q}}(t_n)\Delta{t} + \frac{1}{2!}\ddot{\vec{q}}(t_n)\Delta{t}^2 + \frac{1}{3!}\dddot{\vec{q}}(t_n)\Delta{t}^3+\dots
+	\vec{q}(t_{n+1}) = \vec{q}(t_n) + \dot{\vec{q}}(t_n)\Delta{t} + \frac{1}{2!}\ddot{\vec{q}}(t_n)\Delta{t}^2 + \frac{1}{3!}\dddot{\vec{q}}(t_n)\Delta{t}^3+\dots.
 \end{equation}
 
 Assume that the second order derivative of rotational rate is zero, which is $\ddot{\vec{\omega}} = 0$, we have
 \begin{align} 
 	\label{q36} 
-	\dot{\vec{q}}(t_{n+1}) &= \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega()}(t_{n}) \\
+	\dot{\vec{q}}(t_{n+1}) &= \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega}(t_{n}) \\
 	\label{q37} 
 	\ddot{\vec{q}}(t_{n+1}) &= \frac{1}{2^2}\vec{q}(t_{n}) \otimes \vec{\omega}^2(t_{n})+\frac{1}{2}\vec{q}(t_{n}) \otimes \dot{\vec{\omega}} \\
 	\label{q38} 
 	\dddot{\vec{q}}(t_{n+1}) &= \frac{1}{2^3}\vec{q}(t_{n}) \otimes \vec{\omega}^3(t_{n}) + \frac{1}{4}\vec{q}(t_{n}) \otimes \dot{\vec{\omega}}\vec{\omega}(t_{n}) + \frac{1}{2}\vec{q}(t_{n}) \otimes \vec{\omega}(t_{n})\dot{\vec{\omega}} \\
 	 \vdots & \nonumber 
 \end{align}
-and so forth and so on. We then get the result of time integration by taking Equation (\ref{q36}, \ref{q37}, \ref{q38}) back into Equation (\ref{q35}).
+and so forth and so on. We then get the result of time integration by taking Equation (\ref{q36}), (\ref{q37}), and (\ref{q38}) back into Equation (\ref{q35}).
 
-We hereby uses a stronger assumption that angular rate $\vec{\omega}(t_{n})$ remains constant during a small time period $\Delta{t}$, which is $\dot{\vec{\omega}} = 0$. Considering the sampling rate of IMU sensor is usually high (> 100 Hz), this assumption is actually general. Moreover it gives us a cleaner expression of the quaternion time integration formula. 
+We hereby uses a stronger assumption that angular rate $\vec{\omega}(t_{n})$ remains constant during a small time period $\Delta{t}$, which is $\dot{\vec{\omega}} = 0$. Considering the sampling rate of IMU sensor is usually high (> 100 [Hz]), this assumption is actually quite accurate in practice. Moreover it gives us a cleaner expression of the quaternion time integration formula. 
 
 Given $\dot{\vec{\omega}} = 0$, we can get
 \begin{equation} \label{q39} 
-	\vec{q}_{n+1} = \vec{q}_n \otimes (1+\frac{1}{2}\vec{\omega}_n\Delta{t}+\frac{1}{2!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^2+\frac{1}{3!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^3+\frac{1}{4!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^4+\dots)
+	\vec{q}_{n+1} = \vec{q}_n \otimes (1+\frac{1}{2}\vec{\omega}_n\Delta{t}+\frac{1}{2!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^2+\frac{1}{3!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^3+\frac{1}{4!}(\frac{1}{2}\vec{\omega}_n\Delta{t})^4+\dots).
 \end{equation}
-here we regard $\vec{q}$ and $\vec{\omega}$ as series, which is exactly
+Here we regard $\vec{q}$ and $\vec{\omega}$ as series, which is exactly
 \begin{equation} \label{q40} 
-	\vec{q}_{n+1} = \vec{q}_n \otimes \mathrm{e}^{\vec{\omega}\Delta{t}/2}
+	\vec{q}_{n+1} = \vec{q}_n \otimes \mathrm{e}^{\vec{\omega}\Delta{t}/2}.
 \end{equation}
-we can rewrite it by Equation (\ref{q19}) as,
+We can rewrite it by Equation (\ref{q19}) as
 \begin{equation} \label{q41} 
-	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \vec{\omega}_n\Delta{t} \}
+	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \vec{\omega}_n\Delta{t} \},
 \end{equation}
 which is called \textbf{\textit{Zeroth order forward integration}} of quaternion over time.
 
@@ -276,12 +277,12 @@ We can obtain \textbf{\textit{Zeroth order backward integration}} by assuming th
 \begin{equation} \label{q42} 
 	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \vec{\omega}_{n+1}\Delta{t} \},
 \end{equation}
-and \textbf{\textit{Zeroth order midward integration}}  by assuming the angular rate holds $\bar{\vec{\omega}}_{n+1} =(\vec{\omega}_{n}+ \vec{\omega}_{n+1})/2$ within $\Delta{t}$,
+and \textbf{\textit{Zeroth order midward integration}} by assuming the angular rate holds $\bar{\vec{\omega}}_{n+1} =(\vec{\omega}_{n}+ \vec{\omega}_{n+1})/2$ within $\Delta{t}$, which is
 \begin{equation} \label{q43} 
-	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \bar{\vec{\omega}}_{n}\Delta{t} \}
+	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \bar{\vec{\omega}}_{n}\Delta{t} \}.
 \end{equation}
 
-Though not used in this master thesis, we notice that \cite{trawny2005indirect} gives \textbf{\textit{First order integration}} by assuming angular rate is linear with time, \ie, $\dot{\vec{\omega}} = \frac{\vec{\omega}_{n+1} - \vec{\omega}_{n}}{\Delta{t}}$, which is
+Though not used in this master thesis, we notice that \cite{trawny2005indirect} gives \textbf{\textit{First order integration}} by assuming angular rate is linear with time, \ie, $\dot{\vec{\omega}} = \frac{\vec{\omega}_{n+1} - \vec{\omega}_{n}}{\Delta{t}}$, which is precisely
 \begin{equation} \label{q44} 
 	\vec{q}_{n+1} = \vec{q}_n \otimes \vec{q}\{ \bar{\vec{\omega}}_{n}\Delta{t} \} + \frac{\Delta{t}^2}{48}\vec{q}_n\otimes(\vec{\omega}_n \otimes \vec{\omega}_{n+1} - \vec{\omega}_{n+1} \otimes \vec{\omega}_{n}) + \dots
 \end{equation}

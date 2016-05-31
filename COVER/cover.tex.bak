@@ -143,11 +143,14 @@ by having them added to the library of the Computer Science Department.
 \par\noindent\makebox[2in]{\hrulefill} 		\hfill\makebox[2in]{\hrulefill}%
 \par\noindent\makebox[2in][l]{(Datum / Date)}	\hfill\makebox[2in][l]{(Unterschrift / Signature)}%
 
+% @Xi: Add a page manually to make it more intuitive 
+\newpage
+\
 \newpage
 \section*{Acknowledgments}
 I would like to thank Dr. Roland Angst who has been a great supervisor during my thesis. Thanks Dr. Angst for giving me many valuable advise, also keeping a perfect balance of guidance and freedom. 
 
-Also many thanks to members in our group: Dushyant and Rui, who has helped and encouraged me a lot. Special thanks to Rui, Han and Jianan, who has suggested a lot of amazing ideas and helped me to debug my code. Thanks Siwen, Hang for being the proof readers of my master thesis. 
+Also many thanks to members in our group: Dushyant and Rui, who has helped and encouraged me a lot. Special thanks to Han and Jianan, who has suggested a lot of amazing ideas and helped me to debug my code. Thanks Siwen, Hang for being the proof readers of my master thesis. 
 
 At last I want to thank my parents, who has always give their unconditional supports and love to me. Without their supports and love, I never would have made it.
 

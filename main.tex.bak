@@ -9,7 +9,7 @@
 %% Page Intentionally Left Blank'', use the ``leftblank'' option, as
 %% above. 
 
-\documentclass[12pt,oneside]{SETUP/mitthesis}
+\documentclass[12pt,twoside,openright]{SETUP/mitthesis}
 \pagestyle{plain}
 \usepackage{SETUP/lgrind}
 \usepackage{cmap}

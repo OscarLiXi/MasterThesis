@@ -8,7 +8,7 @@
 \BOOKMARK [1][-]{section.3.1}{Definition of Quaternion}{chapter.3}% 8
 \BOOKMARK [1][-]{section.3.2}{Properties of Quaternion}{chapter.3}% 9
 \BOOKMARK [1][-]{section.3.3}{Quaternions and Rotation operations}{chapter.3}% 10
-\BOOKMARK [1][-]{section.3.4}{Time-derivatives on Quaternion}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.4}{Quaternion Differentiation}{chapter.3}% 11
 \BOOKMARK [1][-]{section.3.5}{Time-integration on Quaternion}{chapter.3}% 12
 \BOOKMARK [0][-]{chapter.4}{Modular Sensor Fusing}{}% 13
 \BOOKMARK [1][-]{section.4.1}{Error-state Kalman Filter for IMU Integration}{chapter.4}% 14
@@ -29,7 +29,7 @@
 \BOOKMARK [2][-]{subsection.5.2.4}{Experiment 3: Keyframe Bundle Adjustment}{section.5.2}% 29
 \BOOKMARK [2][-]{subsection.5.2.5}{Experiment 4: Runtime Evaluation}{section.5.2}% 30
 \BOOKMARK [1][-]{section.5.3}{Conclusion}{chapter.5}% 31
-\BOOKMARK [0][-]{chapter.6}{Current Orientation: Nonlinear Optimization-based Visual-Inertial Odometry }{}% 32
+\BOOKMARK [0][-]{chapter.6}{A Brief Introduction to Nonlinear Optimization-based Visual-Inertial Odometry }{}% 32
 \BOOKMARK [1][-]{section.6.1}{Cost Function of Visual-Inertial Odometry}{chapter.6}% 33
 \BOOKMARK [1][-]{section.6.2}{Manifold Nonlinear Optimization}{chapter.6}% 34
 \BOOKMARK [1][-]{section.6.3}{Disscussion and Conclusion}{chapter.6}% 35

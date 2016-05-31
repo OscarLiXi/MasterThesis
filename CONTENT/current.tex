@@ -1,18 +1,18 @@
-\chapter{Current Orientation: Nonlinear Optimization-based Visual-Inertial Odometry }
+\chapter{A Brief Introduction to Nonlinear Optimization-based Visual-Inertial Odometry }
 \label{chap:current}
 
-In the previous chapters, we introduce our loosely-coupled visual-inertial odometry using ESKF, and show our results are slightly better than single visual odometry. It is known that an ESKF update can be regarded as one single iteration during optimization. Though we apply the bundle adjustment to further improve the estimation quality, the correlations among different sensors have been ignored. Therefore, we hereby explore a more general method, \eg, a nonlinear optimization way, to solve visual-inertial odometry problem in this chapter. Our presentations in this chapter are based on \cite{leutenegger2015keyframe} and \cite{forster2015imu}. We do not perform any experiments due to the time limitation of this master thesis. The experimental results might be concluded in future publications.
+In the previous chapters, we introduce our loosely-coupled visual-inertial odometry using ESKF, and show our results are slightly better than single visual odometry. Generally, an ESKF update can usually be regarded as one iteration during optimization. Though we apply the bundle adjustment to further improve the estimation quality, the internal correlations among different sensors have been ignored. We hereby explore a more general approach, \eg, a nonlinear optimization way, to solve visual-inertial odometry problem in this chapter. Our presentations in this chapter are based on \cite{leutenegger2015keyframe} and \cite{forster2015imu}. Note that we do not perform any experiments due to the time limitation of this master thesis, the experimental results might be included in future publications.
 
 \section{Cost Function of Visual-Inertial Odometry}
 \label{sec:map}
 
-Intuitively, in order to formulate our problem in non-linear optimization way, we need to form a cost function to minimize the visual error and IMU temporal error, which is precisely the reprojection error and IMU error state we introduce in Chapter \ref{chap:sensor_fusing}.
+Intuitively, in order to formulate our problem in non-linear optimization way, a cost function to minimize the visual error and IMU temporal error is required. This cost function is precisely the reprojection error and IMU error state we have introduced in Chapter \ref{chap:sensor_fusing}.
 
-We first define the set of true states up to the keyframe $n$ is
+We first define the set of true states up to the frame $n$ as
 \begin{equation}
 	\mX_n \triangleq \{ \vec{x}_t^i \}_{i \in \mK_n},
 \end{equation}
-where $\{ \vec{x}_t^i \}$ denotes the $i^{th}$ frame of true states, and $\mK$ represents the set of keyframes until keyframe $n$. Therefore our optimal set of true state $\mX_n^\star$ is
+where $\{ \vec{x}_t^i \}$ denotes the $i^{th}$ frame of true states, and $\mK_n$ represents the set of keyframes until frame $n$. Therefore our optimal set of true state $\mX_n^\star$ is
 \begin{equation}
 	\mX_n^\star \triangleq \argmin_{\mX_n} \norm{e_v}^2 + \norm{e_{imu}}^2,
 \end{equation}
@@ -24,7 +24,7 @@ Reprojection error can written $e_v$ by Equation (\ref{c1}) and Equation ({\ref{
 \end{equation}
 where $n$, $m$ is the number of camera poses and visible 3D points respectively, and $\mI_{ij}$ is the predicted 2D point position corresponding to $j^{th}$ visible 3D point in $i^{th}$ image keyframe.
 
-For IMU temporal error, $\norm{e_{imu}}^2$ can then be denoted as
+For IMU temporal error, $\norm{e_{imu}}^2$ can then be denoted via our error state $\vec{x}_e$ as
 \begin{equation}
 	\norm{e_{imu}}^2 = \sum_{i=1}^n \norm{\vec{x}_e^i}^2,
 \end{equation}
@@ -52,6 +52,6 @@ In summary, in each optimization iteration, we first perform general optimizatio
 \section{Disscussion and Conclusion}
 \label{sec:conclusion}
 
-One problem of the optimization approach is that the optimized result is not easily calculated within a short time. Historical information has to be kept in order to apply a global optimization; new keyframes, landmarks and error states will be inserted to cost function continuously. Therefore solving this usually spends more time than our suggested ESKF framework. Though in \cite{mourikis2007multi}, they solve it by only keep some of previous keyframes, but this is sub-optimal. However, in tightly-coupled visual-inertial SLAM, recent researches has partially addressed complexity problem by proposing \textit{structureless approach} \cite{mourikis2007multi, forster2015imu} to efficiently eliminate all the landmarks (3D points) in optimization step, besides an IMU pre-integration technique \cite{forster2015imu} to avoid recomputing relative pose transformation between successive keyframes via IMU information. These methods have decreased the optimization time significantly, thus non-linear optimization becomes feasible in the real-time VIO system.
+One problem of the optimization approach is that the optimized result is not easily calculated within a short time. Historical information has to be kept in order to apply a global optimization; new keyframes, landmarks and error states will be inserted to cost function continuously. Therefore solving such a cost function usually spends more time than our suggested ESKF framework. Though in \cite{mourikis2007multi}, they solve it by only keep some of previous keyframes, but this is sub-optimal. However, in tightly-coupled visual-inertial SLAM, recent researches has partially addressed complexity problem by proposing \textit{structureless approach} \cite{mourikis2007multi, forster2015imu} to efficiently eliminate all the landmarks (3D points) in optimization step. Also an IMU pre-integration technique \cite{forster2015imu} has been exploited to avoid recomputing relative pose transformations (via IMU measurements) between successive keyframes. These methods have decreased the optimization time significantly, thus non-linear optimization becomes feasible in the real-time VIO system. We aim to explore these approaches since the source codes of \cite{forster2015imu} and a nicely-structured visual-inertial dataset \cite{Burri25012016} have been released recently, unfortunately we are not able to finish coding and debugging until the writing of this thesis.
 
-In this chapter, we introduce the way to form a optimization cost function with similar notations and knowledge in this master thesis. To conclude, though our suggested ESKF VIO runs in a constant time complexity, and obtain a good estimation results, we could further improve our approach by focusing on internal connection between visual sensors and IMU sensors. Theoretically, if we can address the high computational complexity well, a more general approach, such as nonlinear optimization, might obtain more accurate results with similar time consuming.  
+In this chapter, we introduce an approach to form a optimization cost function via similar notations in this master thesis. To conclude, though our suggested ESKF VIO runs in a constant time complexity, and obtain an acceptable estimation results, we could further improve our approach by focusing on internal connections between visual sensors and IMU sensors. Theoretically, if we can address the high computational complexity well, a more general approach, such as nonlinear optimization, might obtain more accurate results as similar time consumings as our suggested VIO.  

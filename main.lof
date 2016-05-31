@@ -1,13 +1,24 @@
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1-1}{\ignorespaces IMU sensor with gyroscope and accelerometer measures rotational rate and acceleration of X, Y, Z axis regarding its local frame. Note that IMU sensor normally has bias and irreducible noises, it is necessary to apply a calibration like cameras. The frequency of IMU output is normally larger than 100 Hz. Source: \cite {Figure1-1_IMU_Sensor}}}{10}{figure.1.1}
+\contentsline {figure}{\numberline {1-1}{\ignorespaces IMU sensor with gyroscope and accelerometer measures rotational rate and acceleration of X, Y, and Z axis regarding its local frame. Note that IMU sensor normally has bias and irreducible noises, and it is necessary to apply a calibration like cameras. The frequency of IMU output is normally larger than 100 Hz. Source: \cite {Figure1-1_IMU_Sensor}}}{14}{figure.1.1}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2-1}{\ignorespaces This figure shows the connection among world frame $\mathcal {W}$, IMU frame $\mathcal {I}$ and camera frame $\mathcal {C}$. Green line shows the transformation between camera and IMU, which can be pre-calibrated. Red line is the pose of IMU in world frame. Camera frame observes point $\textbf {p}$ of object P in image plane, and connects a object P by blue line, and the coordinate of object P in world frame is presented as yellow line.}}{14}{figure.2.1}
-\contentsline {figure}{\numberline {2-2}{\ignorespaces (a) Filter method for SLAM. (b) Keyframe-based Bundle Adjustment (BA) for SLAM. We denote the $i^{th}$ camera position as $\textbf {x}_i$, $i^{th}$ image feature as $\textbf {y}_i$. We connect the line between camera and image feature if this feature is observed by this camera, the vanished observations is presented as dotted line, and the vanished camera is expressed as grey font. Both graph changes as time goes on from left to right. One can see from (a) that though only the latest camera pose is reserved, the edges between features are increasing exponentially. (b) stores some of former camera poses (keyframe) (\peek _meaning:NTF .{i.e\spacefactor \@m }{\peek _catcode:NTF a{i.e.\spacefactor \@m }{i.e.\spacefactor \@m }}, $\textbf {x}_1$ and $\textbf {x}_4$) by keeping graph stay sparsity. }}{15}{figure.2.2}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Filter}}}{15}{subfigure.2.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Keyframe-based BA}}}{15}{subfigure.2.2}
+\contentsline {figure}{\numberline {2-1}{\ignorespaces This figure shows the connection among the world frame $\mathcal {W}$, the IMU frame $\mathcal {I}$ and the camera frame $\mathcal {C}$. Green line shows the transformation between the camera and IMU, which can be pre-calibrated. Red line is the pose of IMU in the world frame. The camera frame observes point $\textbf {p}$ of object P in the image plane, and it connects a object P by blue line. The coordinate of object P in the world frame is presented as yellow line.}}{18}{figure.2.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4-1}{\ignorespaces Pipeline of our visual-inertial odometry. Noted that measurement frequency from camera is 4 times lower than measurement frequency of IMU sensor in our experiment setting, therefore we do not have visual odometry (VO) result in some certain turn. Also whether this frame is keyframe is provided by VO.}}{33}{figure.4.1}
+\contentsline {figure}{\numberline {4-1}{\ignorespaces Pipeline of our visual-inertial odometry. Noted that measurement frequency from camera is 4 times lower than measurement frequency of IMU sensor in our experiment setting, therefore we do not have visual odometry (VO) result in some certain turn. Also whether this frame is keyframe is provided by VO.}}{40}{figure.4.1}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5-1}{\ignorespaces Experiment 1: (a)(b) Position and attitude drift of Dataset \textbf {001} (c)(d) Position and attitude drift of Dataset \textbf {002} (e)(f) Position and attitude drift of Dataset \textbf {004}. Position error is measured using Euclidean distance, and attitude drift is measured by transforming quaternion back into Euler angle (see Appendix \ref {chap:appendix3}) since it is more straightforward to evaluation. Ground truth data is provided by synthetic IMU data generator.}}{45}{figure.5.1}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{45}{subfigure.1.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{45}{subfigure.1.2}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {}}}{45}{subfigure.1.3}
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {}}}{45}{subfigure.1.4}
+\contentsline {subfigure}{\numberline {(e)}{\ignorespaces {}}}{45}{subfigure.1.5}
+\contentsline {subfigure}{\numberline {(f)}{\ignorespaces {}}}{45}{subfigure.1.6}
+\contentsline {figure}{\numberline {5-2}{\ignorespaces Experiment 2: (a) Position drifts of VIO and VO. (b) Attitude drifts of VIO and VO. Both VIO and VO report an average position drifts less than 1\% of overall travelled distance, however VIO performs regarding to the attitude drift, where VIO has 0.027 [rad] and VO has 0.787 [rad] average attitude drift.}}{47}{figure.5.2}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{47}{subfigure.2.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{47}{subfigure.2.2}
+\contentsline {figure}{\numberline {5-3}{\ignorespaces Experiment 3: (a) Position drifts of VIO with and without BA. (b) Attitude drifts of VIO with and without BA. The red and blue curves show the errors for VIO with and without keyframe BA respectively.}}{49}{figure.5.3}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{49}{subfigure.3.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{49}{subfigure.3.2}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
